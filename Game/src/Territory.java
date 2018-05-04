@@ -11,11 +11,17 @@ public class Territory {
 	private int nUnits;
 	private ArrayList<Territory> adjacentTerritories;
 	
-	public Territory() {
-		
+	public Territory(ArrayList<Territory> adjacentTerritories) {
+		this.owner = null;
+		this.nUnits = 0;
+		this.adjacentTerritories = adjacentTerritories;
 	}
 	
-	public void Set_Units(int units) {
+	public void SetOwner(Player newOwner) {
+		this.owner = newOwner;
+	}
+	
+	public void SetUnits(int units) {
 		this.nUnits = units;
 	}
 	

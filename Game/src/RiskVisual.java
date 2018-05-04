@@ -9,4 +9,8 @@ public class RiskVisual {
 	public RiskVisual() {
 		
 	}
+	
+	public void Update() {
+		
+	}
 }
