@@ -12,12 +12,14 @@ public class Board {
 	private ArrayList<Territory> territories;
 	
 	private List<Card> drawPile;
+	private List<Card> discardPile;
 	
 	private int goldenCavalry;
 	
 	
-	public Board() {
-		
+	public Board(ArrayList<Continent> continents, ArrayList<Territory> territories) {
+		this.continents = continents;
+		this.territories = territories;
 		this.goldenCavalry = 4;
 	}
 	
@@ -46,7 +48,7 @@ public class Board {
 	/**
 	 * Move the golden cavalry one step forward.
 	 */
-	public void MoveGoldenCavalry() {
+	private void MoveGoldenCavalry() {
 		if (goldenCavalry == 4) { this.goldenCavalry = 6; }
 		else if (goldenCavalry == 6) { this.goldenCavalry = 8; }
 		else if (goldenCavalry == 8) { this.goldenCavalry = 10; }
@@ -61,6 +63,32 @@ public class Board {
 		else if (goldenCavalry == 50) { this.goldenCavalry = 55; }
 		else if (goldenCavalry == 55) { this.goldenCavalry = 60; }
 		else if (goldenCavalry == 60) { this.goldenCavalry = 65; }
+	}
+	
+	/**
+	 * Draw a Card from the draw pile.
+	 */
+	public Card drawCard() {
+		if (drawPile.size() == 1) {
+			Card result = drawPile.remove(0);
+			// TODO: shuffle discardPile and swap with drawPile...
+			return result;
+		} else {
+			return drawPile.remove(0);
+		}
+	}
+	
+	/**
+	 * Turn in a cardSet.
+	 * @return the number of reinforcements received 
+	 */
+	public int TurnInCards(ArrayList<Card> cardSet) {
+		for (int i = 0; i < cardSet.size(); i++) {
+			discardPile.add(cardSet.get(i));
+		}
+		int result = goldenCavalry;
+		MoveGoldenCavalry();
+		return result;
 	}
 	
 	/**
