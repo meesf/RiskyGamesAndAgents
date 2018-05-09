@@ -27,7 +27,7 @@ public class Territory {
 		
 	}
 	
-	public void Set_Units(int units) {
+	public void SetUnits(int units) {
 		this.nUnits = units;
 	}
 	
