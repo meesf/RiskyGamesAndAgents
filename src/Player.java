@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.awt.Color;
 
 /**
@@ -10,6 +11,9 @@ public abstract class Player {
 	private String name;
 	private Color color;
 	
+
+	private ArrayList<Card> cards;
+
 	public Player() {
 		
 	}
@@ -23,4 +27,9 @@ public abstract class Player {
 	public Color GetColor() {
 		return color;
 	}
+
+	public ArrayList<Card> GetCards() {
+		return cards;
+	}
+  
 }

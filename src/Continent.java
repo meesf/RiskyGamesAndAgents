@@ -9,7 +9,9 @@ import java.util.ArrayList;
 public class Continent {
 	private String name;
 	private ArrayList<Territory> members;
-	private int nReinforcements;
+
+	private int nReinforcements;			// Number of reinforcements received when a player owns the continent.
+
 	
 	public Continent() {
 		
