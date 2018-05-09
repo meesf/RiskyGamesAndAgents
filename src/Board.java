@@ -22,7 +22,11 @@ public class Board {
 		this.continents = continents;
 		this.territories = territories;
 		this.goldenCavalry = 4;
+	}
 
+	public Board(){
+
+	}
 	
 	/**
 	 * Add the given amount of units to the given territory.
@@ -30,10 +34,6 @@ public class Board {
 	 */
 	public void AddUnits(Territory territory, int number) {
 		territory.SetUnits(territory.GetNUnits() + number);
-	 
-	public boolean AddUnits(Territory territory, int number) {
-		return false;
-
 	}
 	
 	/**

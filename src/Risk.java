@@ -27,6 +27,8 @@ public class Risk {
 
 	public Risk(){
 		visuals = new RiskVisual();
+		players = new ArrayList<Player>();
+		board = new Board();
 		InitializeGame();
 	}
 
