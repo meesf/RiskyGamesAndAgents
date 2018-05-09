@@ -14,7 +14,7 @@ public class Continent {
 
 	
 	public Continent() {
-		
+		members = new ArrayList<Territory>();
 	}
 	
 	public String GetName() {
@@ -27,5 +27,9 @@ public class Continent {
 	
 	public int GetNReinforcements() {
 		return nReinforcements;
+	}
+	
+	public void addTerritory(Territory ter) {
+		members.add(ter);
 	}
 }
