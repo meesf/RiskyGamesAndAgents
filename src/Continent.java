@@ -25,7 +25,7 @@ public class Continent {
 		return members;
 	}
 	
-	public int GetNReinforcements() {
+	public int getNReinforcements() {
 		return nReinforcements;
 	}
 	

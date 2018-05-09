@@ -12,15 +12,18 @@ public class Board {
 	private ArrayList<Continent> continents;
 	private ArrayList<Territory> territories;
 
-	private List<Card> drawPile;
-	private List<Card> discardPile;
-	
+	private Integer artillery, cavalry, infantry, wildcard;
+
 	private int goldenCavalry;
 
 	public Board() {
 		continents = new ArrayList<Continent>();
 
 		this.goldenCavalry = 4;
+		this.artillery = 14;
+		this.cavalry = 14;
+		this.infantry = 14;
+		this.wildcard = 2;
 	
 		Territory ter1 = new Territory(0.1,0.8);
 		Territory ter2 = new Territory(0.2,0.8);
@@ -106,7 +109,7 @@ public class Board {
 	/**
 	 * Move the golden cavalry one step forward.
 	 */
-	private void MoveGoldenCavalry() {
+	public void moveGoldenCavalry() {
 		if (goldenCavalry == 4) { this.goldenCavalry = 6; }
 		else if (goldenCavalry == 6) { this.goldenCavalry = 8; }
 		else if (goldenCavalry == 8) { this.goldenCavalry = 10; }
@@ -123,32 +126,7 @@ public class Board {
 		else if (goldenCavalry == 60) { this.goldenCavalry = 65; }
 	}
 	
-	/**
-	 * Draw a Card from the draw pile.
-	 */
-	public Card drawCard() {
-		if (drawPile.size() == 1) {
-			Card result = drawPile.remove(0);
-			// TODO: shuffle discardPile and swap with drawPile...
-			return result;
-		} else {
-			return drawPile.remove(0);
-		}
-	}
-	
-	/**
-	 * Turn in a cardSet.
-	 * @return the number of reinforcements received 
-	 */
-	public int TurnInCards(ArrayList<Card> cardSet) {
-		for (int i = 0; i < cardSet.size(); i++) {
-			discardPile.add(cardSet.get(i));
-		}
-		int result = goldenCavalry;
-		MoveGoldenCavalry();
-		return result;
-	}
-	
+
 	/**
 	 * If there is a winner in the current state, return the winner.
 	 */
@@ -157,21 +135,42 @@ public class Board {
 	}
 	
 
-	public ArrayList<Continent> GetContinents() {
+	public ArrayList<Continent> getContinents() {
 		return continents;
 	}
 
-	public List<Card> GetDrawPile() {
-		return drawPile;
-	}
-	
-	public int GetGoldenCavalry() {
+	public int getGoldenCavalry() {
 		return goldenCavalry;
 	}
 
 	public ArrayList<Territory> getTerritories(){
 		return territories;
 	}
+
+	public int getInfantry() {
+		return infantry;
+	}
+
+	public int getArtillery() {
+		return artillery;
+	}
+
+	public int getCavalry() {
+		return cavalry;
+	}
+
+	public void setInfantry(Integer infantry){
+		this.infantry = infantry;
+	}
+
+	public void setArtillery(int artillery) {
+		this.artillery = artillery;
+	}
+
+	public void setCavalry(int cavalry) {
+		this.cavalry = cavalry;
+	}
+
 
 	@Override
 	public String toString(){

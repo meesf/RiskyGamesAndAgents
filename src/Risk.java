@@ -1,3 +1,4 @@
+import com.sun.javafx.image.IntPixelGetter;
 import sun.rmi.transport.ObjectTable;
 
 import java.lang.reflect.Array;
@@ -31,14 +32,52 @@ public class Risk {
 		initializeGame();
 	}
 
-	public void run(){
+	private void run(){
 		while (!finished()) {
-			playTurn();
+			Integer nrOfReinforcements = calculateReinforcements();
+			currentPlayer.setReinforcements(currentPlayer.getReinforcements() + nrOfReinforcements);
 			visuals.update();
+			currentPlayer.turnInCards(board);
+			visuals.update();
+			while(currentPlayer.getReinforcements() != 0){
+				currentPlayer.placeSingleReinforcement(board);
+				visuals.update();
+			}
+			CombatMove combatMove;
+			while((combatMove = currentPlayer.getCombatMove()) == null){
+
+			}
+
 		}
 	}
+	//TODO: update current player
+	private Integer calculateReinforcements(){
+		Integer reinforcements = 0;
+		reinforcements += Integer.max(3, currentPlayer.territories.size() / 3);
+		reinforcements += calculateContinentBonus();
+		return reinforcements;
+	}
 
-	public void initializeGame() {
+	private Integer calculateContinentBonus(){
+		int bonus = 0;
+		for(Continent continent : board.getContinents()){
+			boolean controlsContinent = true;
+			for(Territory territory : continent.getMembers()){
+				if(territory.getOwner() != currentPlayer){
+					controlsContinent = false;
+					break;
+				}
+			}
+			if(controlsContinent){
+				bonus += continent.getNReinforcements();
+			}
+		}
+		return bonus;
+	}
+
+
+
+	private void initializeGame() {
 		System.out.println("Initializing game");
         visuals = new RiskVisual();
 		board = new Board();
@@ -51,7 +90,7 @@ public class Risk {
 
 	}
 
-	public void initializePlayers() {
+	private void initializePlayers() {
 		System.out.println("Initializing players");
 		players = new ArrayList<Player>();
 		//TODO deciding number of startingUnits using number of players and evt. number territorries
@@ -63,7 +102,7 @@ public class Risk {
 	}
 
 	//Divide players randomly over territories
-	public Integer divideTerritories(){
+	private Integer divideTerritories(){
 		System.out.println("Dividing territories");
 		Collections.shuffle(board.getTerritories());
 		int player = 0;
@@ -77,7 +116,7 @@ public class Risk {
 		return player % players.size();
 	}
 
-	public void initialPlaceReinforcements(Integer currentPlayerIndex){
+	private void initialPlaceReinforcements(Integer currentPlayerIndex){
 		System.out.println("Placing initial reinforcements");
 		int player = currentPlayerIndex;
 		for(int i = 0; i < (players.size() * nrOfStartingUnits) - board.getTerritories().size() ; i++){
@@ -87,14 +126,14 @@ public class Risk {
 	}
 
 
-	public void playTurn() {
+	private void playTurn() {
 
 	}
 
 	/**
 	 * Returns true if there is a winner.
 	 */
-	public boolean finished() {
+	private boolean finished() {
 		if (board.GetWinner() == null) {
 			return false;
 		}

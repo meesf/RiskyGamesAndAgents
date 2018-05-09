@@ -12,18 +12,20 @@ public abstract class Player {
 	protected Color color;
 	protected Objective objective;
 	protected ArrayList<Territory> territories;
-	protected ArrayList<Card> cards;
+	protected Hand hand;
 	protected Integer reinforcements;
 
 	public Player(Objective objective, Integer reinforcements, String name) {
 		this.objective = objective;
 		this.reinforcements = reinforcements;
 		this.name = name;
+		this.hand = new Hand();
 		this.territories = new ArrayList<Territory>();
 	}
 
-	public abstract Action getAction();
 	public abstract void placeSingleReinforcement(Board board);
+	public abstract void turnInCards(Board board);
+	public abstract CombatMove getCombatMove();
 
 	public String getName() {
 		return name;
@@ -31,10 +33,6 @@ public abstract class Player {
 
 	public Color getColor() {
 		return color;
-	}
-
-	public ArrayList<Card> getCards() {
-		return cards;
 	}
 
 	public Objective getObjective() {
@@ -59,9 +57,12 @@ public abstract class Player {
 		territories.add(t);
 	}
 
+
 	@Override
 	public String toString(){
 		return name;
 	}
+
+
 
 }
