@@ -40,7 +40,7 @@ public class Territory {
 		this.adjacentTerritories.add(t);
 	}
 	
-	public ArrayList<Territory> GetAdjacentTerritories() {
+	public ArrayList<Territory> getAdjacentTerritories() {
 		return adjacentTerritories;
 	}
 }

@@ -26,7 +26,7 @@ public class Risk {
 	}
 
 	public Risk(){
-		visuals = new RiskVisual();
+		visuals = new RiskVisual(this);
 		players = new ArrayList<Player>();
 		board = new Board();
 		InitializeGame();
@@ -47,6 +47,10 @@ public class Risk {
 
 	}
 
+	public Board getBoard() {
+		return this.board;
+	}
+	
 	/**
 	 * Returns true if there is a winner.
 	 */
