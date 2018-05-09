@@ -9,14 +9,16 @@ import javax.swing.JFrame;
  * @version FirstPrototype
  * @date 4/5/2018
  */
-public class RiskVisual {
+public class RiskVisual extends JFrame{
 
 	public RiskVisual() {
-		
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setSize(800,600);
+		this.pack();
+		this.setVisible(true);
 	}
 
-	
-	public void Update() {
+	public void update() {
 		
 	}
 }
