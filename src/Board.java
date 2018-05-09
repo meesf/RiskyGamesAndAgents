@@ -9,8 +9,7 @@ import java.util.ArrayList;
  */
 public class Board {
 	private ArrayList<Continent> continents;
-	private ArrayList<Territory> territories;
-	
+
 
 	private List<Card> drawPile;
 	private List<Card> discardPile;

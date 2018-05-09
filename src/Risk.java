@@ -1,3 +1,5 @@
+import sun.rmi.transport.ObjectTable;
+
 import java.util.ArrayList;
 
 /**
@@ -16,31 +18,33 @@ public class Risk {
 
 
 	public static void main(String[] args) {
-		Risk risk = new Risk();
+		Risk risk = new Risk(args);
 		risk.Run();
-		// TODO: Let players initialize the board. 
-		
-										// This can be achieved by separating PlayTurn into different methods.
-		
 		System.out.println("Game is won by a player!");
 	}
 
-	public Risk(){
-		visuals = new RiskVisual();
-		players = new ArrayList<Player>();
-		board = new Board();
-		InitializeGame();
+	public Risk(String[] args){
+		InitializeGame(args);
 	}
 
 	public void Run(){
 		while (!Finished()) {
 			PlayTurn();
-			visuals.Update();			// Possibly even more updates throughout the turn...
+			visuals.Update();
 		}
 	}
 
-	public void InitializeGame() {
-
+	public void InitializeGame(String[] args) {
+        visuals = new RiskVisual();
+        players = new ArrayList<Player>();
+        for(int i = 0; i < Integer.parseInt(args[0]); i++){
+            Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
+            Bot player = new Bot(objective);
+            players.add(player);
+        }
+        currentPlayer = players.get(0);
+        board = new Board();
+        System.out.println(players);
 	}
 
 	public void PlayTurn() {

@@ -10,12 +10,11 @@ import java.awt.Color;
 public abstract class Player {
 	private String name;
 	private Color color;
-	
-
+	private Objective objective;
 	private ArrayList<Card> cards;
 
-	public Player() {
-		
+	public Player(Objective objective) {
+		this.objective = objective;
 	}
 	
 	public abstract Action GetAction();
@@ -31,5 +30,6 @@ public abstract class Player {
 	public ArrayList<Card> GetCards() {
 		return cards;
 	}
-  
+
+
 }
