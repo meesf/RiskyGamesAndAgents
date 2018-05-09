@@ -16,14 +16,15 @@ import javax.swing.JFrame;
  */
 public class RiskVisual extends JFrame{
 
-	int width = 800, height = 600;
-	int radii = 20;
+	int width = 1920, height = 1080;
+	int radii = 50;
 	Risk risk;
 	
 	public RiskVisual(Risk risk) {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.pack();
 		this.setSize(width,height);
+		
 		this.setVisible(true);
 		this.risk = risk;
 	}
@@ -41,21 +42,24 @@ public class RiskVisual extends JFrame{
 			continentColor = c.getColor();
 			for (Territory t : c.getTerritories()) {
 				int centerX = (int) (t.x * (double) width);
-				int centerY = (int) (t.y * (double) height);
+				int centerY = height - (int) (t.y * (double) height);
 				g.setColor(continentColor);
 				g.fillOval(centerX - radii / 2, centerY - radii / 2, radii, radii);
+				g.setColor(Color.BLACK);
+				g.drawString(t.getName(), centerX, centerY);
 				for (Territory adjacent : t.getAdjacentTerritories()) {
 					g.setColor(Color.BLACK);
-					g.drawLine(centerX, centerY, (int) (adjacent.x * (double) width), (int) (adjacent.y*(double) height));
+					if (t.getName()=="Alaska" && adjacent.getName() == "Kamchatka") {
+						g.drawLine(centerX, centerY, 0, centerY);
+					} else if (t.getName()== "Kamchatka" && adjacent.getName() == "Alaska") {
+						g.drawLine(centerX, centerY, width, centerY);
+					} else {
+						g.drawLine(centerX, centerY, (int) (adjacent.x * (double) width), height - (int) (adjacent.y*(double) height));
+					}
 				}
 			}
 		}
 		
-		AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
-		tx.translate(0, -bufferedImage.getHeight(null));
-		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-		bufferedImage = op.filter(bufferedImage, null);
-		
-		this.getGraphics().drawImage(bufferedImage, 0, 0, null);
+		this.getContentPane().getGraphics().drawImage(bufferedImage, 0, 0, null);
 	}
 }
