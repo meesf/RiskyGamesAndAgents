@@ -17,6 +17,8 @@ public class Board {
 	
 	
 	public Board() {
+		continents = new ArrayList<Continent>();
+		
 		this.goldenCavalry = 4;
 	
 		Territory ter1 = new Territory(0.1,0.8);
