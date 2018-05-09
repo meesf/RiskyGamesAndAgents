@@ -22,10 +22,7 @@ public class Board {
 		this.continents = continents;
 		this.territories = territories;
 		this.goldenCavalry = 4;
-	
-	public Board() {
-		
-	}
+
 	
 	/**
 	 * Add the given amount of units to the given territory.
