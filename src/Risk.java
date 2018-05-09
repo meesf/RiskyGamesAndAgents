@@ -35,7 +35,7 @@ public class Risk {
 	public void Run(){
 		while (!Finished()) {
 			PlayTurn();
-			visuals.Update();			// Possibly even more updates throughout the turn...
+			visuals.update();			// Possibly even more updates throughout the turn...
 		}
 	}
 

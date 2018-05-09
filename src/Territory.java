@@ -13,21 +13,15 @@ public class Territory {
 	
 	public double x, y;
 	
-
-	public Territory(ArrayList<Territory> adjacentTerritories) {
-		this.owner = null;
-		this.nUnits = 0;
-		this.adjacentTerritories = adjacentTerritories;
-	}
-	
 	public void SetOwner(Player newOwner) {
 		this.owner = newOwner;
 	}
-	
 
 	public Territory(double x, double y) {
 		this.x = x;
 		this.y = y;
+		this.nUnits = 0;
+		this.adjacentTerritories = new ArrayList<Territory>();
 	}
 	
 	public void SetUnits(int units) {
@@ -40,6 +34,10 @@ public class Territory {
 	
 	public int GetNUnits() {
 		return nUnits;
+	}
+
+	public void addAdjacentTerritory(Territory t) {
+		this.adjacentTerritories.add(t);
 	}
 	
 	public ArrayList<Territory> GetAdjacentTerritories() {
