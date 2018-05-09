@@ -14,18 +14,22 @@ public class Continent {
 
 	
 	public Continent() {
-		
+		members = new ArrayList<Territory>();
 	}
 	
 	public String GetName() {
 		return name;
 	}
 	
-	public ArrayList<Territory> GetMembers() {
+	public ArrayList<Territory> getMembers() {
 		return members;
 	}
 	
 	public int GetNReinforcements() {
 		return nReinforcements;
+	}
+	
+	public void addTerritory(Territory ter) {
+		members.add(ter);
 	}
 }

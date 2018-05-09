@@ -11,35 +11,36 @@ public class Territory {
 	private int nUnits;
 	private ArrayList<Territory> adjacentTerritories;
 	
+	public double x, y;
+	
 
-	public Territory(ArrayList<Territory> adjacentTerritories) {
-		this.owner = null;
+	public Territory(double x, double y) {
+		this.x = x;
+		this.y = y;
 		this.nUnits = 0;
-		this.adjacentTerritories = adjacentTerritories;
+		this.adjacentTerritories = new ArrayList<Territory>();
 	}
 	
-	public void SetOwner(Player newOwner) {
+	public void setOwner(Player newOwner) {
+		this.owner.removeTerritory(this);
+		newOwner.addTerritory(this);
 		this.owner = newOwner;
 	}
 	
-
-	public Territory() {
-		
-	}
-	
-	public void SetUnits(int units) {
+	public void setUnits(int units) {
 		this.nUnits = units;
 	}
 	
-	public Player GetOwner() {
+	public Player getOwner() {
 		return owner;
 	}
 	
-	public int GetNUnits() {
+	public int getNUnits() {
 		return nUnits;
 	}
 	
-	public ArrayList<Territory> GetAdjacentTerritories() {
+	public ArrayList<Territory> getAdjacentTerritories() {
 		return adjacentTerritories;
 	}
+
 }

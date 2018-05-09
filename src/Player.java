@@ -11,25 +11,50 @@ public abstract class Player {
 	private String name;
 	private Color color;
 	private Objective objective;
+	private ArrayList<Territory> territories;
 	private ArrayList<Card> cards;
+	private Integer reinforcements;
 
-	public Player(Objective objective) {
+	public Player(Objective objective, Integer reinforcements) {
 		this.objective = objective;
+		this.reinforcements = reinforcements;
+		this.territories = new ArrayList<Territory>();
 	}
-	
-	public abstract Action GetAction();
-	
-	public String GetName() {
+
+	public abstract Action getAction();
+	public abstract void placeSingleReinforcement(Board board);
+
+	public String getName() {
 		return name;
 	}
-	
-	public Color GetColor() {
+
+	public Color getColor() {
 		return color;
 	}
 
-	public ArrayList<Card> GetCards() {
+	public ArrayList<Card> getCards() {
 		return cards;
 	}
 
+	public Objective getObjective() {
+		return objective;
+	}
 
+	public Integer getReinforcements(){
+		return reinforcements;
+	}
+
+	public void setReinforcements(Integer nr){
+		this.reinforcements = nr;
+	}
+
+	public ArrayList<Territory> getTerritories() { return this.territories; }
+
+	public void removeTerritory(Territory t) {
+		territories.remove(t);
+	}
+
+	public void addTerritory(Territory t) {
+		territories.add(t);
+	}
 }

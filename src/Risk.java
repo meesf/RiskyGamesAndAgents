@@ -1,6 +1,9 @@
 import sun.rmi.transport.ObjectTable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * This class contains the main() method. This class is the bridge between the visual presentation of 
@@ -15,47 +18,72 @@ public class Risk {
 	private Board board;
 	private Player currentPlayer;
 	private RiskVisual visuals;
-
+	private Integer nrOfStartingUnits;
 
 	public static void main(String[] args) {
-		Risk risk = new Risk(args);
-		risk.Run();
+
+		Risk risk = new Risk();
+		risk.run();
 		System.out.println("Game is won by a player!");
 	}
 
-	public Risk(String[] args){
-		InitializeGame(args);
+	public Risk(){
+		initializeGame();
 	}
 
-	public void Run(){
-		while (!Finished()) {
-			PlayTurn();
-			visuals.Update();
+	public void run(){
+		while (!finished()) {
+			playTurn();
 		}
 	}
 
-	public void InitializeGame(String[] args) {
+	public void initializeGame() {
         visuals = new RiskVisual();
-        players = new ArrayList<Player>();
-        for(int i = 0; i < Integer.parseInt(args[0]); i++){
-            Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-            Bot player = new Bot(objective);
-            players.add(player);
-        }
-        currentPlayer = players.get(0);
-        board = new Board();
-        System.out.println(players);
+		board = new Board();
+        initializePlayers();
+        Integer currentPlayerIndex = divideTerritories();
+		nrOfStartingUnits = 30;
 	}
 
-	public void PlayTurn() {
-
+	public void initializePlayers(){
+		players = new ArrayList<Player>();
+		//TODO deciding number of startingUnits using number of players and evt. number territorries
+		for(int i = 0; i < 4; i++){
+			Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
+			Bot player = new Bot(objective, nrOfStartingUnits);
+			players.add(player);
+		}
+		currentPlayer = players.get(0);
 	}
 
+	//Divide players randomly over territories
+	public Integer divideTerritories(){
+		Collections.shuffle(board.getTerritories());
+		int player = 0;
+		for(Territory territory : board.getTerritories()){
+			territory.setOwner(players.get(player % players.size()));
+			territory.setUnits(1);
+			territory.getOwner().setReinforcements(territory.getOwner().getReinforcements() - 1);
+		}
+		return player;
+	}
+
+	public void initialPlaceReinforcements(Integer currentPlayerIndex){
+		int player = currentPlayerIndex;
+		for(int i = 0; i < (players.size() * nrOfStartingUnits) - board.getTerritories().size() ; i++){
+
+		}
+	}
+
+
+	public void playTurn() {
+
+	}
 
 	/**
 	 * Returns true if there is a winner.
 	 */
-	public boolean Finished() {
+	public boolean finished() {
 		if (board.GetWinner() == null) {
 			return false;
 		}

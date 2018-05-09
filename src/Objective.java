@@ -8,4 +8,8 @@ public class Objective {
     public Objective(type type){
         this.type = type;
     }
+
+    public Objective.type getType() {
+        return type;
+    }
 }
