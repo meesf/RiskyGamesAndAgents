@@ -20,7 +20,7 @@ public class Risk {
 		risk.Run();
 		// TODO: Let players initialize the board. 
 		
-										// This can be achieved by separating PlayTurn into different methods.
+		// This can be achieved by separating PlayTurn into different methods.
 		
 		System.out.println("Game is won by a player!");
 	}
@@ -46,7 +46,6 @@ public class Risk {
 	public void PlayTurn() {
 
 	}
-
 
 	/**
 	 * Returns true if there is a winner.
