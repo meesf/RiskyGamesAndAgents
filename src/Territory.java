@@ -10,6 +10,7 @@ public class Territory {
 	private Player owner;
 	private int nUnits;
 	private ArrayList<Territory> adjacentTerritories;
+	private String name;
 	
 	public double x, y;
 	
@@ -17,15 +18,20 @@ public class Territory {
 		this.owner = newOwner;
 	}
 
-	public Territory(double x, double y) {
+	public Territory(String name, double x, double y) {
 		this.x = x;
 		this.y = y;
+		this.name = name;
 		this.nUnits = 0;
 		this.adjacentTerritories = new ArrayList<Territory>();
 	}
 	
 	public void SetUnits(int units) {
 		this.nUnits = units;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	public Player GetOwner() {
