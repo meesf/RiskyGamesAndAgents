@@ -3,25 +3,19 @@ import java.util.Random;
 
 public class Bot extends Player{
 
-    public Bot(Objective o, Integer reinforcements){
-        super(o, reinforcements);
+    public Bot(Objective o, Integer reinforcements, String name){
+        super(o, reinforcements, name);
     }
     @Override
-    public Action GetAction() {
+    public Action getAction() {
         return null;
     }
 
     @Override
     public void placeSingleReinforcement(Board board) {
-        ArrayList<Territory> ownTerritories = new ArrayList<Territory>();
-        for(Territory ter : board.getTerritories()) {
-            if(ter.getOwner().equals(this)) {
-                ownTerritories.add(ter);
-            }
-        }
         Random rand = new Random();
-        Territory randomTer = ownTerritories.get(rand.nextInt(ownTerritories.size()));
-        randomTer.setUnits();
-
+        Territory randomTer = territories.get(rand.nextInt(territories.size()));
+        randomTer.setUnits(randomTer.getNUnits() + 1);
+        reinforcements--;
     }
 }

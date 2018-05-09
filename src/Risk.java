@@ -34,44 +34,55 @@ public class Risk {
 	public void run(){
 		while (!finished()) {
 			playTurn();
+			visuals.update();
 		}
 	}
 
 	public void initializeGame() {
+		System.out.println("Initializing game");
         visuals = new RiskVisual();
 		board = new Board();
+		nrOfStartingUnits = 30;
         initializePlayers();
         Integer currentPlayerIndex = divideTerritories();
-		nrOfStartingUnits = 30;
+		initialPlaceReinforcements(currentPlayerIndex);
+		System.out.println(board.toString());
+		System.out.println(players);
+
 	}
 
-	public void initializePlayers(){
+	public void initializePlayers() {
+		System.out.println("Initializing players");
 		players = new ArrayList<Player>();
 		//TODO deciding number of startingUnits using number of players and evt. number territorries
-		for(int i = 0; i < 4; i++){
+		for (int i = 0; i < 4; i++) {
 			Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-			Bot player = new Bot(objective, nrOfStartingUnits);
+			Bot player = new Bot(objective, nrOfStartingUnits, "player" + i);
 			players.add(player);
 		}
-		currentPlayer = players.get(0);
 	}
 
 	//Divide players randomly over territories
 	public Integer divideTerritories(){
+		System.out.println("Dividing territories");
 		Collections.shuffle(board.getTerritories());
 		int player = 0;
 		for(Territory territory : board.getTerritories()){
 			territory.setOwner(players.get(player % players.size()));
 			territory.setUnits(1);
 			territory.getOwner().setReinforcements(territory.getOwner().getReinforcements() - 1);
+			player++;
 		}
-		return player;
+		System.out.println(player % players.size());
+		return player % players.size();
 	}
 
 	public void initialPlaceReinforcements(Integer currentPlayerIndex){
+		System.out.println("Placing initial reinforcements");
 		int player = currentPlayerIndex;
 		for(int i = 0; i < (players.size() * nrOfStartingUnits) - board.getTerritories().size() ; i++){
-
+			players.get(player % players.size()).placeSingleReinforcement(board);
+			player++;
 		}
 	}
 

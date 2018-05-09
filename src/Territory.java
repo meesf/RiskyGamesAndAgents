@@ -22,7 +22,12 @@ public class Territory {
 	}
 	
 	public void setOwner(Player newOwner) {
-		this.owner.removeTerritory(this);
+
+		if(this.owner != null){
+			this.owner.removeTerritory(this);
+
+		}
+		System.out.println(" new: " + newOwner.toString());
 		newOwner.addTerritory(this);
 		this.owner = newOwner;
 	}
@@ -38,9 +43,18 @@ public class Territory {
 	public int getNUnits() {
 		return nUnits;
 	}
+
+	public void addAdjacentTerritory(Territory t) {
+		this.adjacentTerritories.add(t);
+	}
 	
 	public ArrayList<Territory> getAdjacentTerritories() {
 		return adjacentTerritories;
+	}
+
+	@Override
+	public String toString(){
+		return "owner: " + owner.toString() + " x,y: " + x + "," + y + " nrOfUnits: " + nUnits;
 	}
 
 }

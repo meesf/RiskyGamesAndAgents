@@ -43,6 +43,30 @@ public class Board {
 		con3.addTerritory(ter7);
 		con3.addTerritory(ter8);
 		con3.addTerritory(ter9);
+		ter1.addAdjacentTerritory(ter2);
+		ter1.addAdjacentTerritory(ter3);
+		ter1.addAdjacentTerritory(ter8);
+		ter2.addAdjacentTerritory(ter1);
+		ter2.addAdjacentTerritory(ter3);
+		ter3.addAdjacentTerritory(ter1);
+		ter3.addAdjacentTerritory(ter2);
+		ter3.addAdjacentTerritory(ter4);
+		ter4.addAdjacentTerritory(ter3);
+		ter4.addAdjacentTerritory(ter5);
+		ter4.addAdjacentTerritory(ter6);
+		ter5.addAdjacentTerritory(ter6);
+		ter5.addAdjacentTerritory(ter4);
+		ter5.addAdjacentTerritory(ter9);
+		ter6.addAdjacentTerritory(ter4);
+		ter6.addAdjacentTerritory(ter5);
+		ter7.addAdjacentTerritory(ter8);
+		ter7.addAdjacentTerritory(ter9);
+		ter8.addAdjacentTerritory(ter1);
+		ter8.addAdjacentTerritory(ter9);
+		ter8.addAdjacentTerritory(ter7);
+		ter9.addAdjacentTerritory(ter7);
+		ter9.addAdjacentTerritory(ter8);
+		ter9.addAdjacentTerritory(ter5);
 		continents.add(con1);
 		continents.add(con2);
 		continents.add(con3);
@@ -60,7 +84,7 @@ public class Board {
    * @return boolean if the action succeeded, in other words if the action was possible and has been executed.
 	 */
 	public void AddUnits(Territory territory, int number) {
-		territory.SetUnits(territory.GetNUnits() + number);
+		territory.setUnits(territory.getNUnits() + number);
 	}
 	
 	/**
@@ -147,6 +171,16 @@ public class Board {
 
 	public ArrayList<Territory> getTerritories(){
 		return territories;
+	}
+
+	@Override
+	public String toString(){
+		String result = "";
+		for(Territory territory : territories){
+			result += territory.toString() + '\n';
+		}
+
+		return result;
 	}
 
 }

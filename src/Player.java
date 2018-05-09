@@ -8,16 +8,17 @@ import java.awt.Color;
  * @date 4/5/2018
  */
 public abstract class Player {
-	private String name;
-	private Color color;
-	private Objective objective;
-	private ArrayList<Territory> territories;
-	private ArrayList<Card> cards;
-	private Integer reinforcements;
+	protected String name;
+	protected Color color;
+	protected Objective objective;
+	protected ArrayList<Territory> territories;
+	protected ArrayList<Card> cards;
+	protected Integer reinforcements;
 
-	public Player(Objective objective, Integer reinforcements) {
+	public Player(Objective objective, Integer reinforcements, String name) {
 		this.objective = objective;
 		this.reinforcements = reinforcements;
+		this.name = name;
 		this.territories = new ArrayList<Territory>();
 	}
 
@@ -57,4 +58,10 @@ public abstract class Player {
 	public void addTerritory(Territory t) {
 		territories.add(t);
 	}
+
+	@Override
+	public String toString(){
+		return name;
+	}
+
 }
