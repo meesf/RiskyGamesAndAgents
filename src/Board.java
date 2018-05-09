@@ -11,6 +11,7 @@ public class Board {
 	private ArrayList<Continent> continents;
 	private ArrayList<Territory> territories;
 	
+
 	private List<Card> drawPile;
 	private List<Card> discardPile;
 	
@@ -21,13 +22,21 @@ public class Board {
 		this.continents = continents;
 		this.territories = territories;
 		this.goldenCavalry = 4;
+	
+	public Board() {
+		
 	}
 	
 	/**
 	 * Add the given amount of units to the given territory.
+   * @return boolean if the action succeeded, in other words if the action was possible and has been executed.
 	 */
 	public void AddUnits(Territory territory, int number) {
 		territory.SetUnits(territory.GetNUnits() + number);
+	 
+	public boolean AddUnits(Territory territory, int number) {
+		return false;
+
 	}
 	
 	/**
@@ -45,6 +54,7 @@ public class Board {
 		return 0;
 	}
 	
+
 	/**
 	 * Move the golden cavalry one step forward.
 	 */
@@ -98,6 +108,7 @@ public class Board {
 		return null;
 	}
 	
+
 	public ArrayList<Continent> GetContinents() {
 		return continents;
 	}
@@ -105,7 +116,7 @@ public class Board {
 	public ArrayList<Territory> GetTerritories() {
 		return territories;
 	}
-	
+
 	public List<Card> GetDrawPile() {
 		return drawPile;
 	}
@@ -113,4 +124,5 @@ public class Board {
 	public int GetGoldenCavalry() {
 		return goldenCavalry;
 	}
+
 }

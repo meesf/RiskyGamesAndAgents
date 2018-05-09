@@ -50,4 +50,8 @@ public class RiskPhysics {
 	public Player GetCurrentPlayer() {
 		return currentPlayer;
 	}
+
+	public RiskPhysics() {
+		
+	}
 }

@@ -11,6 +11,7 @@ public class Territory {
 	private int nUnits;
 	private ArrayList<Territory> adjacentTerritories;
 	
+
 	public Territory(ArrayList<Territory> adjacentTerritories) {
 		this.owner = null;
 		this.nUnits = 0;
@@ -21,7 +22,12 @@ public class Territory {
 		this.owner = newOwner;
 	}
 	
-	public void SetUnits(int units) {
+
+	public Territory() {
+		
+	}
+	
+	public void Set_Units(int units) {
 		this.nUnits = units;
 	}
 	
