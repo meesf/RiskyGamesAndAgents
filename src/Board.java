@@ -9,8 +9,6 @@ import java.util.ArrayList;
  */
 public class Board {
 	private ArrayList<Continent> continents;
-	private ArrayList<Territory> territories;
-	
 
 	private List<Card> drawPile;
 	private List<Card> discardPile;
@@ -18,14 +16,33 @@ public class Board {
 	private int goldenCavalry;
 	
 	
-	public Board(ArrayList<Continent> continents, ArrayList<Territory> territories) {
-		this.continents = continents;
-		this.territories = territories;
-		this.goldenCavalry = 4;
-	}
-		
 	public Board() {
-		
+		this.goldenCavalry = 4;
+	
+		Territory ter1 = new Territory(0.1,0.8);
+		Territory ter2 = new Territory(0.2,0.8);
+		Territory ter3 = new Territory(0.15,0.7);
+		Territory ter4 = new Territory(0.3,0.3);
+		Territory ter5 = new Territory(0.4,0.3);
+		Territory ter6 = new Territory(0.315,0.2);
+		Territory ter7 = new Territory(0.6,0.8);
+		Territory ter8 = new Territory(0.7,0.8);
+		Territory ter9 = new Territory(0.615,0.7);
+		Continent con1 = new Continent();
+		Continent con2 = new Continent();
+		Continent con3 = new Continent();
+		con1.addTerritory(ter1);
+		con1.addTerritory(ter2);
+		con1.addTerritory(ter3);
+		con2.addTerritory(ter4);
+		con2.addTerritory(ter5);
+		con2.addTerritory(ter6);
+		con3.addTerritory(ter7);
+		con3.addTerritory(ter8);
+		con3.addTerritory(ter9);
+		continents.add(con1);
+		continents.add(con2);
+		continents.add(con3);
 	}
 	
 	/**
@@ -108,10 +125,6 @@ public class Board {
 
 	public ArrayList<Continent> GetContinents() {
 		return continents;
-	}
-	
-	public ArrayList<Territory> GetTerritories() {
-		return territories;
 	}
 
 	public List<Card> GetDrawPile() {

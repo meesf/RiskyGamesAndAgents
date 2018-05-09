@@ -11,6 +11,8 @@ public class Territory {
 	private int nUnits;
 	private ArrayList<Territory> adjacentTerritories;
 	
+	public double x, y;
+	
 
 	public Territory(ArrayList<Territory> adjacentTerritories) {
 		this.owner = null;
@@ -23,8 +25,9 @@ public class Territory {
 	}
 	
 
-	public Territory() {
-		
+	public Territory(double x, double y) {
+		this.x = x;
+		this.y = y;
 	}
 	
 	public void SetUnits(int units) {

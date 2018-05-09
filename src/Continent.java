@@ -28,4 +28,8 @@ public class Continent {
 	public int GetNReinforcements() {
 		return nReinforcements;
 	}
+	
+	public void addTerritory(Territory ter) {
+		members.add(ter);
+	}
 }
