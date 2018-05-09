@@ -1,1 +1,6 @@
-/bin/
+RiskyGamesAndAgents.iml
+.classpath
+.project
+
+out/
+bin/
