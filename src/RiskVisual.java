@@ -50,6 +50,7 @@ public class RiskVisual extends JFrame{
 				g.fillOval(centerX - radii / 2, centerY - radii / 2, radii, radii);
 				g.setColor(Color.BLACK);
 				g.drawString(t.getName(), centerX, centerY);
+				g.drawString(Integer.toString(t.getNUnits()), centerX, centerY + 10);
 				for (Territory adjacent : t.getAdjacentTerritories()) {
 					g.setColor(Color.BLACK);
 					if (t.getName()=="Alaska" && adjacent.getName() == "Kamchatka") {

@@ -38,7 +38,7 @@ public class Territory {
 		return owner;
 	}
 	
-	public int GetNUnits() {
+	public int getNUnits() {
 		return nUnits;
 	}
 

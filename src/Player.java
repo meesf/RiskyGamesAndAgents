@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.awt.Color;
 
 /**
@@ -15,7 +16,8 @@ public abstract class Player {
 	private ArrayList<Card> cards;
 
 	public Player() {
-		
+		Random r = new Random();
+		this.color = new Color(r.nextFloat()*0.8f+0.2f,r.nextFloat()*0.8f+0.2f,r.nextFloat()*0.8f+0.2f);
 	}
 	
 	public abstract Action GetAction();
