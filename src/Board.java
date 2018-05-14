@@ -267,10 +267,6 @@ public class Board {
 	/**
 	 * If there is a winner in the current state, return the winner.
 	 */
-	public Player GetWinner() {
-		return null;
-	}
-	
 
 	public ArrayList<Continent> getContinents() {
 		return continents;
