@@ -27,7 +27,6 @@ public class Risk {
 		random = new Random(111);
 		Risk risk = new Risk();
 		risk.run();
-		System.out.println("Game is won by a player!");
 	}
 
 	public Risk(){
@@ -35,41 +34,44 @@ public class Risk {
 	}
 
 	public void run(){
-		long targetFrameDuration = (long) (1);
+		long targetFrameDuration = (long) (0.1);
 		long frameDuration = 1000;
 		long lastFrameTime = System.currentTimeMillis();
 		while (!finished()) {
+			visuals.update();
 			frameDuration = System.currentTimeMillis() - lastFrameTime;
 			if (frameDuration < targetFrameDuration) {
-				try {
-					Thread.sleep(targetFrameDuration - frameDuration);
-				} catch (InterruptedException e) {
-					System.exit(0);
-				}
+//				try {
+//					//Thread.sleep(targetFrameDuration - frameDuration);
+//				} catch (InterruptedException e) {
+//					System.exit(0);
+//				}
 			}
 			lastFrameTime = System.currentTimeMillis();
 
 			System.out.println("Current Player: " + currentPlayer.toString());
 			Integer nrOfReinforcements = calculateReinforcements();
 			currentPlayer.setReinforcements(currentPlayer.getReinforcements() + nrOfReinforcements);
-			visuals.update();
 			currentPlayer.turnInCards(board);
-			visuals.update();
 			while(currentPlayer.getReinforcements() != 0){
+				System.out.println("place single reinforecements " + currentPlayer.getName());
 				currentPlayer.placeSingleReinforcement(board);
-				visuals.update();
 			}
 			CombatMove combatMove;
 			while((combatMove = currentPlayer.getCombatMove()) != null){
 				performCombatMove(combatMove);
 			}
 
-			nextCurrentPlayer();// Possibly even more updates throughout the turn...
+			nextCurrentPlayer();
 		}
+		System.out.println(players.get(0) + " has won!");
+
 	}
 
 	private void nextCurrentPlayer(){
 		currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+		System.out.println("next current player set: " + currentPlayer);
+
 	}
 
 	private void performCombatMove(CombatMove combatMove){
@@ -112,13 +114,16 @@ public class Risk {
 
 		//Update number of units on both territories and new owner
 		if(combatMove.getDefendingTerritory().getNUnits() == 0){
+			Player defender = combatMove.getDefendingTerritory().getOwner();
 			System.out.println(currentPlayer + " conquered " + combatMove.getDefendingTerritory().getName());
 			combatMove.getDefendingTerritory().setOwner(currentPlayer);
 			int transferredUnits = combatMove.getAttackingTerritory().getNUnits() - 1;
 			combatMove.getDefendingTerritory().setUnits(transferredUnits);
 			combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredUnits);
-			if(isPlayerAlive(combatMove.getDefendingTerritory().getOwner())){
-				players.remove(combatMove.getDefendingTerritory().getOwner());
+			//System.out.println("territories of player: " + combatMove.getDefendingTerritory().getOwner().getTerritories());
+			if(isPlayerDead(defender)){
+				System.out.println("removed player: " + combatMove.getDefendingTerritory().getOwner());
+				players.remove(defender);
 			}
 		}
 
@@ -212,7 +217,7 @@ public class Risk {
 		return this.board;
 	}
 
-	public Boolean isPlayerAlive(Player player){
+	public Boolean isPlayerDead(Player player){
 		return player.getTerritories().size() == 0;
 	}
 	
@@ -220,9 +225,6 @@ public class Risk {
 	 * Returns true if there is a winner.
 	 */
 	private boolean finished() {
-		if (board.GetWinner() == null) {
-			return false;
-		}
-		return true;
+		return players.size() == 1;
 	}
 }
