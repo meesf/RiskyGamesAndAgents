@@ -3,7 +3,6 @@ public class CombatMove {
     private Integer attackingUnits, defendingUnits;
 
     public CombatMove(){
-
     }
 
     public Territory getAttackingTerritory() {

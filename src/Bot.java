@@ -55,7 +55,7 @@ public class Bot extends Player{
     public CombatMove getCombatMove() {
         Random r = new Random();
         if(r.nextInt(10) > 2){
-            // retrurn randm attack
+            // return random attack
             CombatMove combatMove = new CombatMove();
 
             Collections.shuffle(territories);
@@ -66,11 +66,15 @@ public class Bot extends Player{
                         if (!territories.contains(dt)) {
                             combatMove.setDefendingTerritory(dt);
                             combatMove.setAttackingTerritory(at);
-                            break;
+                            combatMove.setAttackingUnits(Integer.min(3,at.getNUnits()));
+                            combatMove.setDefendingUnits(Integer.min(2,dt.getNUnits()));
+                            return combatMove;
                         }
                     }
                 }
-                if(combatMove.getAttackingTerritory() != null) { break; }
+//                if(combatMove.getAttackingTerritory() != null) {
+//                    return combatMove;
+//                }
             }
 
 

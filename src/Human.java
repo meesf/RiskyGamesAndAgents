@@ -13,4 +13,9 @@ public class Human extends Player{
     public void turnInCards(Board board) {
 
     }
+
+    @Override
+    public CombatMove getCombatMove() {
+        return null;
+    }
 }

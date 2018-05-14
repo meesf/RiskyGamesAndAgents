@@ -2,9 +2,7 @@ import com.sun.javafx.image.IntPixelGetter;
 import sun.rmi.transport.ObjectTable;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * This class contains the main() method. This class is the bridge between the visual presentation of 
@@ -44,12 +42,57 @@ public class Risk {
 				visuals.update();
 			}
 			CombatMove combatMove;
-			while((combatMove = currentPlayer.getCombatMove()) == null){
-
+			while((combatMove = currentPlayer.getCombatMove()) != null){
+				performCombatMove(combatMove);
 			}
+
+			nextCurrentPlayer();
 
 		}
 	}
+
+	private void nextCurrentPlayer(){
+		currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+	}
+
+	private void performCombatMove(CombatMove combatMove){
+		Random r = new Random();
+		ArrayList<Integer> attackThrows = new ArrayList<Integer>();
+		ArrayList<Integer> defenseThrows = new ArrayList<Integer>();
+
+		//Attacker throws dices
+		for(int i = 0; i < combatMove.getAttackingUnits(); i++){
+			int value = r.nextInt(6) + 1;
+			attackThrows.add(value);
+		}
+
+		//Defender throws dices
+		for(int i = 0; i < combatMove.getDefendingUnits(); i++){
+			int value = r.nextInt(6) + 1;
+			defenseThrows.add(value);
+		}
+
+		//Determining the losses of both sides and changes those values
+		int attackLoss = 0, defenseLoss = 0;
+
+		if(Collections.max(attackThrows) > Collections.max(defenseThrows)){
+			defenseLoss++;
+		}else{
+			attackLoss++;
+		}
+
+		attackThrows.remove(Collections.max(attackThrows));
+		if(combatMove.getDefendingUnits() > 1 && combatMove.getAttackingUnits() > 1 && Collections.max(attackThrows) > Collections.min(defenseThrows)){
+			defenseLoss++;
+		}else{
+			attackLoss++;
+		}
+
+		combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - attackLoss);
+		combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getNUnits() - defenseLoss);
+
+	}
+
 	//TODO: update current player
 	private Integer calculateReinforcements(){
 		Integer reinforcements = 0;
