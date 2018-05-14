@@ -27,7 +27,6 @@ public class Territory {
 			this.owner.removeTerritory(this);
 
 		}
-		System.out.println(" new: " + newOwner.toString());
 		newOwner.addTerritory(this);
 		this.owner = newOwner;
 	}

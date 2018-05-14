@@ -13,6 +13,8 @@ import java.util.*;
  */
 public class Risk {
 
+	public static Random random;
+
 	private ArrayList<Player> players;
 	private Board board;
 	private Player currentPlayer;
@@ -20,7 +22,7 @@ public class Risk {
 	private Integer nrOfStartingUnits;
 
 	public static void main(String[] args) {
-
+		random = new Random(111);
 		Risk risk = new Risk();
 		risk.run();
 		System.out.println("Game is won by a player!");
@@ -32,6 +34,7 @@ public class Risk {
 
 	private void run(){
 		while (!finished()) {
+			System.out.println("Current Player: " + currentPlayer.toString());
 			Integer nrOfReinforcements = calculateReinforcements();
 			currentPlayer.setReinforcements(currentPlayer.getReinforcements() + nrOfReinforcements);
 			visuals.update();
@@ -56,19 +59,19 @@ public class Risk {
 	}
 
 	private void performCombatMove(CombatMove combatMove){
-		Random r = new Random();
+		System.out.println("Performing combatMove: " + combatMove.toString());
 		ArrayList<Integer> attackThrows = new ArrayList<Integer>();
 		ArrayList<Integer> defenseThrows = new ArrayList<Integer>();
 
 		//Attacker throws dices
 		for(int i = 0; i < combatMove.getAttackingUnits(); i++){
-			int value = r.nextInt(6) + 1;
+			int value = Risk.random.nextInt(6) + 1;
 			attackThrows.add(value);
 		}
 
 		//Defender throws dices
 		for(int i = 0; i < combatMove.getDefendingUnits(); i++){
-			int value = r.nextInt(6) + 1;
+			int value = Risk.random.nextInt(6) + 1;
 			defenseThrows.add(value);
 		}
 
@@ -91,10 +94,18 @@ public class Risk {
 		combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - attackLoss);
 		combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getNUnits() - defenseLoss);
 
+		//Update number of units on both territories and new owner
+		if(combatMove.getDefendingTerritory().getNUnits() == 0){
+			System.out.println(currentPlayer + " conquered");
+			combatMove.getDefendingTerritory().setOwner(currentPlayer);
+			int transferredUnits = combatMove.getAttackingTerritory().getNUnits() - 1;
+			combatMove.getDefendingTerritory().setUnits(transferredUnits);
+			combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredUnits);
+		}
 	}
 
-	//TODO: update current player
 	private Integer calculateReinforcements(){
+		System.out.println("Calculate reinforcements");
 		Integer reinforcements = 0;
 		reinforcements += Integer.max(3, currentPlayer.territories.size() / 3);
 		reinforcements += calculateContinentBonus();
@@ -102,6 +113,7 @@ public class Risk {
 	}
 
 	private Integer calculateContinentBonus(){
+		System.out.println("Calculating continent Bonus");
 		int bonus = 0;
 		for(Continent continent : board.getContinents()){
 			boolean controlsContinent = true;
@@ -118,8 +130,6 @@ public class Risk {
 		return bonus;
 	}
 
-
-
 	private void initializeGame() {
 		System.out.println("Initializing game");
         visuals = new RiskVisual();
@@ -128,9 +138,11 @@ public class Risk {
         initializePlayers();
         Integer currentPlayerIndex = divideTerritories();
 		initialPlaceReinforcements(currentPlayerIndex);
-		System.out.println(board.toString());
-		System.out.println(players);
+		currentPlayer = players.get(0);
 
+		for(int i = 0; i < players.size(); i++){
+			System.out.println(players.get(i).toString());
+		}
 	}
 
 	private void initializePlayers() {
@@ -155,7 +167,6 @@ public class Risk {
 			territory.getOwner().setReinforcements(territory.getOwner().getReinforcements() - 1);
 			player++;
 		}
-		System.out.println(player % players.size());
 		return player % players.size();
 	}
 
@@ -166,11 +177,6 @@ public class Risk {
 			players.get(player % players.size()).placeSingleReinforcement(board);
 			player++;
 		}
-	}
-
-
-	private void playTurn() {
-
 	}
 
 	/**

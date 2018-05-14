@@ -36,4 +36,9 @@ public class CombatMove {
     public void setDefendingUnits(Integer defendingUnits) {
         this.defendingUnits = defendingUnits;
     }
+
+    @Override
+    public String toString(){
+        return "AttackingTerritory: " + attackingTerritory.toString() + " DefendingTerritory: " + defendingTerritory.toString();
+    }
 }

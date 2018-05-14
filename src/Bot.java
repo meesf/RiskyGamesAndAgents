@@ -10,8 +10,8 @@ public class Bot extends Player{
 
     @Override
     public void placeSingleReinforcement(Board board) {
-        Random rand = new Random();
-        Territory randomTer = territories.get(rand.nextInt(territories.size()));
+
+        Territory randomTer = territories.get(Risk.random.nextInt(territories.size()));
         randomTer.setUnits(randomTer.getNUnits() + 1);
         reinforcements--;
     }
@@ -53,8 +53,7 @@ public class Bot extends Player{
 
     @Override
     public CombatMove getCombatMove() {
-        Random r = new Random();
-        if(r.nextInt(10) > 2){
+        if(Risk.random.nextInt(10) > 2){
             // return random attack
             CombatMove combatMove = new CombatMove();
 
@@ -72,22 +71,7 @@ public class Bot extends Player{
                         }
                     }
                 }
-//                if(combatMove.getAttackingTerritory() != null) {
-//                    return combatMove;
-//                }
             }
-
-
-//            while(combatMove.getAttackingTerritory() != null) {
-//                Territory at = territories.get(r.nextInt(territories.size()));
-//                Territory dt = at.getAdjacentTerritories().get(r.nextInt(at.getAdjacentTerritories().size()));
-//                if(dt.getOwner() != this) {
-//                    combatMove.setAttackingTerritory(at);
-//                    combatMove.setDefendingTerritory(dt);
-//                }
-//            }
-
-
         }
         return null;
     }
