@@ -210,7 +210,7 @@ public class Board {
    * @return boolean if the action succeeded, in other words if the action was possible and has been executed.
 	 */
 	public void AddUnits(Territory territory, int number) {
-		territory.SetUnits(territory.GetNUnits() + number);
+		territory.SetUnits(territory.getNUnits() + number);
 	}
 	
 	/**
