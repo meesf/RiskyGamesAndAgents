@@ -12,6 +12,7 @@ import javax.swing.JFrame;
  * @date 4/5/2018
  */
 public class RiskVisual extends JFrame{
+	private static final long serialVersionUID = 1L;
 
 	int width = 1920, height = 1080;
 	int continentRadius = 50;
