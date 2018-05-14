@@ -1,3 +1,4 @@
+import java.sql.Time;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +34,18 @@ public class Risk {
 	}
 
 	public void Run(){
+		long targetFrameDuration = (long) (1000/60.0);
+		long frameDuration = 1000;
+		long lastFrameTime = System.currentTimeMillis();
 		while (!Finished()) {
+			frameDuration = -(lastFrameTime - (lastFrameTime = System.currentTimeMillis() / 1000000000));
+			if (frameDuration > targetFrameDuration) {
+				try {
+					Thread.sleep(targetFrameDuration - frameDuration);
+				} catch (InterruptedException e) {
+					System.exit(0);
+				}
+			}
 			PlayTurn();
 			visuals.update();			// Possibly even more updates throughout the turn...
 		}
