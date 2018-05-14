@@ -72,10 +72,12 @@ public class Risk {
 	}
 
 	private void performCombatMove(CombatMove combatMove){
-		System.out.println("Performing combatMove: " + combatMove.toString());
+		System.out.println("Before performing combatMove: " + combatMove.toString());
 		ArrayList<Integer> attackThrows = new ArrayList<Integer>();
 		ArrayList<Integer> defenseThrows = new ArrayList<Integer>();
 
+		System.out.println("Attacking units: " + combatMove.getAttackingUnits());
+		System.out.println("Defense units: " + combatMove.getDefendingUnits());
 		//Attacker throws dices
 		for(int i = 0; i < combatMove.getAttackingUnits(); i++){
 			int value = Risk.random.nextInt(6) + 1;
@@ -100,7 +102,7 @@ public class Risk {
 		attackThrows.remove(Collections.max(attackThrows));
 		if(combatMove.getDefendingUnits() > 1 && combatMove.getAttackingUnits() > 1 && Collections.max(attackThrows) > Collections.min(defenseThrows)){
 			defenseLoss++;
-		}else{
+		}else if(combatMove.getDefendingUnits() > 1 && combatMove.getAttackingUnits() > 1){
 			attackLoss++;
 		}
 
@@ -109,12 +111,14 @@ public class Risk {
 
 		//Update number of units on both territories and new owner
 		if(combatMove.getDefendingTerritory().getNUnits() == 0){
-			System.out.println(currentPlayer + " conquered");
+			System.out.println(currentPlayer + " conquered " + combatMove.getDefendingTerritory().getName());
 			combatMove.getDefendingTerritory().setOwner(currentPlayer);
 			int transferredUnits = combatMove.getAttackingTerritory().getNUnits() - 1;
 			combatMove.getDefendingTerritory().setUnits(transferredUnits);
 			combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredUnits);
 		}
+
+		System.out.println("After performing combatMove: " + combatMove.toString());
 	}
 
 	private Integer calculateReinforcements(){
@@ -180,7 +184,7 @@ public class Risk {
 	//Divide players randomly over territories
 	private Integer divideTerritories(){
 		System.out.println("Dividing territories");
-		Collections.shuffle(board.getTerritories());
+		Collections.shuffle(board.getTerritories(), Risk.random);
 		int player = 0;
 		for(Territory territory : board.getTerritories()){
 			territory.setOwner(players.get(player % players.size()));
