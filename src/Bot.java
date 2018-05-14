@@ -8,6 +8,7 @@ public class Bot extends Player{
         super(o, reinforcements, name);
     }
 
+    //TODO: the placement is just random now,  this should be changed when we want to make it smarter
     @Override
     public void placeSingleReinforcement(Board board) {
         System.out.println(territories);
@@ -51,6 +52,7 @@ public class Bot extends Player{
         this.reinforcements += reinforcements;
     }
 
+    //TODO: deciding whether and which territories to use in an combat is random now, this should be changed when we want to make it smarter
     @Override
     public CombatMove getCombatMove() {
         int val = Risk.random.nextInt(10);

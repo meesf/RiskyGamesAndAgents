@@ -22,6 +22,7 @@ public class Risk {
 	private Player currentPlayer;
 	private RiskVisual visuals;
 	private Integer nrOfStartingUnits;
+	private boolean StopGame;
 
 	public static void main(String[] args) {
 		random = new Random(111);
@@ -60,12 +61,22 @@ public class Risk {
 			CombatMove combatMove;
 			while((combatMove = currentPlayer.getCombatMove()) != null){
 				performCombatMove(combatMove);
+				if(StopGame){
+					break;
+				}
 			}
 
 			nextCurrentPlayer();
 		}
 		System.out.println(players.get(0) + " has won!");
 
+	}
+
+	private boolean playerHasReachedObjective(Player player){
+		if(player.objective.getType() == Objective.type.TOTAL_DOMINATION){
+			return players.size() == 1;
+		}
+		return false;
 	}
 
 	private void nextCurrentPlayer(){
@@ -125,6 +136,7 @@ public class Risk {
 				System.out.println("removed player: " + combatMove.getDefendingTerritory().getOwner());
 				players.remove(defender);
 			}
+			StopGame = playerHasReachedObjective(currentPlayer);
 		}
 
 		System.out.println("After performing combatMove: " + combatMove.toString());
@@ -225,6 +237,6 @@ public class Risk {
 	 * Returns true if there is a winner.
 	 */
 	private boolean finished() {
-		return players.size() == 1;
+		return players.size() == 1 || StopGame;
 	}
 }
