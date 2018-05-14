@@ -53,7 +53,9 @@ public class Bot extends Player{
 
     @Override
     public CombatMove getCombatMove() {
-        if(Risk.random.nextInt(10) > 2){
+        int val = Risk.random.nextInt(10);
+        System.out.println("val: " + val);
+        if(val > 2){
             // return random attack
             CombatMove combatMove = new CombatMove();
 

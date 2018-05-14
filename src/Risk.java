@@ -100,7 +100,7 @@ public class Risk {
 		attackThrows.remove(Collections.max(attackThrows));
 		if(combatMove.getDefendingUnits() > 1 && combatMove.getAttackingUnits() > 1 && Collections.max(attackThrows) > Collections.min(defenseThrows)){
 			defenseLoss++;
-		}else{
+		}else if(combatMove.getDefendingUnits() > 1 && combatMove.getAttackingUnits() > 1){
 			attackLoss++;
 		}
 
@@ -109,7 +109,7 @@ public class Risk {
 
 		//Update number of units on both territories and new owner
 		if(combatMove.getDefendingTerritory().getNUnits() == 0){
-			System.out.println(currentPlayer + " conquered");
+			System.out.println(currentPlayer + " conquered " + combatMove.getDefendingTerritory().getName());
 			combatMove.getDefendingTerritory().setOwner(currentPlayer);
 			int transferredUnits = combatMove.getAttackingTerritory().getNUnits() - 1;
 			combatMove.getDefendingTerritory().setUnits(transferredUnits);
