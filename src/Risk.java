@@ -35,18 +35,19 @@ public class Risk {
 	}
 
 	public void run(){
-		long targetFrameDuration = (long) (1000/1000.0);
+		long targetFrameDuration = (long) (1);
 		long frameDuration = 1000;
 		long lastFrameTime = System.currentTimeMillis();
 		while (!finished()) {
-			frameDuration = -(lastFrameTime - (lastFrameTime = System.currentTimeMillis() / 1000));
-			if (frameDuration > targetFrameDuration) {
+			frameDuration = System.currentTimeMillis() - lastFrameTime;
+			if (frameDuration < targetFrameDuration) {
 				try {
 					Thread.sleep(targetFrameDuration - frameDuration);
 				} catch (InterruptedException e) {
 					System.exit(0);
 				}
 			}
+			lastFrameTime = System.currentTimeMillis();
 
 			System.out.println("Current Player: " + currentPlayer.toString());
 			Integer nrOfReinforcements = calculateReinforcements();
