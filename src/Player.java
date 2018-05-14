@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.awt.Color;
 
 /**
@@ -21,6 +22,7 @@ public abstract class Player {
 		this.name = name;
 		this.hand = new Hand();
 		this.territories = new ArrayList<Territory>();
+		this.color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f);
 	}
 
 	public abstract void placeSingleReinforcement(Board board);

@@ -2,3 +2,8 @@
 .idea/
 out/
 RiskyGamesAndAgents.iml
+.classpath
+.project
+
+out/
+bin/

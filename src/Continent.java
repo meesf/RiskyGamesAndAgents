@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * This class represents a continent in the game.
@@ -8,21 +10,32 @@ import java.util.ArrayList;
  */
 public class Continent {
 	private String name;
-	private ArrayList<Territory> members;
-
+	private ArrayList<Territory> territories;
+	private Color color;
+	
 	private int nReinforcements;			// Number of reinforcements received when a player owns the continent.
 
 	
-	public Continent() {
-		members = new ArrayList<Territory>();
+	public Continent(Color color) {
+		this.color = color;
+		territories = new ArrayList<Territory>();
+		Random rand = new Random();
 	}
 	
 	public String GetName() {
 		return name;
 	}
-	
+
 	public ArrayList<Territory> getMembers() {
-		return members;
+		return territories;
+	}
+
+	public Color getColor() {
+		return this.color;
+	}
+	
+	public ArrayList<Territory> getTerritories() {
+		return territories;
 	}
 	
 	public int getNReinforcements() {
@@ -30,6 +43,6 @@ public class Continent {
 	}
 	
 	public void addTerritory(Territory ter) {
-		members.add(ter);
+		territories.add(ter);
 	}
 }

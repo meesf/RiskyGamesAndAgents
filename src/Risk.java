@@ -3,6 +3,8 @@ import sun.rmi.transport.ObjectTable;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.sql.Time;
+import java.util.ArrayList;
 
 /**
  * This class contains the main() method. This class is the bridge between the visual presentation of 
@@ -32,8 +34,20 @@ public class Risk {
 		initializeGame();
 	}
 
-	private void run(){
+	public void run(){
+		long targetFrameDuration = (long) (1000/1.0);
+		long frameDuration = 1000;
+		long lastFrameTime = System.currentTimeMillis();
 		while (!finished()) {
+			frameDuration = -(lastFrameTime - (lastFrameTime = System.currentTimeMillis() / 1000000000));
+			if (frameDuration > targetFrameDuration) {
+				try {
+					Thread.sleep(targetFrameDuration - frameDuration);
+				} catch (InterruptedException e) {
+					System.exit(0);
+				}
+			}
+
 			System.out.println("Current Player: " + currentPlayer.toString());
 			Integer nrOfReinforcements = calculateReinforcements();
 			currentPlayer.setReinforcements(currentPlayer.getReinforcements() + nrOfReinforcements);
@@ -49,8 +63,7 @@ public class Risk {
 				performCombatMove(combatMove);
 			}
 
-			nextCurrentPlayer();
-
+			nextCurrentPlayer();// Possibly even more updates throughout the turn...
 		}
 	}
 
@@ -132,7 +145,7 @@ public class Risk {
 
 	private void initializeGame() {
 		System.out.println("Initializing game");
-        visuals = new RiskVisual();
+        visuals = new RiskVisual(this);
 		board = new Board();
 		nrOfStartingUnits = 30;
         initializePlayers();
@@ -179,6 +192,10 @@ public class Risk {
 		}
 	}
 
+	public Board getBoard() {
+		return this.board;
+	}
+	
 	/**
 	 * Returns true if there is a winner.
 	 */
