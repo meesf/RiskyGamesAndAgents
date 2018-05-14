@@ -38,9 +38,14 @@ public class RiskVisual extends JFrame{
 	    Graphics2D g = bufferedImage.createGraphics();
 
 		g.setColor(Color.WHITE);
+		drawMap(g);
 		
+		this.getContentPane().getGraphics().drawImage(bufferedImage, 0, 0, null);
+	}
+
+	private void drawMap(Graphics g) {
 		Color continentColor;
-		
+
 		for (Continent c : risk.getBoard().GetContinents()) {
 			continentColor = c.getColor();
 			for (Territory t : c.getTerritories()) {
@@ -63,7 +68,5 @@ public class RiskVisual extends JFrame{
 				}
 			}
 		}
-		
-		this.getContentPane().getGraphics().drawImage(bufferedImage, 0, 0, null);
 	}
 }
