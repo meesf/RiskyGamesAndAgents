@@ -1,4 +1,5 @@
 import java.util.List;
+import java.awt.Color;
 import java.util.ArrayList;
 
 /**
@@ -20,34 +21,34 @@ public class Board {
 		
 		this.goldenCavalry = 4;
 		
-		Continent northAmerica = new Continent();
+		Continent northAmerica = new Continent(new Color(1.0f,1.0f,0.0f));
 		continents.add(northAmerica);
-		Continent southAmerica = new Continent();
+		Continent southAmerica = new Continent(new Color(0.6f,0f,0f));
 		continents.add(southAmerica);
-		Continent europe = new Continent();
+		Continent europe = new Continent(new Color(0.33f,0f,1f));
 		continents.add(europe);
-		Continent asia = new Continent();
+		Continent asia = new Continent(new Color(0f,1f,0f));
 		continents.add(asia);
-		Continent africa = new Continent();
+		Continent africa = new Continent(new Color(1f,0.5f,0f));
 		continents.add(africa);
-		Continent australia = new Continent();
+		Continent australia = new Continent(new Color(1f,0.4f,0.55f));
 		continents.add(australia);
 		
-		Territory yakutsk = new Territory("Yakutsk",0.94,0.9);
+		Territory yakutsk = new Territory("Yakutsk",0.84,0.79);
 		asia.addTerritory(yakutsk);
-		Territory kamchatka = new Territory("Kamchatka", 0.99,0.89);
+		Territory kamchatka = new Territory("Kamchatka", 0.92,0.78);
 		asia.addTerritory(kamchatka);
-		Territory siberia = new Territory("Siberia", 0.9, 0.89);
+		Territory siberia = new Territory("Siberia", 0.72, 0.8);
 		asia.addTerritory(siberia);
-		Territory japan = new Territory("Japan", 1.0, 0.6);
+		Territory japan = new Territory("Japan", 0.9, 0.6);
 		asia.addTerritory(japan);
-		Territory irkutsk = new Territory("Irkutsk", 0.9, 0.77);
+		Territory irkutsk = new Territory("Irkutsk", 0.79, 0.70);
 		asia.addTerritory(irkutsk);
-		Territory mongolia = new Territory("Mongolia", 0.92, 0.65);
+		Territory mongolia = new Territory("Mongolia", 0.82, 0.62);
 		asia.addTerritory(mongolia);
-		Territory china = new Territory("China", 0.83, 0.6);
+		Territory china = new Territory("China", 0.75, 0.55);
 		asia.addTerritory(china);
-		Territory siam = new Territory("Siam", 0.89, 0.5);
+		Territory siam = new Territory("Siam", 0.80, 0.42);
 		asia.addTerritory(siam);
 		Territory indonesia = new Territory("Indonesia", 0.82, 0.3);
 		australia.addTerritory(indonesia);
@@ -107,16 +108,21 @@ public class Board {
 		africa.addTerritory(madagascar);
 		Territory ukraine = new Territory("Ukraine", 0.57, 0.68);
 		europe.addTerritory(ukraine);
-		Territory middleEast = new Territory("Middle East", 0.62, 0.66);
+		Territory middleEast = new Territory("Middle East", 0.60, 0.5);
 		asia.addTerritory(middleEast);
-		Territory afganistan = new Territory("Afganistan", 0.73, 0.75);
+		Territory afganistan = new Territory("Afganistan", 0.65, 0.59);
 		asia.addTerritory(afganistan);
-		Territory ural = new Territory("Ural", 0.78, 0.89);
+		Territory ural = new Territory("Ural", 0.67, 0.74);
 		asia.addTerritory(ural);
-		Territory india = new Territory("India", 0.77, 0.58);
+		Territory india = new Territory("India", 0.7, 0.48);
 		asia.addTerritory(india);
 		Territory westernEurope = new Territory("Western Europe", 0.44, 0.57);
 		europe.addTerritory(westernEurope);
+		makeEdge(siberia,china);
+		makeEdge(southernEurope,northAfrica);
+		makeEdge(westernEurope,northernEurope);
+		makeEdge(scandinavia,unitedKingdom);
+		makeEdge(centralUS, easternUS);
 		makeEdge(india, siam);
 		makeEdge(india, middleEast);
 		makeEdge(india, afganistan);

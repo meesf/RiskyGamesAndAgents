@@ -23,17 +23,11 @@ public class RiskVisual extends JFrame{
 	int width = 1920, height = 1080;
 	int radii = 50;
 	Risk risk;
-	Image image;
 	
 	public RiskVisual(Risk risk) {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.pack();
 		this.setSize(width,height);
-		try {                
-			image = ImageIO.read(new File("src/map.jpg"));
-	    } catch (IOException e) {
-	    	System.out.println("Haha I'm a map xd");
-	    }
 		this.setVisible(true);
 		this.risk = risk;
 	}
@@ -43,7 +37,6 @@ public class RiskVisual extends JFrame{
 	    Graphics2D g = bufferedImage.createGraphics();
 
 		g.setColor(Color.WHITE);
-		g.drawImage(image,0,0,width,height,null);
 		
 		Color continentColor;
 		

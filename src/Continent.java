@@ -16,12 +16,10 @@ public class Continent {
 	private int nReinforcements;			// Number of reinforcements received when a player owns the continent.
 
 	
-	public Continent() {
+	public Continent(Color color) {
+		this.color = color;
 		territories = new ArrayList<Territory>();
 		Random rand = new Random();
-		color = new Color((float) (rand.nextFloat()*0.5+0.5),
-				(float) (rand.nextFloat()*0.5+0.5), 
-				(float) (rand.nextFloat()*0.5+0.5));
 	}
 	
 	public String GetName() {
