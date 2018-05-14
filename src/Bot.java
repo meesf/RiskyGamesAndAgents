@@ -54,20 +54,19 @@ public class Bot extends Player{
     @Override
     public CombatMove getCombatMove() {
         int val = Risk.random.nextInt(10);
-        System.out.println("val: " + val);
         if(val > 2){
             // return random attack
             CombatMove combatMove = new CombatMove();
 
-            Collections.shuffle(territories);
+            Collections.shuffle(territories, Risk.random);
             for(Territory at : territories) {
                 if(at.getNUnits() > 1) {
-                    Collections.shuffle(at.getAdjacentTerritories());
+                    Collections.shuffle(at.getAdjacentTerritories(), Risk.random);
                     for (Territory dt : at.getAdjacentTerritories()) {
                         if (!territories.contains(dt)) {
                             combatMove.setDefendingTerritory(dt);
                             combatMove.setAttackingTerritory(at);
-                            combatMove.setAttackingUnits(Integer.min(3,at.getNUnits()));
+                            combatMove.setAttackingUnits(Integer.min(3,at.getNUnits() - 1));
                             combatMove.setDefendingUnits(Integer.min(2,dt.getNUnits()));
                             return combatMove;
                         }

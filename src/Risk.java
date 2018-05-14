@@ -1,4 +1,3 @@
-import com.sun.javafx.image.IntPixelGetter;
 import sun.rmi.transport.ObjectTable;
 
 import java.lang.reflect.Array;
@@ -39,7 +38,7 @@ public class Risk {
 		long frameDuration = 1000;
 		long lastFrameTime = System.currentTimeMillis();
 		while (!finished()) {
-			frameDuration = -(lastFrameTime - (lastFrameTime = System.currentTimeMillis() / 1000000000));
+			frameDuration = -(lastFrameTime - (lastFrameTime = System.currentTimeMillis() / 1000));
 			if (frameDuration > targetFrameDuration) {
 				try {
 					Thread.sleep(targetFrameDuration - frameDuration);
@@ -72,10 +71,12 @@ public class Risk {
 	}
 
 	private void performCombatMove(CombatMove combatMove){
-		System.out.println("Performing combatMove: " + combatMove.toString());
+		System.out.println("Before performing combatMove: " + combatMove.toString());
 		ArrayList<Integer> attackThrows = new ArrayList<Integer>();
 		ArrayList<Integer> defenseThrows = new ArrayList<Integer>();
 
+		System.out.println("Attacking units: " + combatMove.getAttackingUnits());
+		System.out.println("Defense units: " + combatMove.getDefendingUnits());
 		//Attacker throws dices
 		for(int i = 0; i < combatMove.getAttackingUnits(); i++){
 			int value = Risk.random.nextInt(6) + 1;
@@ -115,6 +116,8 @@ public class Risk {
 			combatMove.getDefendingTerritory().setUnits(transferredUnits);
 			combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredUnits);
 		}
+
+		System.out.println("After performing combatMove: " + combatMove.toString());
 	}
 
 	private Integer calculateReinforcements(){
@@ -158,6 +161,14 @@ public class Risk {
 		}
 	}
 
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+	
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
 	private void initializePlayers() {
 		System.out.println("Initializing players");
 		players = new ArrayList<Player>();
@@ -172,7 +183,7 @@ public class Risk {
 	//Divide players randomly over territories
 	private Integer divideTerritories(){
 		System.out.println("Dividing territories");
-		Collections.shuffle(board.getTerritories());
+		Collections.shuffle(board.getTerritories(), Risk.random);
 		int player = 0;
 		for(Territory territory : board.getTerritories()){
 			territory.setOwner(players.get(player % players.size()));
