@@ -67,6 +67,8 @@ public class RiskVisual extends JFrame{
 				int centerY = height - (int) (t.y * (double) height);
 				g.setColor(continentColor);
 				g.fillOval(centerX - radii / 2, centerY - radii / 2, radii, radii);
+				g.setColor(t.getOwner().getColor());
+				g.fillOval(centerX - radii * 4/5 / 2, centerY - radii * 4/5 / 2, radii * 4/5, radii * 4/5);
 				g.setColor(Color.BLACK);
 				g.drawString(t.getName(), centerX, centerY);
 				g.drawString(Integer.toString(t.getNUnits()), centerX, centerY + 10);
