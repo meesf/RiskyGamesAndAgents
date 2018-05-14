@@ -21,7 +21,8 @@ import javax.swing.JFrame;
 public class RiskVisual extends JFrame{
 
 	int width = 1920, height = 1080;
-	int radii = 50;
+	int continentRadius = 50;
+	int playerRadius = continentRadius * 3/4;
 	Risk risk;
 	
 	public RiskVisual(Risk risk) {
@@ -66,9 +67,15 @@ public class RiskVisual extends JFrame{
 				int centerX = (int) (t.x * (double) width);
 				int centerY = height - (int) (t.y * (double) height);
 				g.setColor(continentColor);
-				g.fillOval(centerX - radii / 2, centerY - radii / 2, radii, radii);
+				g.fillOval(centerX - continentRadius / 2,
+						centerY - continentRadius / 2,
+						continentRadius,
+						continentRadius);
 				g.setColor(t.getOwner().getColor());
-				g.fillOval(centerX - radii * 4/5 / 2, centerY - radii * 4/5 / 2, radii * 4/5, radii * 4/5);
+				g.fillOval(centerX - playerRadius / 2,
+						centerY - playerRadius / 2,
+						playerRadius,
+						playerRadius);
 				g.setColor(Color.BLACK);
 				g.drawString(t.getName(), centerX, centerY);
 				g.drawString(Integer.toString(t.getNUnits()), centerX, centerY + 10);
