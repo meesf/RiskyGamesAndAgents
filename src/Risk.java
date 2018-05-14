@@ -1,3 +1,4 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import sun.rmi.transport.ObjectTable;
 
 import java.lang.reflect.Array;
@@ -34,7 +35,7 @@ public class Risk {
 	}
 
 	public void run(){
-		long targetFrameDuration = (long) (1000/1.0);
+		long targetFrameDuration = (long) (1000/1000.0);
 		long frameDuration = 1000;
 		long lastFrameTime = System.currentTimeMillis();
 		while (!finished()) {
@@ -115,6 +116,9 @@ public class Risk {
 			int transferredUnits = combatMove.getAttackingTerritory().getNUnits() - 1;
 			combatMove.getDefendingTerritory().setUnits(transferredUnits);
 			combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredUnits);
+			if(isPlayerAlive(combatMove.getDefendingTerritory().getOwner())){
+				players.remove(combatMove.getDefendingTerritory().getOwner());
+			}
 		}
 
 		System.out.println("After performing combatMove: " + combatMove.toString());
@@ -205,6 +209,10 @@ public class Risk {
 
 	public Board getBoard() {
 		return this.board;
+	}
+
+	public Boolean isPlayerAlive(Player player){
+		return player.getTerritories().size() == 0;
 	}
 	
 	/**
