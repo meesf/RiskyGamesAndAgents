@@ -41,7 +41,6 @@ public class Risk {
 			frameDuration = System.currentTimeMillis() - lastFrameTime;
 			if (frameDuration < targetFrameDuration) {
 				try {
-					System.out.println("Waiting for "+ (targetFrameDuration - frameDuration));
 					Thread.sleep(targetFrameDuration - frameDuration);
 				} catch (InterruptedException e) {
 					System.exit(0);
