@@ -14,9 +14,6 @@ public class Territory {
 	
 	public double x, y;
 	
-	public void SetOwner(Player newOwner) {
-		this.owner = newOwner;
-	}
 
 	public Territory(String name, double x, double y) {
 		this.x = x;
@@ -26,15 +23,26 @@ public class Territory {
 		this.adjacentTerritories = new ArrayList<Territory>();
 	}
 	
-	public void SetUnits(int units) {
+	public void setOwner(Player newOwner) {
+
+		if(this.owner != null){
+			this.owner.removeTerritory(this);
+
+		}
+		newOwner.addTerritory(this);
+		this.owner = newOwner;
+	}
+	
+	public void setUnits(int units) {
 		this.nUnits = units;
 	}
 	
+
 	public String getName() {
 		return this.name;
 	}
 	
-	public Player GetOwner() {
+	public Player getOwner() {
 		return owner;
 	}
 	
@@ -49,4 +57,10 @@ public class Territory {
 	public ArrayList<Territory> getAdjacentTerritories() {
 		return adjacentTerritories;
 	}
+
+	@Override
+	public String toString(){
+		return "owner: " + owner.toString() + " x,y: " + x + "," + y + " nrOfUnits: " + nUnits;
+	}
+
 }

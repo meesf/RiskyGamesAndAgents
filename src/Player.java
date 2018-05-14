@@ -9,29 +9,62 @@ import java.awt.Color;
  * @date 4/5/2018
  */
 public abstract class Player {
-	private String name;
-	private Color color;
-	
+	protected String name;
+	protected Color color;
+	protected Objective objective;
+	protected ArrayList<Territory> territories;
+	protected Hand hand;
+	protected Integer reinforcements;
 
-	private ArrayList<Card> cards;
-
-	public Player() {
-		Random r = new Random();
-		this.color = new Color(r.nextFloat()*0.8f+0.2f,r.nextFloat()*0.8f+0.2f,r.nextFloat()*0.8f+0.2f);
+	public Player(Objective objective, Integer reinforcements, String name) {
+		this.objective = objective;
+		this.reinforcements = reinforcements;
+		this.name = name;
+		this.hand = new Hand();
+		this.territories = new ArrayList<Territory>();
+		this.color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f);
 	}
-	
-	public abstract Action GetAction();
-	
-	public String GetName() {
+
+	public abstract void placeSingleReinforcement(Board board);
+	public abstract void turnInCards(Board board);
+	public abstract CombatMove getCombatMove();
+
+	public String getName() {
 		return name;
 	}
-	
-	public Color GetColor() {
+
+	public Color getColor() {
 		return color;
 	}
 
-	public ArrayList<Card> GetCards() {
-		return cards;
+	public Objective getObjective() {
+		return objective;
 	}
-  
+
+	public Integer getReinforcements(){
+		return reinforcements;
+	}
+
+	public void setReinforcements(Integer nr){
+		this.reinforcements = nr;
+	}
+
+	public ArrayList<Territory> getTerritories() { return this.territories; }
+
+	public void removeTerritory(Territory t) {
+		territories.remove(t);
+	}
+
+	public void addTerritory(Territory t) {
+		territories.add(t);
+	}
+
+
+	@Override
+	public String toString(){
+		return name;
+	}
+
+
+
 }
