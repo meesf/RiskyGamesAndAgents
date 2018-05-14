@@ -183,7 +183,7 @@ public class Risk {
 		System.out.println("Initializing players");
 		players = new ArrayList<Player>();
 		//TODO deciding number of startingUnits using number of players and evt. number territorries
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 6; i++) {
 			Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
 			Bot player = new Bot(objective, nrOfStartingUnits, "player" + i);
 			players.add(player);
