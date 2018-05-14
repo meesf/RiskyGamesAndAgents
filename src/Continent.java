@@ -25,7 +25,11 @@ public class Continent {
 	public String GetName() {
 		return name;
 	}
-	
+
+	public ArrayList<Territory> getMembers() {
+		return territories;
+	}
+
 	public Color getColor() {
 		return this.color;
 	}
@@ -34,7 +38,7 @@ public class Continent {
 		return territories;
 	}
 	
-	public int GetNReinforcements() {
+	public int getNReinforcements() {
 		return nReinforcements;
 	}
 	

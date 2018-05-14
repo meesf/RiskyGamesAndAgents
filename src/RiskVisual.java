@@ -45,8 +45,7 @@ public class RiskVisual extends JFrame{
 
 	private void drawMap(Graphics g) {
 		Color continentColor;
-
-		for (Continent c : risk.getBoard().GetContinents()) {
+		for (Continent c : risk.getBoard().getContinents()) {
 			continentColor = c.getColor();
 			for (Territory t : c.getTerritories()) {
 				int centerX = (int) (t.x * (double) width);
