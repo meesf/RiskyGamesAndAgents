@@ -1,14 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 
@@ -19,41 +12,55 @@ import javax.swing.JFrame;
  * @date 4/5/2018
  */
 public class RiskVisual extends JFrame{
+	private static final long serialVersionUID = 1L;
 
-	int width = 1920, height = 1080;
-	int radii = 50;
 	Risk risk;
-	
+
+	// Define screen size
+	int width = 1920, height = 1080;
+
+	// Define territory radii
+	int continentRadius = 50;
+	int playerRadius = continentRadius * 3/4;
+
+	boolean drawNames = false;
+
 	public RiskVisual(Risk risk) {
+		this.risk = risk;
+
+		// Standard window building code
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.pack();
 		this.setSize(width,height);
-		
 		this.setVisible(true);
-		this.risk = risk;
 	}
 
 	public void update() {
-		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g = bufferedImage.createGraphics();
+		// One draws to buffer, then buffer to screen, to prevent flickering
+		BufferedImage buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g = buffer.createGraphics();
 
+	    // Background
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
-		
+
+		// Draw game
 		drawMap(g);
 		drawGameStateInfo(g);
-		
-		this.getContentPane().getGraphics().drawImage(bufferedImage, 0, 0, null);
+
+		// Draw buffer to screen
+		this.getContentPane().getGraphics().drawImage(buffer, 0, 0, null);
 	}
 
 	private void drawGameStateInfo(Graphics g) {
-		g.setColor(Color.BLACK);
+		// Draw player names
 		int offset = 0;
 		for (Player p : risk.getPlayers()) {
 			String string = p.getName();
 			if (p == risk.getCurrentPlayer()) {
 				string += " (Current)";
 			}
+			g.setColor(p.getColor());
 			g.drawString(string, 0, offset += 10);
 		}
 	}
@@ -65,11 +72,27 @@ public class RiskVisual extends JFrame{
 			for (Territory t : c.getTerritories()) {
 				int centerX = (int) (t.x * (double) width);
 				int centerY = height - (int) (t.y * (double) height);
+				// Draw continent
 				g.setColor(continentColor);
-				g.fillOval(centerX - radii / 2, centerY - radii / 2, radii, radii);
+				g.fillOval(centerX - continentRadius / 2,
+						centerY - continentRadius / 2,
+						continentRadius,
+						continentRadius);
+				// Draw player
+				g.setColor(t.getOwner().getColor());
+				g.fillOval(centerX - playerRadius / 2,
+						centerY - playerRadius / 2,
+						playerRadius,
+						playerRadius);
+				// Draw territory names
+				if(drawNames) {
+					g.setColor(Color.BLACK);
+					g.drawString(t.getName(), centerX, centerY);
+				}
+				// Draw unit counts
 				g.setColor(Color.BLACK);
-				g.drawString(t.getName(), centerX, centerY);
 				g.drawString(Integer.toString(t.getNUnits()), centerX, centerY + 10);
+				// Draw edges
 				for (Territory adjacent : t.getAdjacentTerritories()) {
 					g.setColor(Color.BLACK);
 					if (t.getName()=="Alaska" && adjacent.getName() == "Kamchatka") {
