@@ -20,7 +20,7 @@ public class Board {
 		continents = new ArrayList<Continent>();
 		
 		this.goldenCavalry = 4;
-		
+
 		Continent northAmerica = new Continent(new Color(1.0f,1.0f,0.0f));
 		continents.add(northAmerica);
 		Continent southAmerica = new Continent(new Color(0.6f,0f,0f));

@@ -28,6 +28,7 @@ public class RiskVisual extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.pack();
 		this.setSize(width,height);
+		
 		this.setVisible(true);
 		this.risk = risk;
 	}
