@@ -38,7 +38,7 @@ public class Risk {
 		long frameDuration = 1000;
 		long lastFrameTime = System.currentTimeMillis();
 		while (!finished()) {
-			frameDuration = -(lastFrameTime - (lastFrameTime = System.currentTimeMillis() / 1000000000));
+			frameDuration = -(lastFrameTime - (lastFrameTime = System.currentTimeMillis() / 1000));
 			if (frameDuration > targetFrameDuration) {
 				try {
 					Thread.sleep(targetFrameDuration - frameDuration);
@@ -155,6 +155,14 @@ public class Risk {
 		for(int i = 0; i < players.size(); i++){
 			System.out.println(players.get(i).toString());
 		}
+	}
+
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+	
+	public Player getCurrentPlayer() {
+		return currentPlayer;
 	}
 
 	private void initializePlayers() {

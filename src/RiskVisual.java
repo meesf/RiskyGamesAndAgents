@@ -38,9 +38,24 @@ public class RiskVisual extends JFrame{
 	    Graphics2D g = bufferedImage.createGraphics();
 
 		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, width, height);
+		
 		drawMap(g);
+		drawGameStateInfo(g);
 		
 		this.getContentPane().getGraphics().drawImage(bufferedImage, 0, 0, null);
+	}
+
+	private void drawGameStateInfo(Graphics g) {
+		g.setColor(Color.BLACK);
+		int offset = 0;
+		for (Player p : risk.getPlayers()) {
+			String string = p.getName();
+			if (p == risk.getCurrentPlayer()) {
+				string += " (Current)";
+			}
+			g.drawString(string, 0, offset += 10);
+		}
 	}
 
 	private void drawMap(Graphics g) {
