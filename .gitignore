@@ -5,3 +5,5 @@ RiskyGamesAndAgents.iml
 
 out/
 bin/
+
+.idea/workspace.xml
