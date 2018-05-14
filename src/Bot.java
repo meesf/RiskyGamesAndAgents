@@ -10,7 +10,7 @@ public class Bot extends Player{
 
     @Override
     public void placeSingleReinforcement(Board board) {
-
+        System.out.println(territories);
         Territory randomTer = territories.get(Risk.random.nextInt(territories.size()));
         randomTer.setUnits(randomTer.getNUnits() + 1);
         reinforcements--;

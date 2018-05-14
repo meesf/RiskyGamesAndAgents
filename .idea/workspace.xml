@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4faf1625-81bc-414e-b6be-7371525f662d" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/out/production/RiskyGamesAndAgents/Board.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/out/production/RiskyGamesAndAgents/Continent.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/out/production/RiskyGamesAndAgents/Player.class" afterPath="" />
       <change beforePath="$PROJECT_DIR$/out/production/RiskyGamesAndAgents/Risk.class" afterPath="$PROJECT_DIR$/out/production/RiskyGamesAndAgents/Risk.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/RiskyGamesAndAgents/RiskVisual.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/out/production/RiskyGamesAndAgents/Territory.class" afterPath="$PROJECT_DIR$/out/production/RiskyGamesAndAgents/Territory.class" />
-      <change beforePath="$PROJECT_DIR$/src/Bot.java" afterPath="$PROJECT_DIR$/src/Bot.java" />
       <change beforePath="$PROJECT_DIR$/src/Risk.java" afterPath="$PROJECT_DIR$/src/Risk.java" />
       <change beforePath="$PROJECT_DIR$/src/RiskVisual.java" afterPath="$PROJECT_DIR$/src/RiskVisual.java" />
     </list>
@@ -40,16 +33,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Risk.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Risk.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Risk.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="117">
-              <caret line="78" column="79" lean-forward="true" selection-start-line="78" selection-start-column="79" selection-end-line="78" selection-end-column="79" />
+            <state relative-caret-position="160">
+              <caret line="37" column="44" lean-forward="false" selection-start-line="37" selection-start-column="44" selection-end-line="37" selection-end-column="44" />
               <folding>
-                <element signature="e#2217#2226#0" expanded="true" />
-                <element signature="e#2280#2289#0" expanded="true" />
-                <element signature="e#6754#6755#0" expanded="true" />
-                <element signature="e#6778#6779#0" expanded="true" />
+                <element signature="e#2287#2296#0" expanded="true" />
+                <element signature="e#2350#2359#0" expanded="true" />
+                <element signature="e#5588#5589#0" expanded="true" />
+                <element signature="e#5609#5610#0" expanded="true" />
+                <element signature="e#5647#5648#0" expanded="true" />
+                <element signature="e#5674#5675#0" expanded="true" />
+                <element signature="e#6965#6966#0" expanded="true" />
+                <element signature="e#6989#6990#0" expanded="true" />
+                <element signature="e#7036#7037#0" expanded="true" />
+                <element signature="e#7085#7086#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -79,8 +78,8 @@
       <file leaf-file-name="RiskVisual.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/RiskVisual.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+            <state relative-caret-position="303">
+              <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -215,11 +214,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Bot.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Bot.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Bot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="68" column="89" lean-forward="false" selection-start-line="68" selection-start-column="89" selection-end-line="68" selection-end-column="89" />
+            <state relative-caret-position="324">
+              <caret line="21" column="87" lean-forward="false" selection-start-line="21" selection-start-column="87" selection-end-line="21" selection-end-column="87" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#182#183#0" expanded="true" />
@@ -260,6 +259,8 @@
       <find>shuffle</find>
       <find>Performing</find>
       <find>Ural</find>
+      <find>placeSin</find>
+      <find>single</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -284,8 +285,8 @@
         <option value="$PROJECT_DIR$/src/RiskVisual.java" />
         <option value="$PROJECT_DIR$/src/CombatMove.java" />
         <option value="$PROJECT_DIR$/src/Territory.java" />
-        <option value="$PROJECT_DIR$/src/Risk.java" />
         <option value="$PROJECT_DIR$/src/Bot.java" />
+        <option value="$PROJECT_DIR$/src/Risk.java" />
       </list>
     </option>
   </component>
@@ -606,10 +607,16 @@
         <state relative-caret-position="1218">
           <caret line="66" column="0" lean-forward="false" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
           <folding>
-            <element signature="e#2217#2226#0" expanded="true" />
-            <element signature="e#2280#2289#0" expanded="true" />
-            <element signature="e#6754#6755#0" expanded="true" />
-            <element signature="e#6778#6779#0" expanded="true" />
+            <element signature="e#2287#2296#0" expanded="true" />
+            <element signature="e#2350#2359#0" expanded="true" />
+            <element signature="e#5588#5589#0" expanded="true" />
+            <element signature="e#5609#5610#0" expanded="true" />
+            <element signature="e#5647#5648#0" expanded="true" />
+            <element signature="e#5674#5675#0" expanded="true" />
+            <element signature="e#6965#6966#0" expanded="true" />
+            <element signature="e#6989#6990#0" expanded="true" />
+            <element signature="e#7036#7037#0" expanded="true" />
+            <element signature="e#7085#7086#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -915,10 +922,16 @@
         <state relative-caret-position="1176">
           <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
           <folding>
-            <element signature="e#2217#2226#0" expanded="true" />
-            <element signature="e#2280#2289#0" expanded="true" />
-            <element signature="e#6754#6755#0" expanded="true" />
-            <element signature="e#6778#6779#0" expanded="true" />
+            <element signature="e#2287#2296#0" expanded="true" />
+            <element signature="e#2350#2359#0" expanded="true" />
+            <element signature="e#5588#5589#0" expanded="true" />
+            <element signature="e#5609#5610#0" expanded="true" />
+            <element signature="e#5647#5648#0" expanded="true" />
+            <element signature="e#5674#5675#0" expanded="true" />
+            <element signature="e#6965#6966#0" expanded="true" />
+            <element signature="e#6989#6990#0" expanded="true" />
+            <element signature="e#7036#7037#0" expanded="true" />
+            <element signature="e#7085#7086#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1084,10 +1097,16 @@
         <state relative-caret-position="924">
           <caret line="44" column="13" lean-forward="true" selection-start-line="44" selection-start-column="13" selection-end-line="44" selection-end-column="13" />
           <folding>
-            <element signature="e#2217#2226#0" expanded="true" />
-            <element signature="e#2280#2289#0" expanded="true" />
-            <element signature="e#6754#6755#0" expanded="true" />
-            <element signature="e#6778#6779#0" expanded="true" />
+            <element signature="e#2287#2296#0" expanded="true" />
+            <element signature="e#2350#2359#0" expanded="true" />
+            <element signature="e#5588#5589#0" expanded="true" />
+            <element signature="e#5609#5610#0" expanded="true" />
+            <element signature="e#5647#5648#0" expanded="true" />
+            <element signature="e#5674#5675#0" expanded="true" />
+            <element signature="e#6965#6966#0" expanded="true" />
+            <element signature="e#6989#6990#0" expanded="true" />
+            <element signature="e#7036#7037#0" expanded="true" />
+            <element signature="e#7085#7086#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1256,20 +1275,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/RiskVisual.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="303">
+          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Territory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="62" column="35" lean-forward="false" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
-          <folding>
-            <element signature="e#1110#1111#0" expanded="true" />
-            <element signature="e#1197#1198#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1333,27 +1341,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Risk.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="78" column="79" lean-forward="true" selection-start-line="78" selection-start-column="79" selection-end-line="78" selection-end-column="79" />
-          <folding>
-            <element signature="e#2217#2226#0" expanded="true" />
-            <element signature="e#2280#2289#0" expanded="true" />
-            <element signature="e#6754#6755#0" expanded="true" />
-            <element signature="e#6778#6779#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Bot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="68" column="89" lean-forward="false" selection-start-line="68" selection-start-column="89" selection-end-line="68" selection-end-column="89" />
+        <state relative-caret-position="324">
+          <caret line="21" column="87" lean-forward="false" selection-start-line="21" selection-start-column="87" selection-end-line="21" selection-end-column="87" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#182#183#0" expanded="true" />
             <element signature="e#228#229#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Territory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="454">
+          <caret line="62" column="35" lean-forward="false" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
+          <folding>
+            <element signature="e#1110#1111#0" expanded="true" />
+            <element signature="e#1197#1198#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Risk.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="37" column="44" lean-forward="false" selection-start-line="37" selection-start-column="44" selection-end-line="37" selection-end-column="44" />
+          <folding>
+            <element signature="e#2287#2296#0" expanded="true" />
+            <element signature="e#2350#2359#0" expanded="true" />
+            <element signature="e#5588#5589#0" expanded="true" />
+            <element signature="e#5609#5610#0" expanded="true" />
+            <element signature="e#5647#5648#0" expanded="true" />
+            <element signature="e#5674#5675#0" expanded="true" />
+            <element signature="e#6965#6966#0" expanded="true" />
+            <element signature="e#6989#6990#0" expanded="true" />
+            <element signature="e#7036#7037#0" expanded="true" />
+            <element signature="e#7085#7086#0" expanded="true" />
           </folding>
         </state>
       </provider>
