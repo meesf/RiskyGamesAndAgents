@@ -48,12 +48,16 @@ public class RiskVisual extends JFrame{
 		this.pack();
 		this.setSize(width,height);
 		this.setVisible(true);
+
+		this.buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 
-	public void update() {
+	BufferedImage buffer;
+	Graphics2D g;
+
+	public void createBuffer() {
 		// One draws to buffer, then buffer to screen, to prevent flickering
-		BufferedImage buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g = buffer.createGraphics();
+	    g = buffer.createGraphics();
 	    g.setStroke(new BasicStroke(5));
 
 	    Font currentFont = g.getFont();
@@ -67,14 +71,24 @@ public class RiskVisual extends JFrame{
 		} else {
 			g.drawImage(map, 0, 0, width, height, null);
 		}
+	}
 
-		// Draw game
+	public void drawBuffer() {
+		this.getContentPane().getGraphics().drawImage(buffer, 0, 0, null);
+
+	}
+
+	public void update() {
+		createBuffer();
 		drawMap(g);
 		drawGameStateInfo(g);
-
-		// Draw buffer to screen
-		this.getContentPane().getGraphics().drawImage(buffer, 0, 0, null);
+		drawBuffer();
 	}
+
+	public void update(CombatMove cm) {
+		update();
+	}
+
 
 	private void drawGameStateInfo(Graphics2D g) {
 		// Draw player names
