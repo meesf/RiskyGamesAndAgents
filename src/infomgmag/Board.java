@@ -244,20 +244,8 @@ public class Board {
 	 * Move the golden cavalry one step forward.
 	 */
 	public void moveGoldenCavalry() {
-		if (goldenCavalry == 4) { this.goldenCavalry = 6; }
-		else if (goldenCavalry == 6) { this.goldenCavalry = 8; }
-		else if (goldenCavalry == 8) { this.goldenCavalry = 10; }
-		else if (goldenCavalry == 10) { this.goldenCavalry = 15; }
-		else if (goldenCavalry == 15) { this.goldenCavalry = 20; }
-		else if (goldenCavalry == 20) { this.goldenCavalry = 25; }
-		else if (goldenCavalry == 25) { this.goldenCavalry = 30; }
-		else if (goldenCavalry == 30) { this.goldenCavalry = 35; }
-		else if (goldenCavalry == 35) { this.goldenCavalry = 40; }
-		else if (goldenCavalry == 40) { this.goldenCavalry = 45; }
-		else if (goldenCavalry == 45) { this.goldenCavalry = 50; }
-		else if (goldenCavalry == 50) { this.goldenCavalry = 55; }
-		else if (goldenCavalry == 55) { this.goldenCavalry = 60; }
-		else if (goldenCavalry == 60) { this.goldenCavalry = 65; }
+		if(goldenCavalry < 10) {goldenCavalry += 2;}
+		else if(goldenCavalry < 65) {goldenCavalry += 5;} 
 	}
 	
 
