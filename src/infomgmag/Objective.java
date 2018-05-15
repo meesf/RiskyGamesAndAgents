@@ -1,3 +1,4 @@
+package infomgmag;
 public class Objective {
     private type type;
 

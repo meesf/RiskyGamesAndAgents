@@ -1,3 +1,4 @@
+package infomgmag;
 import java.util.ArrayList;
 
 /**
