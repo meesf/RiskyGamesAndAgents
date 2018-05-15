@@ -84,7 +84,7 @@ public class Bot extends Player{
 		Collections.shuffle(territories, Risk.random);
 		for(Territory t : territories) {
 			if(t.getNUnits() > 1) {
-				int units = Risk.random.nextInt(t.getNUnits());
+				int units = Risk.random.nextInt(t.getNUnits() - 1) + 1;
 				ArrayList<Territory> connections = getConnectedTerritories(t);
 				Territory fortifiedTerritory = connections.get(Risk.random.nextInt(connections.size()));
 				t.setUnits(t.getNUnits() - units);
