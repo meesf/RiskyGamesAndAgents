@@ -28,6 +28,8 @@ public class RiskVisual extends JFrame{
 	// Define territory radii
 	int continentRadius = 50;
 	int playerRadius = continentRadius * 3/4;
+	int attackMarkerTargetRadius = playerRadius * 1/2;
+	int attackMarkerCrossResolution = playerRadius * 1/2;
 
 	boolean drawNames = false;
 
@@ -48,12 +50,26 @@ public class RiskVisual extends JFrame{
 		this.pack();
 		this.setSize(width,height);
 		this.setVisible(true);
+
+		this.buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		this.lastFrameTime = System.currentTimeMillis();
 	}
 
-	public void update() {
+	BufferedImage buffer;
+	Graphics2D g;
+
+	private int rasterX(double x) {
+		return (int) (x * width);
+	}
+
+	private int rasterY(double y) {
+		return height - (int) (y * height);
+	}
+
+	public void createBuffer() {
 		// One draws to buffer, then buffer to screen, to prevent flickering
-		BufferedImage buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g = buffer.createGraphics();
+	    g = buffer.createGraphics();
 	    g.setStroke(new BasicStroke(5));
 
 	    Font currentFont = g.getFont();
@@ -67,13 +83,60 @@ public class RiskVisual extends JFrame{
 		} else {
 			g.drawImage(map, 0, 0, width, height, null);
 		}
+	}
 
-		// Draw game
+
+	long targetFrameDuration = (long) (25);
+	long frameDuration = 1000;
+	long lastFrameTime;
+
+	public void drawBuffer() {
+		frameDuration = System.currentTimeMillis() - lastFrameTime;
+		if (frameDuration < targetFrameDuration) {
+			try {
+				Thread.sleep(targetFrameDuration - frameDuration);
+			} catch (InterruptedException e) {
+				System.exit(0);
+			}
+		}
+		lastFrameTime = System.currentTimeMillis();
+		this.getContentPane().getGraphics().drawImage(buffer, 0, 0, null);
+	}
+
+	public void update() {
+		createBuffer();
 		drawMap(g);
 		drawGameStateInfo(g);
+		drawBuffer();
+	}
 
-		// Draw buffer to screen
-		this.getContentPane().getGraphics().drawImage(buffer, 0, 0, null);
+	public void update(CombatMove cm) {
+		createBuffer();
+		drawMap(g);
+		drawGameStateInfo(g);
+		drawCombatArrow(cm);
+		drawBuffer();
+	}
+
+	public void drawCombatArrow(CombatMove cm) {
+		g.setColor(Color.RED);
+		int attackingX = rasterX(cm.getAttackingTerritory().x);
+		int attackingY = rasterY(cm.getAttackingTerritory().y);
+		int defendingX = rasterX(cm.getDefendingTerritory().x);
+		int defendingY = rasterY(cm.getDefendingTerritory().y);
+		g.drawLine(attackingX, attackingY, defendingX, defendingY);
+		g.fillOval(defendingX - attackMarkerTargetRadius / 2,
+				defendingY - attackMarkerTargetRadius / 2,
+				attackMarkerTargetRadius,
+				attackMarkerTargetRadius);
+		g.drawLine(attackingX - attackMarkerCrossResolution/2,
+				attackingY - attackMarkerCrossResolution/2,
+				attackingX + attackMarkerCrossResolution/2,
+				attackingY + attackMarkerCrossResolution/2);
+		g.drawLine(attackingX - attackMarkerCrossResolution/2,
+				attackingY + attackMarkerCrossResolution/2,
+				attackingX + attackMarkerCrossResolution/2,
+				attackingY - attackMarkerCrossResolution/2);
 	}
 
 	private void drawGameStateInfo(Graphics2D g) {
