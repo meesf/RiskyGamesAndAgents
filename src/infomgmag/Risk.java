@@ -1,3 +1,4 @@
+package infomgmag;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import sun.rmi.transport.ObjectTable;
 

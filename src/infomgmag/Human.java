@@ -1,3 +1,4 @@
+package infomgmag;
 public class Human extends Player{
 
     public Human(Objective o, Integer reinforcements, String name){
