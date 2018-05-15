@@ -1,6 +1,4 @@
 package infomgmag;
-import java.lang.reflect.Array;
-import java.util.List;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -26,8 +24,6 @@ public class Board {
 		this.cavalry = 14;
 		this.infantry = 14;
 		this.wildcard = 2;
-
-
 
 		Continent northAmerica = new Continent(new Color(1.0f,1.0f,0.0f));
 		continents.add(northAmerica);

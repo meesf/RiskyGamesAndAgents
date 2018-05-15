@@ -1,7 +1,6 @@
 package infomgmag;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * This class represents a continent in the game.
@@ -20,7 +19,6 @@ public class Continent {
 	public Continent(Color color) {
 		this.color = color;
 		territories = new ArrayList<Territory>();
-		Random rand = new Random();
 	}
 	
 	public String GetName() {
