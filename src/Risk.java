@@ -24,7 +24,7 @@ public class Risk {
 	private Integer nrOfStartingUnits;
 
 	public static void main(String[] args) {
-		random = new Random(111);
+		random = new Random(System.currentTimeMillis());
 		Risk risk = new Risk();
 		risk.run();
 	}
@@ -34,20 +34,8 @@ public class Risk {
 	}
 
 	public void run(){
-		long targetFrameDuration = (long) (0.1);
-		long frameDuration = 1000;
-		long lastFrameTime = System.currentTimeMillis();
 		while (!finished()) {
 			visuals.update();
-			frameDuration = System.currentTimeMillis() - lastFrameTime;
-			if (frameDuration < targetFrameDuration) {
-//				try {
-//					//Thread.sleep(targetFrameDuration - frameDuration);
-//				} catch (InterruptedException e) {
-//					System.exit(0);
-//				}
-			}
-			lastFrameTime = System.currentTimeMillis();
 
 			System.out.println("Current Player: " + currentPlayer.toString());
 			Integer nrOfReinforcements = calculateReinforcements();
@@ -59,11 +47,13 @@ public class Risk {
 			}
 			CombatMove combatMove;
 			while((combatMove = currentPlayer.getCombatMove()) != null){
+				visuals.update(combatMove);
 				performCombatMove(combatMove);
 			}
 
 			nextCurrentPlayer();
 		}
+		visuals.update();
 		System.out.println(players.get(0) + " has won!");
 
 	}
@@ -183,7 +173,7 @@ public class Risk {
 		System.out.println("Initializing players");
 		players = new ArrayList<Player>();
 		//TODO deciding number of startingUnits using number of players and evt. number territorries
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i <= 6; i++) {
 			Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
 			Bot player = new Bot(objective, nrOfStartingUnits, "player" + i);
 			players.add(player);
