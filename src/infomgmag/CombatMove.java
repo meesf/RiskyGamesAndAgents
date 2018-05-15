@@ -1,3 +1,4 @@
+package infomgmag;
 public class CombatMove {
     private Territory attackingTerritory, defendingTerritory;
     private Integer attackingUnits, defendingUnits;

@@ -1,3 +1,4 @@
+package infomgmag;
 public class Hand {
     private int infantry, cavalry, artillery;
 
