@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.ArrayList;
 
 /**
- * This class contains the main() method. This class is the bridge between the visual presentation of 
+ * This class contains the main() method. This class is the bridge between the visual presentation of
  * the game (RiskVisual) and the data presentation of the game (RiskPhysics).
  * @author Games&AgentsGroup8
  * @version FirstPrototype
@@ -13,6 +13,8 @@ import java.util.ArrayList;
 public class Risk {
 
 	public static Random random;
+
+	private int turn = 0;
 
 	private ArrayList<Player> players;
 	private Board board;
@@ -53,10 +55,15 @@ public class Risk {
 			}
 
 			nextCurrentPlayer();
+			turn++;
 		}
 		visuals.update();
 		System.out.println(players.get(0) + " has won!");
 
+	}
+
+	public int getTurn() {
+		return turn;
 	}
 
 	private boolean playerHasReachedObjective(Player player){
@@ -173,7 +180,7 @@ public class Risk {
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
-	
+
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
@@ -219,7 +226,7 @@ public class Risk {
 	public Boolean isPlayerDead(Player player){
 		return player.getTerritories().size() == 0;
 	}
-	
+
 	/**
 	 * Returns true if there is a winner.
 	 */

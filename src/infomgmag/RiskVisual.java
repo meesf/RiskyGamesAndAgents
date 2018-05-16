@@ -3,9 +3,11 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.LayoutManager;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -35,8 +37,11 @@ public class RiskVisual extends JFrame{
 	int logWidth = width - gameWidth - 20;
 
 	JPanel gamePanel;
+	JPanel infoPanel;
+	JTextArea infoArea;
 	JTextArea logArea;
 	JScrollPane logPanel;
+
 
 	// Define territory radii
 	int continentRadius = 50;
@@ -58,23 +63,36 @@ public class RiskVisual extends JFrame{
 			e.printStackTrace();
 		}
 
-		gamePanel = new JPanel();
+		gamePanel = new JPanel((LayoutManager) new BorderLayout(0, 0));
 		gamePanel.setPreferredSize(new Dimension (gameWidth, gameHeight));
 		gamePanel.setVisible(true);
 		this.add(gamePanel, BorderLayout.WEST);
 
+		infoPanel = new JPanel((LayoutManager) new BorderLayout(0, 0));
+		infoPanel.setSize(width-gameWidth, height);
+		this.add(infoPanel, BorderLayout.EAST);
+
 		logArea = new JTextArea();
-		logArea.setSize(logWidth, height);
+		logArea.setSize(logWidth, height * 3 / 4);
 		logArea.setEditable(false);
 		logArea.setLineWrap(true);
 		logArea.setWrapStyleWord(true);
+
+		infoArea = new JTextArea();
+		infoArea.setSize(logWidth, height);
+		infoArea.setEditable(false);
+		infoArea.setLineWrap(true);
+		infoArea.setWrapStyleWord(true);
+		infoArea.append("Here should be player info \n hahah");
+		infoPanel.add(infoArea, BorderLayout.NORTH);
+
 		logPanel = new JScrollPane(logArea);
 		logPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		logPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		logPanel.setSize(width-gameWidth, height);
+		logPanel.setPreferredSize(new Dimension(width-gameWidth, height * 1/4));
 		DefaultCaret caret = (DefaultCaret)logArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		this.add(logPanel, BorderLayout.EAST);
+		infoPanel.add(logPanel, BorderLayout.SOUTH);
 
 		// Standard window building code
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -116,7 +134,6 @@ public class RiskVisual extends JFrame{
 		}
 	}
 
-
 	long targetFrameDuration = (long) (25);
 	long frameDuration = 1000;
 	long lastFrameTime;
@@ -132,19 +149,42 @@ public class RiskVisual extends JFrame{
 		}
 		lastFrameTime = System.currentTimeMillis();
 		gamePanel.getGraphics().drawImage(buffer, 0, 0, null);
+
+		updateGameInfo();
+	}
+
+	private void updateGameInfo() {
+		String info = new String();
+
+		info += "Turn " + risk.getTurn() + "\n";
+
+		info += "Current state:\n\n";
+
+		for (Player p : risk.getPlayers()) {
+			info += p.getName();
+			if (risk.getCurrentPlayer() == p)
+				info += " (current)";
+			info += "\nHand:\n";
+
+			info += "Infantry: " + p.hand.getInfantry() + "\n";
+			info += "Cavalry: " + p.hand.getCavalry() + "\n";
+			info += "Artillery: " + p.hand.getArtillery() + "\n";
+
+			info += "\n";
+		}
+
+		this.infoArea.setText(info);
 	}
 
 	public void update() {
 		createBuffer();
 		drawMap(g);
-		drawGameStateInfo(g);
 		drawBuffer();
 	}
 
 	public void update(CombatMove cm) {
 		createBuffer();
 		drawMap(g);
-		drawGameStateInfo(g);
 		drawCombatArrow(cm);
 		drawBuffer();
 	}
@@ -168,19 +208,6 @@ public class RiskVisual extends JFrame{
 				attackingY + attackMarkerCrossResolution/2,
 				attackingX + attackMarkerCrossResolution/2,
 				attackingY - attackMarkerCrossResolution/2);
-	}
-
-	private void drawGameStateInfo(Graphics2D g) {
-		// Draw player names
-		int offset = 0;
-		for (Player p : risk.getPlayers()) {
-			String string = p.getName();
-			if (p == risk.getCurrentPlayer()) {
-				string += " (Current)";
-			}
-			g.setColor(p.getColor());
-			g.drawString(string, 0, offset += 20);
-		}
 	}
 
 	private void drawMap(Graphics2D g) {
