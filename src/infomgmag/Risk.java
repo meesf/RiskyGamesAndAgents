@@ -16,7 +16,7 @@ import java.util.Random;
 public class Risk {
 
     public static Random random;
-
+    
     private int turn = 0;
 
     private ArrayList<Player> players;
@@ -28,6 +28,7 @@ public class Risk {
 
     private ArrayList<Player> defeatedPlayers;
     private boolean visible = true;
+
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
@@ -43,10 +44,10 @@ public class Risk {
         while (!finished()) {
             visuals.update();
             Integer nrOfReinforcements = calculateReinforcements();
-            currentPlayer.setReinforcements(currentPlayer.getReinforcements() + nrOfReinforcements);
+            currentPlayer.setReinforcements(nrOfReinforcements);
             currentPlayer.turnInCards(board);
             currentPlayer.placeReinforcements(board);
-
+            
             int startingNrOfTerritories = currentPlayer.getTerritories().size();
             CombatMove combatMove; // If a territory is claimed the player has to move the units he used during his
                                    // attack to the claimed territoy, he can move more units to the new territory
@@ -228,12 +229,37 @@ public class Risk {
     private boolean finished() {
         return players.size() == 1 || StopGame;
     }
+    
+    public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
+        ArrayList<Territory> visited = new ArrayList<>();
+        ArrayList<Territory> result = new ArrayList<>();
+        result.add(origin);
+        boolean foundTerritory = true;
+        while (foundTerritory) {
+            foundTerritory = false;
+            ArrayList<Territory> add = new ArrayList<>();
+            for (Territory t : result)
+                if (!visited.contains(t)) {
+                    for (Territory c : t.getAdjacentTerritories())
+                        if (!result.contains(c) && origin.getOwner().getTerritories().contains(c)) {
+                            add.add(c);
+                            foundTerritory = true;
+                        }
+                    visited.add(t);
+                }
+            for (Territory t : add)
+                result.add(t);
+        }
+        return result;
+    }
+
+    public static void printError(String str) {
+    	System.err.println("Error:"+str);
+    	System.exit(1);
+    }
 
     public ArrayList<Player> getDefeatedPlayers(){
         return this.defeatedPlayers;
     }
 
-    public static void println(String str) {
-        System.out.println(str);
-    }
 }
