@@ -223,8 +223,14 @@ public class Board {
      * @return boolean if the action succeeded, in other words if the action was
      *         possible and has been executed.
      */
-    public void addUnits(Territory territory, int number) {
-        territory.setUnits(territory.getNUnits() + number);
+    public void addUnits(Player player, Territory territory, int number) {
+    	if(player!=territory.getOwner()) {
+    		Risk.printError(player.getName()+" tried reinforcing "+territory.getName()+", but does not own this territory");
+    	} else if(player.getReinforcements() < number) {
+    		Risk.printError(player.getName()+" does not have "+number+" reinforcements");
+    	} else {
+    		territory.setUnits(territory.getNUnits() + number);
+    	}
     }
 
     /**
@@ -315,6 +321,18 @@ public class Board {
             this.wildcard--;
             player.hand.setWildCards(player.hand.getWildcards() + 1);
         }
+    }
+    
+    public void moveUnits(Territory a, Territory b, int units) {
+    	if(a.getNUnits() < 2) {
+    		Risk.printError("The fortifying territory, "+a.getName()+", doesn't have enough units to fortify "+b.getName());
+    	} else if(!Risk.getConnectedTerritories(a).contains(b)) {
+    		Risk.printError("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
+    	} else {
+    		a.setUnits(a.getNUnits() - units);
+            b.setUnits(b.getNUnits() + units);
+    	}
+    	
     }
 
     @Override

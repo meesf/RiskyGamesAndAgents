@@ -100,36 +100,11 @@ public class RandomBot extends Player {
         for (Territory t : territories)
             if (t.getNUnits() > 1) {
                 int units = Risk.random.nextInt(t.getNUnits() - 1) + 1;
-                ArrayList<Territory> connections = getConnectedTerritories(t);
+                ArrayList<Territory> connections = Risk.getConnectedTerritories(t);
                 Territory fortifiedTerritory = connections.get(Risk.random.nextInt(connections.size()));
-                t.setUnits(t.getNUnits() - units);
-                fortifiedTerritory.setUnits(fortifiedTerritory.getNUnits() + units);
+                board.moveUnits(t, fortifiedTerritory, units);
                 break;
             }
-    }
-
-    // TODO: Maybe this function can be more efficient....
-    private ArrayList<Territory> getConnectedTerritories(Territory origin) {
-        ArrayList<Territory> visited = new ArrayList<>();
-        ArrayList<Territory> result = new ArrayList<>();
-        result.add(origin);
-        boolean foundTerritory = true;
-        while (foundTerritory) {
-            foundTerritory = false;
-            ArrayList<Territory> add = new ArrayList<>();
-            for (Territory t : result)
-                if (!visited.contains(t)) {
-                    for (Territory c : t.getAdjacentTerritories())
-                        if (!result.contains(c) && territories.contains(c)) {
-                            add.add(c);
-                            foundTerritory = true;
-                        }
-                    visited.add(t);
-                }
-            for (Territory t : add)
-                result.add(t);
-        }
-        return result;
     }
 
     @Override
@@ -143,7 +118,7 @@ public class RandomBot extends Player {
     public void placeReinforcements(Board board) {
         while (getReinforcements() != 0) {
             Territory randomTer = territories.get(Risk.random.nextInt(territories.size()));
-            randomTer.setUnits(randomTer.getNUnits() + 1);
+            board.addUnits(this, randomTer, 1);
             reinforcements--;
         }
     }
