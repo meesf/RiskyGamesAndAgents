@@ -3,9 +3,9 @@ package infomgmag;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Bot extends Player {
+public class RandomBot extends Player {
 
-    public Bot(Objective o, Integer reinforcements, String name) {
+    public RandomBot(Objective o, Integer reinforcements, String name) {
         super(o, reinforcements, name);
     }
 
