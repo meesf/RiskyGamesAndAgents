@@ -287,7 +287,6 @@ public class RiskVisual extends JFrame {
                 g.setColor(Color.WHITE);
                 String nr = Integer.toString(t.getNUnits());
                 int width = g.getFontMetrics().stringWidth(nr);
-                System.out.println(width);
                 g.drawString(nr, centerX - (int)(width / 2), centerY + 10);
             }
         }
