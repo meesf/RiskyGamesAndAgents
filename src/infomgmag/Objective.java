@@ -1,16 +1,17 @@
 package infomgmag;
+
 public class Objective {
-    private type type;
+	public static enum type {
+		TOTAL_DOMINATION
+	}
 
-    public static enum type{
-        TOTAL_DOMINATION
-    }
+	private type type;
 
-    public Objective(type type){
-        this.type = type;
-    }
+	public Objective(type type) {
+		this.type = type;
+	}
 
-    public Objective.type getType() {
-        return type;
-    }
+	public Objective.type getType() {
+		return this.type;
+	}
 }
