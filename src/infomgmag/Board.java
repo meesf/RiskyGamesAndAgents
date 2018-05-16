@@ -48,7 +48,7 @@ public class Board {
 		asia.addTerritory(japan);
 		Territory irkutsk = new Territory("Irkutsk", 0.79, 0.70);
 		asia.addTerritory(irkutsk);
-		Territory mongolia = new Territory("Mongolia", 0.82, 0.62);
+		Territory mongolia = new Territory("Mongolia", 0.80, 0.62);
 		asia.addTerritory(mongolia);
 		Territory china = new Territory("China", 0.75, 0.55);
 		asia.addTerritory(china);

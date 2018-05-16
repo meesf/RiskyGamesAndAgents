@@ -90,7 +90,7 @@ public class Bot extends Player{
     @Override
     public CombatMove getCombatMove() {
         int val = Risk.random.nextInt(10);
-        if(val > 2){
+        if(val > 0){
             // return random attack
             CombatMove combatMove = new CombatMove();
 

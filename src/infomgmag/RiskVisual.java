@@ -258,5 +258,13 @@ public class RiskVisual extends JFrame{
 				g.drawString(Integer.toString(t.getNUnits()), centerX-5, centerY + 10);
 			}
 		}
+
+		int offset = 10;
+		for (Player p : risk.getPlayers()) {
+			g.setColor(p.getColor());
+			g.fillRect(0, offset + 10, 20, 20);
+			g.setColor(Color.WHITE);
+			g.drawString(p.getName(), 30, offset += 25);
+		}
 	}
 }
