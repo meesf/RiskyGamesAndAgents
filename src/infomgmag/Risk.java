@@ -26,6 +26,8 @@ public class Risk {
     private Integer nrOfStartingUnits;
     private boolean StopGame;
 
+    private boolean visible = true;
+
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
         Risk risk = new Risk();
@@ -65,7 +67,7 @@ public class Risk {
             turn++;
         }
         visuals.update();
-        System.out.println(players.get(0) + " has won!");
+        visuals.log(players.get(0) + " has won!");
     }
 
     public int getTurn() {
@@ -160,7 +162,7 @@ public class Risk {
     }
 
     private void initializeGame() {
-        visuals = new RiskVisual(this);
+        visuals = new RiskVisual(this,visible);
         board = new Board();
         nrOfStartingUnits = 30;
         initializePlayers();
