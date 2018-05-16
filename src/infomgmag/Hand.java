@@ -1,4 +1,5 @@
 package infomgmag;
+
 public class Hand {
     private int infantry, cavalry, artillery, wildcards;
 
@@ -14,9 +15,11 @@ public class Hand {
         return cavalry;
     }
 
-    public int getWildcards(){return wildcards;}
+    public int getWildcards() {
+        return wildcards;
+    }
 
-    public void setInfantry(Integer infantry){
+    public void setInfantry(Integer infantry) {
         this.infantry = infantry;
     }
 
@@ -27,14 +30,16 @@ public class Hand {
     public void setCavalry(int cavalry) {
         this.cavalry = cavalry;
     }
-    
+
     public int getNumberOfCards() {
-    	return infantry + cavalry + artillery + wildcards;
+        return infantry + cavalry + artillery + wildcards;
     }
 
-    public void setWildCards(int wildcard){ this.wildcards = wildcards;}
+    public void setWildCards(int wildcards) {
+        this.wildcards = wildcards;
+    }
 
-    public Hand(){
+    public Hand() {
         infantry = 0;
         cavalry = 0;
         artillery = 0;

@@ -1,7 +1,8 @@
 package infomgmag;
-public class Human extends Player{
 
-    public Human(Objective o, Integer reinforcements, String name){
+public class Human extends Player {
+
+    public Human(Objective o, Integer reinforcements, String name) {
         super(o, reinforcements, name);
     }
 
@@ -26,7 +27,7 @@ public class Human extends Player{
     }
 
     @Override
-	public void fortifyTerritory(Board board) {
-		
-	}
+    public void fortifyTerritory(Board board) {
+
+    }
 }

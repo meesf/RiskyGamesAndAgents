@@ -1,9 +1,10 @@
 package infomgmag;
+
 public class CombatMove {
     private Territory attackingTerritory, defendingTerritory;
     private Integer attackingUnits, defendingUnits;
 
-    public CombatMove(){
+    public CombatMove() {
     }
 
     public Territory getAttackingTerritory() {
@@ -39,7 +40,8 @@ public class CombatMove {
     }
 
     @Override
-    public String toString(){
-        return "AttackingTerritory: " + attackingTerritory.toString() + " DefendingTerritory: " + defendingTerritory.toString();
+    public String toString() {
+        return "AttackingTerritory: " + attackingTerritory.toString() + " DefendingTerritory: "
+                + defendingTerritory.toString();
     }
 }
