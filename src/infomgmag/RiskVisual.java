@@ -20,7 +20,7 @@ import javax.swing.text.DefaultCaret;
 
 /**
  * This class updates the visual presentation of the board.
- * 
+ *
  * @author Games&AgentsGroup8
  * @version FirstPrototype
  * @date 4/5/2018
@@ -191,7 +191,31 @@ public class RiskVisual extends JFrame {
         int attackingY = rasterY(cm.getAttackingTerritory().y);
         int defendingX = rasterX(cm.getDefendingTerritory().x);
         int defendingY = rasterY(cm.getDefendingTerritory().y);
-        g.drawLine(attackingX, attackingY, defendingX, defendingY);
+        Territory t1 = cm.getAttackingTerritory();
+        Territory t2 = cm.getDefendingTerritory();
+
+        if ((t1.getName() == "Alaska" && t2.getName() == "Kamchatka")
+                || (t1.getName() == "Kamchatka" && t2.getName() == "Alaska")) {
+
+            int alaskaX, alaskaY, kamchatkaX, kamchatkaY;
+
+            if (t1.getName() == "Alaska") {
+                alaskaX = attackingX;
+                alaskaY = attackingY;
+                kamchatkaX = defendingX;
+                kamchatkaY = defendingY;
+            } else {
+                alaskaX = defendingX;
+                alaskaY = defendingY;
+                kamchatkaX = attackingX;
+                kamchatkaY = attackingY;
+            }
+
+            g.drawLine(alaskaX, alaskaY, 0, alaskaY);
+            g.drawLine(kamchatkaX, kamchatkaY, gameWidth, kamchatkaY);
+        } else
+            g.drawLine(attackingX, attackingY, defendingX, defendingY);
+
         g.fillOval(defendingX - attackMarkerTargetRadius / 2, defendingY - attackMarkerTargetRadius / 2,
                 attackMarkerTargetRadius, attackMarkerTargetRadius);
         g.drawLine(attackingX - attackMarkerCrossResolution / 2, attackingY - attackMarkerCrossResolution / 2,
