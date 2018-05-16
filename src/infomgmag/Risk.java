@@ -3,6 +3,8 @@ package infomgmag;
 import java.util.*;
 import java.util.ArrayList;
 
+import org.omg.CORBA.Current;
+
 /**
  * This class contains the main() method. This class is the bridge between the visual presentation of 
  * the game (RiskVisual) and the data presentation of the game (RiskPhysics).
@@ -78,7 +80,6 @@ public class Risk {
 	private void nextCurrentPlayer(){
 		currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
 		System.out.println("next current player set: " + currentPlayer);
-
 	}
 
 	private void performCombatMove(CombatMove combatMove){
@@ -130,6 +131,17 @@ public class Risk {
 			//System.out.println("territories of player: " + combatMove.getDefendingTerritory().getOwner().getTerritories());
 			if(isPlayerDead(defender)){
 				System.out.println("removed player: " + combatMove.getDefendingTerritory().getOwner());
+				// Attacker receives all the territory cards of the defender.
+				currentPlayer.hand.setWildCards(currentPlayer.hand.getWildcards() + defender.hand.getWildcards());
+				currentPlayer.hand.setArtillery(currentPlayer.hand.getArtillery() + defender.hand.getArtillery());
+				currentPlayer.hand.setCavalry(currentPlayer.hand.getCavalry() + defender.hand.getCavalry());
+				currentPlayer.hand.setInfantry(currentPlayer.hand.getInfantry() + defender.hand.getInfantry());
+				while(currentPlayer.hand.getNumberOfCards() > 4) {
+					currentPlayer.turnInCards(board);
+				}
+				while(currentPlayer.getReinforcements() != 0){
+					currentPlayer.placeSingleReinforcement(board);
+				}
 				players.remove(defender);
 			}
 			StopGame = playerHasReachedObjective(currentPlayer);

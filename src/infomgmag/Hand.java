@@ -27,6 +27,10 @@ public class Hand {
     public void setCavalry(int cavalry) {
         this.cavalry = cavalry;
     }
+    
+    public int getNumberOfCards() {
+    	return infantry + cavalry + artillery + wildcards;
+    }
 
     public void setWildCards(int wildcard){ this.wildcards = wildcards;}
 
