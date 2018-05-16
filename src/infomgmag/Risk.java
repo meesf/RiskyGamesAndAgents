@@ -33,7 +33,7 @@ public class Risk {
 
 	public void run(){
 		while (!finished()) {
-			visuals.update();
+			//visuals.update();
 
 			System.out.println("Current Player: " + currentPlayer.toString());
 			Integer nrOfReinforcements = calculateReinforcements();
@@ -43,18 +43,25 @@ public class Risk {
 				System.out.println("place single reinforecements " + currentPlayer.getName());
 				currentPlayer.placeSingleReinforcement(board);
 			}
+			int startingNrOfTerritories = currentPlayer.getTerritories().size();
 			CombatMove combatMove;
 			while((combatMove = currentPlayer.getCombatMove()) != null){
-				visuals.update(combatMove);
+				//visuals.update(combatMove);
 				performCombatMove(combatMove);
 				if(StopGame){
 					break;
 				}
 			}
 
+			int endingNrOfTerritories = currentPlayer.getTerritories().size();
+			if(startingNrOfTerritories < endingNrOfTerritories){
+				board.drawCard(currentPlayer);
+			}
+
 			nextCurrentPlayer();
+
 		}
-		visuals.update();
+		//visuals.update();
 		System.out.println(players.get(0) + " has won!");
 
 	}

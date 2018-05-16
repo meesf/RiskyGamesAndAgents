@@ -273,6 +273,12 @@ public class Board {
 		return goldenCavalry;
 	}
 
+	public int getAndMoveGoldenCavalry(){
+		int result = goldenCavalry;
+		moveGoldenCavalry();
+		return result;
+	}
+
 	public ArrayList<Territory> getTerritories(){
 		return territories;
 	}
@@ -299,6 +305,26 @@ public class Board {
 
 	public void setCavalry(int cavalry) {
 		this.cavalry = cavalry;
+	}
+
+	public void drawCard(Player player){
+		int val = Risk.random.nextInt(this.artillery + this.cavalry + this.infantry + this.wildcard);
+		if(val < this.artillery){
+			this.artillery--;
+			player.hand.setArtillery(player.hand.getArtillery() + 1);
+		}
+		else if(val < this.artillery + this.cavalry){
+			this.cavalry--;
+			player.hand.setCavalry(player.hand.getCavalry() + 1);
+		}
+		else if(val < this.artillery + this.cavalry + this.infantry){
+			this.infantry--;
+			player.hand.setInfantry(player.hand.getInfantry() + 1);
+		}
+		else{
+			this.wildcard--;
+			player.hand.setWildCards(player.hand.getWildcards() + 1);
+		}
 	}
 
 
