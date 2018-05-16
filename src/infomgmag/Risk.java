@@ -26,7 +26,9 @@ public class Risk {
     private Integer nrOfStartingUnits;
     private boolean StopGame;
 
-    private boolean visible = false;
+    private ArrayList<Player> defeatedPlayers;
+    private boolean visible = true;
+
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
@@ -51,7 +53,7 @@ public class Risk {
                                    // attack to the claimed territoy, he can move more units to the new territory
                                    // (atleast one unit has to stay behind)
             while ((combatMove = currentPlayer.getCombatMove()) != null) {
-                visuals.update(combatMove);
+                //visuals.update(combatMove);
                 performCombatMove(combatMove);
                 if (StopGame)
                     break;
@@ -134,6 +136,7 @@ public class Risk {
                     currentPlayer.turnInCards(board);
                 currentPlayer.placeReinforcements(board);
                 players.remove(defender);
+                defeatedPlayers.add(defender);
             }
             StopGame = playerHasReachedObjective(currentPlayer);
         }
@@ -164,6 +167,7 @@ public class Risk {
     private void initializeGame() {
         visuals = new RiskVisual(this,visible);
         board = new Board();
+        defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
         initializePlayers();
         Integer currentPlayerIndex = divideTerritories();
@@ -253,4 +257,9 @@ public class Risk {
     	System.err.println("Error:"+str);
     	System.exit(1);
     }
+
+    public ArrayList<Player> getDefeatedPlayers(){
+        return this.defeatedPlayers;
+    }
+
 }
