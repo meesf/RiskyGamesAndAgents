@@ -131,7 +131,7 @@ public class Bot extends Player{
 			for(Territory t : result) {
 				if(!visited.contains(t)) {
 					for(Territory c : t.getAdjacentTerritories()) {
-						if(!result.contains(c)) {
+						if(!result.contains(c) && territories.contains(c)) {
 							add.add(c);
 							foundTerritory = true;
 						}
