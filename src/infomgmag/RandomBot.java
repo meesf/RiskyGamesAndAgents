@@ -45,7 +45,7 @@ public class RandomBot extends Player {
                 }
             }
         }
-        
+
         if(useInfantry > 0 || useArtillery > 0 || useCavalry > 0){
             int reinforcementsByCards = board.getAndMoveGoldenCavalry();
             hand.setInfantry(hand.getInfantry() - useInfantry);

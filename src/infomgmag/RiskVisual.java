@@ -29,6 +29,7 @@ public class RiskVisual extends JFrame {
     private static final long serialVersionUID = 1L;
 
     Risk risk;
+    private boolean visible;
 
     // Define screen size
     int width = 1920, height = 1080;
@@ -51,56 +52,59 @@ public class RiskVisual extends JFrame {
 
     Image map;
 
-    public RiskVisual(Risk risk) {
+    public RiskVisual(Risk risk, boolean visible) {
         this.risk = risk;
+        this.visible = visible;
 
-        try {
-            map = ImageIO.read(new File("src/map.jpg"));
-        } catch (Exception e) {
-            System.out.println("Could not read image");
-            e.printStackTrace();
+        if (visible) {
+            try {
+                map = ImageIO.read(new File("src/map.jpg"));
+            } catch (Exception e) {
+                System.out.println("Could not read image");
+                e.printStackTrace();
+            }
+
+            gamePanel = new JPanel(new BorderLayout(0, 0));
+            gamePanel.setPreferredSize(new Dimension(gameWidth, gameHeight));
+            gamePanel.setVisible(true);
+            this.add(gamePanel, BorderLayout.WEST);
+
+            infoPanel = new JPanel(new BorderLayout(0, 0));
+            infoPanel.setSize(width - gameWidth, height);
+            this.add(infoPanel, BorderLayout.EAST);
+
+            logArea = new JTextArea();
+            logArea.setSize(logWidth, height * 3 / 4);
+            logArea.setEditable(false);
+            logArea.setLineWrap(true);
+            logArea.setWrapStyleWord(true);
+
+            infoArea = new JTextArea();
+            infoArea.setSize(logWidth, height);
+            infoArea.setEditable(false);
+            infoArea.setLineWrap(true);
+            infoArea.setWrapStyleWord(true);
+            infoArea.append("Here should be player info \n hahah");
+            infoPanel.add(infoArea, BorderLayout.NORTH);
+
+            logPanel = new JScrollPane(logArea);
+            logPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+            logPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            logPanel.setPreferredSize(new Dimension(width - gameWidth, height * 1 / 4));
+            DefaultCaret caret = (DefaultCaret) logArea.getCaret();
+            caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+            infoPanel.add(logPanel, BorderLayout.SOUTH);
+
+            // Standard window building code
+            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            this.setSize(width, height);
+            this.pack();
+            this.setVisible(true);
+
+            this.buffer = new BufferedImage(gameWidth, gameHeight, BufferedImage.TYPE_INT_ARGB);
+
+            this.lastFrameTime = System.currentTimeMillis();
         }
-
-        gamePanel = new JPanel(new BorderLayout(0, 0));
-        gamePanel.setPreferredSize(new Dimension(gameWidth, gameHeight));
-        gamePanel.setVisible(true);
-        this.add(gamePanel, BorderLayout.WEST);
-
-        infoPanel = new JPanel(new BorderLayout(0, 0));
-        infoPanel.setSize(width - gameWidth, height);
-        this.add(infoPanel, BorderLayout.EAST);
-
-        logArea = new JTextArea();
-        logArea.setSize(logWidth, height * 3 / 4);
-        logArea.setEditable(false);
-        logArea.setLineWrap(true);
-        logArea.setWrapStyleWord(true);
-
-        infoArea = new JTextArea();
-        infoArea.setSize(logWidth, height);
-        infoArea.setEditable(false);
-        infoArea.setLineWrap(true);
-        infoArea.setWrapStyleWord(true);
-        infoArea.append("Here should be player info \n hahah");
-        infoPanel.add(infoArea, BorderLayout.NORTH);
-
-        logPanel = new JScrollPane(logArea);
-        logPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        logPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        logPanel.setPreferredSize(new Dimension(width - gameWidth, height * 1 / 4));
-        DefaultCaret caret = (DefaultCaret) logArea.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        infoPanel.add(logPanel, BorderLayout.SOUTH);
-
-        // Standard window building code
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setSize(width, height);
-        this.pack();
-        this.setVisible(true);
-
-        this.buffer = new BufferedImage(gameWidth, gameHeight, BufferedImage.TYPE_INT_ARGB);
-
-        this.lastFrameTime = System.currentTimeMillis();
     }
 
     BufferedImage buffer;
@@ -112,6 +116,30 @@ public class RiskVisual extends JFrame {
 
     private int rasterY(double y) {
         return gameHeight - (int) (y * gameHeight);
+    }
+
+    public void log(String s) {
+        if (visible)
+            logArea.append(s);
+        else
+            System.out.print(s);
+    }
+
+    public void update() {
+        if (!visible)
+            return;
+        createBuffer();
+        drawMap(g);
+        drawBuffer();
+    }
+
+    public void update(CombatMove cm) {
+        if (!visible)
+            return;
+        createBuffer();
+        drawMap(g);
+        drawCombatArrow(cm);
+        drawBuffer();
     }
 
     public void createBuffer() {
@@ -177,19 +205,6 @@ public class RiskVisual extends JFrame {
         }
 
         this.infoArea.setText(info);
-    }
-
-    public void update() {
-        createBuffer();
-        drawMap(g);
-        drawBuffer();
-    }
-
-    public void update(CombatMove cm) {
-        createBuffer();
-        drawMap(g);
-        drawCombatArrow(cm);
-        drawBuffer();
     }
 
     public void drawCombatArrow(CombatMove cm) {
