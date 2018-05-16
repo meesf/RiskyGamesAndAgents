@@ -3,10 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="4faf1625-81bc-414e-b6be-7371525f662d" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/infomgmag/Bot.java" afterPath="$PROJECT_DIR$/src/infomgmag/Bot.java" />
-      <change beforePath="$PROJECT_DIR$/src/infomgmag/Human.java" afterPath="$PROJECT_DIR$/src/infomgmag/Human.java" />
-      <change beforePath="$PROJECT_DIR$/src/infomgmag/Player.java" afterPath="$PROJECT_DIR$/src/infomgmag/Player.java" />
+      <change beforePath="$PROJECT_DIR$/src/infomgmag/Board.java" afterPath="$PROJECT_DIR$/src/infomgmag/Board.java" />
+      <change beforePath="$PROJECT_DIR$/src/infomgmag/RandomBot.java" afterPath="$PROJECT_DIR$/src/infomgmag/RandomBot.java" />
       <change beforePath="$PROJECT_DIR$/src/infomgmag/Risk.java" afterPath="$PROJECT_DIR$/src/infomgmag/Risk.java" />
+      <change beforePath="$PROJECT_DIR$/src/infomgmag/RiskVisual.java" afterPath="$PROJECT_DIR$/src/infomgmag/RiskVisual.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,26 +24,26 @@
       <file leaf-file-name="Risk.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/infomgmag/Risk.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2007">
-              <caret line="58" column="13" lean-forward="true" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="13" />
+            <state relative-caret-position="279">
+              <caret line="212" column="9" lean-forward="true" selection-start-line="212" selection-start-column="9" selection-end-line="212" selection-end-column="9" />
               <folding>
-                <element signature="e#749#750#0" expanded="true" />
-                <element signature="e#772#773#0" expanded="true" />
-                <element signature="e#2287#2296#0" expanded="true" />
-                <element signature="e#2350#2359#0" expanded="true" />
-                <element signature="e#5471#5472#0" expanded="true" />
-                <element signature="e#5492#5493#0" expanded="true" />
-                <element signature="e#5530#5531#0" expanded="true" />
-                <element signature="e#5557#5558#0" expanded="true" />
-                <element signature="e#6668#6669#0" expanded="true" />
-                <element signature="e#6692#6693#0" expanded="true" />
-                <element signature="e#6738#6739#0" expanded="true" />
-                <element signature="e#6787#6788#0" expanded="true" />
-                <element signature="e#6868#6869#0" expanded="true" />
-                <element signature="e#6913#6914#0" expanded="true" />
-                <element signature="e#6957#6958#0" expanded="true" />
-                <element signature="e#6987#6988#0" expanded="true" />
+                <element signature="e#883#884#0" expanded="true" />
+                <element signature="e#915#916#0" expanded="true" />
+                <element signature="e#8138#8139#0" expanded="true" />
+                <element signature="e#8196#8197#0" expanded="true" />
+                <element signature="e#8394#8395#0" expanded="true" />
+                <element signature="e#8437#8438#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Objective.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/infomgmag/Objective.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="6" column="24" lean-forward="false" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -51,8 +51,8 @@
       <file leaf-file-name="RiskVisual.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/infomgmag/RiskVisual.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-231">
-              <caret line="43" column="12" lean-forward="false" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
+            <state relative-caret-position="205">
+              <caret line="158" column="0" lean-forward="true" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -61,26 +61,9 @@
       <file leaf-file-name="Human.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/infomgmag/Human.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+            <state relative-caret-position="441">
+              <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Bot.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/infomgmag/Bot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="156" column="27" lean-forward="false" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="27" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#176#177#0" expanded="true" />
-                <element signature="e#222#223#0" expanded="true" />
-                <element signature="e#5349#5360#0" expanded="true" />
-                <element signature="e#5409#5420#0" expanded="true" />
-                <element signature="e#5575#5586#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -88,12 +71,19 @@
       <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/infomgmag/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-143">
-              <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-              <folding>
-                <element signature="e#1218#1219#0" expanded="true" />
-                <element signature="e#1246#1247#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-80">
+              <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RandomBot.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/infomgmag/RandomBot.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-21">
+              <caret line="47" column="8" lean-forward="false" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -101,9 +91,39 @@
       <file leaf-file-name="Board.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/infomgmag/Board.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="485">
-              <caret line="315" column="0" lean-forward="false" selection-start-line="315" selection-start-column="0" selection-end-line="315" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="109">
+              <caret line="307" column="34" lean-forward="false" selection-start-line="307" selection-start-column="34" selection-end-line="307" selection-end-column="34" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#9771#9772#0" expanded="true" />
+                <element signature="e#9837#9838#0" expanded="true" />
+                <element signature="e#10126#10127#0" expanded="true" />
+                <element signature="e#10154#10155#0" expanded="true" />
+                <element signature="e#10291#10292#0" expanded="true" />
+                <element signature="e#10315#10316#0" expanded="true" />
+                <element signature="e#10695#10696#0" expanded="true" />
+                <element signature="e#10728#10729#0" expanded="true" />
+                <element signature="e#10765#10766#0" expanded="true" />
+                <element signature="e#10801#10802#0" expanded="true" />
+                <element signature="e#10991#10992#0" expanded="true" />
+                <element signature="e#11025#11026#0" expanded="true" />
+                <element signature="e#11057#11058#0" expanded="true" />
+                <element signature="e#11088#11089#0" expanded="true" />
+                <element signature="e#11121#11122#0" expanded="true" />
+                <element signature="e#11153#11154#0" expanded="true" />
+                <element signature="e#11184#11185#0" expanded="true" />
+                <element signature="e#11214#11215#0" expanded="true" />
+                <element signature="e#11246#11247#0" expanded="true" />
+                <element signature="e#11277#11278#0" expanded="true" />
+                <element signature="e#11326#11327#0" expanded="true" />
+                <element signature="e#11366#11367#0" expanded="true" />
+                <element signature="e#11413#11414#0" expanded="true" />
+                <element signature="e#11455#11456#0" expanded="true" />
+                <element signature="e#11498#11499#0" expanded="true" />
+                <element signature="e#11536#11537#0" expanded="true" />
+                <element signature="e#11582#11583#0" expanded="true" />
+                <element signature="e#11623#11624#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -111,9 +131,11 @@
       <file leaf-file-name="Hand.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/infomgmag/Hand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="16" column="46" lean-forward="false" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
-              <folding />
+            <state relative-caret-position="126">
+              <caret line="17" column="31" lean-forward="false" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
+              <folding>
+                <element signature="e#349#350#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -129,9 +151,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>single</find>
       <find>remov</find>
-      <find>remove</find>
       <find>thread</find>
       <find>next</find>
       <find>curren</find>
@@ -159,6 +179,8 @@
       <find>initialPlaceReinforcements</find>
       <find>divideTerritories</find>
       <find>initializePlayers</find>
+      <find>golden</find>
+      <find>remove</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -186,19 +208,20 @@
         <option value="$PROJECT_DIR$/src/Human.java" />
         <option value="$PROJECT_DIR$/src/Risk.java" />
         <option value="$PROJECT_DIR$/src/infomgmag/Hand.java" />
-        <option value="$PROJECT_DIR$/src/infomgmag/Board.java" />
         <option value="$PROJECT_DIR$/src/infomgmag/Player.java" />
-        <option value="$PROJECT_DIR$/src/infomgmag/Risk.java" />
         <option value="$PROJECT_DIR$/src/infomgmag/Bot.java" />
         <option value="$PROJECT_DIR$/src/infomgmag/Human.java" />
+        <option value="$PROJECT_DIR$/src/infomgmag/Risk.java" />
+        <option value="$PROJECT_DIR$/src/infomgmag/RiskVisual.java" />
+        <option value="$PROJECT_DIR$/src/infomgmag/Board.java" />
+        <option value="$PROJECT_DIR$/src/infomgmag/RandomBot.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-2" />
-    <option name="y" value="45" />
-    <option name="width" value="1938" />
-    <option name="height" value="1048" />
+    <option name="x" value="-8" />
+    <option name="width" value="976" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="1" />
@@ -441,7 +464,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18700114" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3808438" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -506,13 +529,34 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <option name="time" value="9" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="hand.getNumberOfCards()" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>hand.getNumberOfCards()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>hand.getArtillery()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>hand.getWildcards()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Human.java" />
-    <entry file="file://$PROJECT_DIR$/src/Board.java" />
     <entry file="file://$PROJECT_DIR$/src/Bot.java" />
     <entry file="file://$PROJECT_DIR$/src/Player.java" />
     <entry file="file://$PROJECT_DIR$/src/Territory.java" />
@@ -570,75 +614,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="353" column="23" lean-forward="false" selection-start-line="353" selection-start-column="23" selection-end-line="353" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/infomgmag/Hand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="16" column="46" lean-forward="false" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/infomgmag/Board.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
-          <caret line="315" column="0" lean-forward="false" selection-start-line="315" selection-start-column="0" selection-end-line="315" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/infomgmag/Risk.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2007">
-          <caret line="58" column="13" lean-forward="true" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="13" />
-          <folding>
-            <element signature="e#749#750#0" expanded="true" />
-            <element signature="e#772#773#0" expanded="true" />
-            <element signature="e#2287#2296#0" expanded="true" />
-            <element signature="e#2350#2359#0" expanded="true" />
-            <element signature="e#5471#5472#0" expanded="true" />
-            <element signature="e#5492#5493#0" expanded="true" />
-            <element signature="e#5530#5531#0" expanded="true" />
-            <element signature="e#5557#5558#0" expanded="true" />
-            <element signature="e#6668#6669#0" expanded="true" />
-            <element signature="e#6692#6693#0" expanded="true" />
-            <element signature="e#6738#6739#0" expanded="true" />
-            <element signature="e#6787#6788#0" expanded="true" />
-            <element signature="e#6868#6869#0" expanded="true" />
-            <element signature="e#6913#6914#0" expanded="true" />
-            <element signature="e#6957#6958#0" expanded="true" />
-            <element signature="e#6987#6988#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/infomgmag/RiskVisual.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-231">
-          <caret line="43" column="12" lean-forward="false" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/infomgmag/Human.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/infomgmag/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-143">
-          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding>
-            <element signature="e#1218#1219#0" expanded="true" />
-            <element signature="e#1246#1247#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -646,14 +621,110 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="385">
           <caret line="156" column="27" lean-forward="false" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/infomgmag/Objective.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="6" column="24" lean-forward="false" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/infomgmag/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-80">
+          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/infomgmag/Board.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="307" column="34" lean-forward="false" selection-start-line="307" selection-start-column="34" selection-end-line="307" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#176#177#0" expanded="true" />
-            <element signature="e#222#223#0" expanded="true" />
-            <element signature="e#5349#5360#0" expanded="true" />
-            <element signature="e#5409#5420#0" expanded="true" />
-            <element signature="e#5575#5586#0" expanded="true" />
+            <element signature="e#9771#9772#0" expanded="true" />
+            <element signature="e#9837#9838#0" expanded="true" />
+            <element signature="e#10126#10127#0" expanded="true" />
+            <element signature="e#10154#10155#0" expanded="true" />
+            <element signature="e#10291#10292#0" expanded="true" />
+            <element signature="e#10315#10316#0" expanded="true" />
+            <element signature="e#10695#10696#0" expanded="true" />
+            <element signature="e#10728#10729#0" expanded="true" />
+            <element signature="e#10765#10766#0" expanded="true" />
+            <element signature="e#10801#10802#0" expanded="true" />
+            <element signature="e#10991#10992#0" expanded="true" />
+            <element signature="e#11025#11026#0" expanded="true" />
+            <element signature="e#11057#11058#0" expanded="true" />
+            <element signature="e#11088#11089#0" expanded="true" />
+            <element signature="e#11121#11122#0" expanded="true" />
+            <element signature="e#11153#11154#0" expanded="true" />
+            <element signature="e#11184#11185#0" expanded="true" />
+            <element signature="e#11214#11215#0" expanded="true" />
+            <element signature="e#11246#11247#0" expanded="true" />
+            <element signature="e#11277#11278#0" expanded="true" />
+            <element signature="e#11326#11327#0" expanded="true" />
+            <element signature="e#11366#11367#0" expanded="true" />
+            <element signature="e#11413#11414#0" expanded="true" />
+            <element signature="e#11455#11456#0" expanded="true" />
+            <element signature="e#11498#11499#0" expanded="true" />
+            <element signature="e#11536#11537#0" expanded="true" />
+            <element signature="e#11582#11583#0" expanded="true" />
+            <element signature="e#11623#11624#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/infomgmag/Human.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="441">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/infomgmag/RiskVisual.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="158" column="0" lean-forward="true" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/infomgmag/Hand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="17" column="31" lean-forward="false" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
+          <folding>
+            <element signature="e#349#350#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/infomgmag/Risk.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="212" column="9" lean-forward="true" selection-start-line="212" selection-start-column="9" selection-end-line="212" selection-end-column="9" />
+          <folding>
+            <element signature="e#883#884#0" expanded="true" />
+            <element signature="e#915#916#0" expanded="true" />
+            <element signature="e#8138#8139#0" expanded="true" />
+            <element signature="e#8196#8197#0" expanded="true" />
+            <element signature="e#8394#8395#0" expanded="true" />
+            <element signature="e#8437#8438#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/infomgmag/RandomBot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-21">
+          <caret line="47" column="8" lean-forward="false" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>

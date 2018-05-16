@@ -155,6 +155,7 @@ public class RiskVisual extends JFrame {
         info += "Turn " + risk.getTurn() + "\n";
 
         info += "Current state:\n\n";
+        info += "Value golden cavalry: " + risk.getBoard().getGoldenCavalry() + "\n\n";
 
         for (Player p : risk.getPlayers()) {
             info += p.getName();
@@ -165,8 +166,14 @@ public class RiskVisual extends JFrame {
             info += "Infantry: " + p.hand.getInfantry() + "\n";
             info += "Cavalry: " + p.hand.getCavalry() + "\n";
             info += "Artillery: " + p.hand.getArtillery() + "\n";
+            info += "Wildcards: " + p.hand.getWildcards() + "\n";
 
             info += "\n";
+        }
+
+        info+= "Defeated players:\n";
+        for(Player p : risk.getDefeatedPlayers()){
+            info+= p.name + "\n";
         }
 
         this.infoArea.setText(info);
