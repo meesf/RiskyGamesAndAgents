@@ -1,6 +1,8 @@
 package infomgmag;
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -9,6 +11,11 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.text.DefaultCaret;
 
 
 /**
@@ -24,6 +31,12 @@ public class RiskVisual extends JFrame{
 
 	// Define screen size
 	int width = 1920, height = 1080;
+	int gameWidth = 1600, gameHeight = height;
+	int logWidth = width - gameWidth - 20;
+
+	JPanel gamePanel;
+	JTextArea logArea;
+	JScrollPane logPanel;
 
 	// Define territory radii
 	int continentRadius = 50;
@@ -45,13 +58,31 @@ public class RiskVisual extends JFrame{
 			e.printStackTrace();
 		}
 
+		gamePanel = new JPanel();
+		gamePanel.setPreferredSize(new Dimension (gameWidth, gameHeight));
+		gamePanel.setVisible(true);
+		this.add(gamePanel, BorderLayout.WEST);
+
+		logArea = new JTextArea();
+		logArea.setSize(logWidth, height);
+		logArea.setEditable(false);
+		logArea.setLineWrap(true);
+		logArea.setWrapStyleWord(true);
+		logPanel = new JScrollPane(logArea);
+		logPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		logPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		logPanel.setSize(width-gameWidth, height);
+		DefaultCaret caret = (DefaultCaret)logArea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		this.add(logPanel, BorderLayout.EAST);
+
 		// Standard window building code
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.pack();
 		this.setSize(width,height);
+		this.pack();
 		this.setVisible(true);
 
-		this.buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		this.buffer = new BufferedImage(gameWidth, gameHeight, BufferedImage.TYPE_INT_ARGB);
 
 		this.lastFrameTime = System.currentTimeMillis();
 	}
@@ -60,11 +91,11 @@ public class RiskVisual extends JFrame{
 	Graphics2D g;
 
 	private int rasterX(double x) {
-		return (int) (x * width);
+		return (int) (x * gameWidth);
 	}
 
 	private int rasterY(double y) {
-		return height - (int) (y * height);
+		return gameHeight - (int) (y * gameHeight);
 	}
 
 	public void createBuffer() {
@@ -79,9 +110,9 @@ public class RiskVisual extends JFrame{
 	    // Background
 		g.setColor(Color.WHITE);
 		if (map == null) {
-			g.fillRect(0, 0, width, height);
+			g.fillRect(0, 0, gameWidth, gameHeight);
 		} else {
-			g.drawImage(map, 0, 0, width, height, null);
+			g.drawImage(map, 0, 0, gameWidth, gameHeight, null);
 		}
 	}
 
@@ -100,7 +131,7 @@ public class RiskVisual extends JFrame{
 			}
 		}
 		lastFrameTime = System.currentTimeMillis();
-		this.getContentPane().getGraphics().drawImage(buffer, 0, 0, null);
+		gamePanel.getGraphics().drawImage(buffer, 0, 0, null);
 	}
 
 	public void update() {
@@ -155,17 +186,17 @@ public class RiskVisual extends JFrame{
 	private void drawMap(Graphics2D g) {
 		for (Continent c : risk.getBoard().getContinents()) {
 			for (Territory t : c.getTerritories()) {
-				int centerX = (int) (t.x * (double) width);
-				int centerY = height - (int) (t.y * (double) height);
+				int centerX = (int) (t.x * (double) gameWidth);
+				int centerY = gameHeight - (int) (t.y * (double) gameHeight);
 				// Draw edges
 				for (Territory adjacent : t.getAdjacentTerritories()) {
 					g.setColor(Color.BLACK);
 					if (t.getName()=="Alaska" && adjacent.getName() == "Kamchatka") {
 						g.drawLine(centerX, centerY, 0, centerY);
 					} else if (t.getName()== "Kamchatka" && adjacent.getName() == "Alaska") {
-						g.drawLine(centerX, centerY, width, centerY);
+						g.drawLine(centerX, centerY, gameWidth, centerY);
 					} else {
-						g.drawLine(centerX, centerY, (int) (adjacent.x * (double) width), height - (int) (adjacent.y*(double) height));
+						g.drawLine(centerX, centerY, (int) (adjacent.x * (double) gameWidth), gameHeight - (int) (adjacent.y*(double) gameHeight));
 					}
 				}
 			}
@@ -175,8 +206,8 @@ public class RiskVisual extends JFrame{
 		for (Continent c : risk.getBoard().getContinents()) {
 			continentColor = c.getColor();
 			for (Territory t : c.getTerritories()) {
-				int centerX = (int) (t.x * (double) width);
-				int centerY = height - (int) (t.y * (double) height);
+				int centerX = (int) (t.x * (double) gameWidth);
+				int centerY = gameHeight - (int) (t.y * (double) gameHeight);
 
 				// Draw continent
 				g.setColor(continentColor);

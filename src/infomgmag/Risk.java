@@ -40,7 +40,7 @@ public class Risk {
 			currentPlayer.setReinforcements(currentPlayer.getReinforcements() + nrOfReinforcements);
 			currentPlayer.turnInCards(board);
 			while(currentPlayer.getReinforcements() != 0){
-				System.out.println("place single reinforecements " + currentPlayer.getName());
+				visuals.logArea.append(("place single reinforecements " + currentPlayer.getName() + "\n"));
 				currentPlayer.placeSingleReinforcement(board);
 			}
 			CombatMove combatMove;
