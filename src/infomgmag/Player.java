@@ -25,12 +25,12 @@ public abstract class Player {
 		this.color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f);
 	}
 
-	public abstract void placeSingleReinforcement(Board board);
 	public abstract void turnInCards(Board board);
 	public abstract void fortifyTerritory(Board board);
 	public abstract CombatMove getCombatMove();
+    public abstract void movingInAfterInvasion(CombatMove combatMove);
 
-	public String getName() {
+    public String getName() {
 		return name;
 	}
 
@@ -59,6 +59,8 @@ public abstract class Player {
 	public void addTerritory(Territory t) {
 		territories.add(t);
 	}
+
+	public abstract void placeReinforcements(Board board);
 
 
 	@Override

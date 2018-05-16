@@ -8,15 +8,6 @@ public class Bot extends Player{
         super(o, reinforcements, name);
     }
 
-    //TODO: the placement is just random now,  this should be changed when we want to make it smarter
-    @Override
-    public void placeSingleReinforcement(Board board) {
-        System.out.println(territories);
-        Territory randomTer = territories.get(Risk.random.nextInt(territories.size()));
-        randomTer.setUnits(randomTer.getNUnits() + 1);
-        reinforcements--;
-    }
-
     @Override
     public void turnInCards(Board board) {
         int reinforcements = 0;
@@ -123,10 +114,6 @@ public class Bot extends Player{
 				Territory fortifiedTerritory = connections.get(Risk.random.nextInt(connections.size()));
 				t.setUnits(t.getNUnits() - units);
 				fortifiedTerritory.setUnits(fortifiedTerritory.getNUnits() + units);
-				if(!t.equals(fortifiedTerritory)) {
-					Risk.println("Fortified "+fortifiedTerritory.getName()+" from "+t.getName()+" with "+units+" units");
-				}
-				System.out.println();
 				break;
 			}
 		}
@@ -156,4 +143,25 @@ public class Bot extends Player{
 		}
 		return result;
 	}
+    @Override
+    public void movingInAfterInvasion(CombatMove combatMove){
+        int transferredUnits = nrOfUnitsmovingInAfterInvasion(combatMove);
+        combatMove.getDefendingTerritory().setUnits(transferredUnits);
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredUnits);
+    }
+
+    @Override
+    public void placeReinforcements(Board board) {
+        while(getReinforcements() != 0){
+            Territory randomTer = territories.get(Risk.random.nextInt(territories.size()));
+            randomTer.setUnits(randomTer.getNUnits() + 1);
+            reinforcements--;
+        }
+    }
+
+    //TODO: Here the agent is always leaving one unit behind and move the rest to the invaded territory. This should eventually be changed.
+    private int nrOfUnitsmovingInAfterInvasion(CombatMove combatMove){
+        return combatMove.getAttackingTerritory().getNUnits() - 1;
+    }
+
 }
