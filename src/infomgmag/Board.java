@@ -288,6 +288,10 @@ public class Board {
         return cavalry;
     }
 
+    public int getWildcards(){
+        return wildcard;
+    }
+
     public void setInfantry(Integer infantry) {
         this.infantry = infantry;
     }
@@ -298,6 +302,10 @@ public class Board {
 
     public void setCavalry(int cavalry) {
         this.cavalry = cavalry;
+    }
+
+    public void setWildcards(int wildcards){
+        this.wildcard = wildcards;
     }
 
     public void drawCard(Player player) {

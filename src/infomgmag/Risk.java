@@ -26,6 +26,7 @@ public class Risk {
     private Integer nrOfStartingUnits;
     private boolean StopGame;
 
+    private ArrayList<Player> defeatedPlayers;
     private boolean visible = true;
 
     public static void main(String[] args) {
@@ -134,6 +135,7 @@ public class Risk {
                     currentPlayer.turnInCards(board);
                 currentPlayer.placeReinforcements(board);
                 players.remove(defender);
+                defeatedPlayers.add(defender);
             }
             StopGame = playerHasReachedObjective(currentPlayer);
         }
@@ -164,6 +166,7 @@ public class Risk {
     private void initializeGame() {
         visuals = new RiskVisual(this,visible);
         board = new Board();
+        defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
         initializePlayers();
         Integer currentPlayerIndex = divideTerritories();
@@ -224,6 +227,10 @@ public class Risk {
      */
     private boolean finished() {
         return players.size() == 1 || StopGame;
+    }
+
+    public ArrayList<Player> getDefeatedPlayers(){
+        return this.defeatedPlayers;
     }
 
     public static void println(String str) {
