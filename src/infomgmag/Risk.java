@@ -132,7 +132,7 @@ public class Risk {
 			if(isPlayerDead(defender)){
 				System.out.println("removed player: " + combatMove.getDefendingTerritory().getOwner());
 				// Attacker receives all the territory cards of the defender.
-				// TODO: also add wildcards...
+				currentPlayer.hand.setWildCards(currentPlayer.hand.getNumberOfCards() + defender.hand.getNumberOfCards());
 				currentPlayer.hand.setArtillery(currentPlayer.hand.getArtillery() + defender.hand.getArtillery());
 				currentPlayer.hand.setCavalry(currentPlayer.hand.getCavalry() + defender.hand.getCavalry());
 				currentPlayer.hand.setInfantry(currentPlayer.hand.getInfantry() + defender.hand.getInfantry());
