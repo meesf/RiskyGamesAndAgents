@@ -1,5 +1,6 @@
 package infomgmag;
 import java.util.Collections;
+import java.util.ArrayList;
 
 public class Bot extends Player{
 
@@ -111,4 +112,48 @@ public class Bot extends Player{
         }
         return null;
     }
+
+	@Override
+	public void fortifyTerritory(Board board) {
+		Collections.shuffle(territories, Risk.random);
+		for(Territory t : territories) {
+			if(t.getNUnits() > 1) {
+				int units = Risk.random.nextInt(t.getNUnits() - 1) + 1;
+				ArrayList<Territory> connections = getConnectedTerritories(t);
+				Territory fortifiedTerritory = connections.get(Risk.random.nextInt(connections.size()));
+				t.setUnits(t.getNUnits() - units);
+				fortifiedTerritory.setUnits(fortifiedTerritory.getNUnits() + units);
+				if(!t.equals(fortifiedTerritory)) {
+					Risk.println("Fortified "+fortifiedTerritory.getName()+" from "+t.getName()+" with "+units+" units");
+				}
+				System.out.println();
+				break;
+			}
+		}
+	}
+	
+	// TODO: Maybe this function can be more efficient....
+	private ArrayList<Territory> getConnectedTerritories(Territory origin) {
+		ArrayList<Territory> visited = new ArrayList<Territory>();
+		ArrayList<Territory> result = new ArrayList<Territory>();
+		result.add(origin);
+		boolean foundTerritory = true;
+		while(foundTerritory) {
+			foundTerritory = false;
+			ArrayList<Territory> add = new ArrayList<Territory>();
+			for(Territory t : result) {
+				if(!visited.contains(t)) {
+					for(Territory c : t.getAdjacentTerritories()) {
+						if(!result.contains(c)) {
+							add.add(c);
+							foundTerritory = true;
+						}
+					}
+					visited.add(t);
+				}
+			}
+			for(Territory t : add) { result.add(t); }
+		}
+		return result;
+	}
 }
