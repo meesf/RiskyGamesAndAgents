@@ -132,14 +132,16 @@ public class Risk {
 			if(isPlayerDead(defender)){
 				System.out.println("removed player: " + combatMove.getDefendingTerritory().getOwner());
 				// Attacker receives all the territory cards of the defender.
-				currentPlayer.hand.setWildCards(currentPlayer.hand.getNumberOfCards() + defender.hand.getNumberOfCards());
+				currentPlayer.hand.setWildCards(currentPlayer.hand.getWildcards() + defender.hand.getWildcards());
 				currentPlayer.hand.setArtillery(currentPlayer.hand.getArtillery() + defender.hand.getArtillery());
 				currentPlayer.hand.setCavalry(currentPlayer.hand.getCavalry() + defender.hand.getCavalry());
 				currentPlayer.hand.setInfantry(currentPlayer.hand.getInfantry() + defender.hand.getInfantry());
 				while(currentPlayer.hand.getNumberOfCards() > 4) {
 					currentPlayer.turnInCards(board);
 				}
-				currentPlayer.turnInCards(board);
+				while(currentPlayer.getReinforcements() != 0){
+					currentPlayer.placeSingleReinforcement(board);
+				}
 				players.remove(defender);
 			}
 			StopGame = playerHasReachedObjective(currentPlayer);

@@ -29,7 +29,7 @@ public class Hand {
     }
     
     public int getNumberOfCards() {
-    	return infantry + cavalry + artillery;
+    	return infantry + cavalry + artillery + wildcards;
     }
 
     public void setWildCards(int wildcard){ this.wildcards = wildcards;}
