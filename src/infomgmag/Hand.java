@@ -1,43 +1,48 @@
 package infomgmag;
+
 public class Hand {
-    private int infantry, cavalry, artillery, wildcards;
+	private int infantry, cavalry, artillery, wildcards;
 
-    public int getInfantry() {
-        return infantry;
-    }
+	public Hand() {
+		this.infantry = 0;
+		this.cavalry = 0;
+		this.artillery = 0;
+		this.wildcards = 0;
+	}
 
-    public int getArtillery() {
-        return artillery;
-    }
+	public int getArtillery() {
+		return this.artillery;
+	}
 
-    public int getCavalry() {
-        return cavalry;
-    }
+	public int getCavalry() {
+		return this.cavalry;
+	}
 
-    public int getWildcards(){return wildcards;}
+	public int getInfantry() {
+		return this.infantry;
+	}
 
-    public void setInfantry(Integer infantry){
-        this.infantry = infantry;
-    }
+	public int getNumberOfCards() {
+		return this.infantry + this.cavalry + this.artillery + this.wildcards;
+	}
 
-    public void setArtillery(int artillery) {
-        this.artillery = artillery;
-    }
+	public int getWildcards() {
+		return this.wildcards;
+	}
 
-    public void setCavalry(int cavalry) {
-        this.cavalry = cavalry;
-    }
-    
-    public int getNumberOfCards() {
-    	return infantry + cavalry + artillery + wildcards;
-    }
+	public void setArtillery(int artillery) {
+		this.artillery = artillery;
+	}
 
-    public void setWildCards(int wildcard){ this.wildcards = wildcards;}
+	public void setCavalry(int cavalry) {
+		this.cavalry = cavalry;
+	}
 
-    public Hand(){
-        infantry = 0;
-        cavalry = 0;
-        artillery = 0;
-        wildcards = 0;
-    }
+	public void setInfantry(Integer infantry) {
+		this.infantry = infantry;
+	}
+
+	public void setWildCards(int wildcards) {
+		this.wildcards = wildcards;
+	}
 }
