@@ -35,7 +35,7 @@ public class Risk {
 
 	public void run(){
 		while (!finished()) {
-			visuals.update();
+			//visuals.update();
 
 			System.out.println("Current Player: " + currentPlayer.toString());
 			Integer nrOfReinforcements = calculateReinforcements();
@@ -45,9 +45,10 @@ public class Risk {
 				System.out.println("place single reinforecements " + currentPlayer.getName());
 				currentPlayer.placeSingleReinforcement(board);
 			}
-			CombatMove combatMove;		// If a territory is claimed the player has to move the units he used during his attack to the claimed territoy, he can move more units to the new territory (atleast one unit has to stay behind)   
+			int startingNrOfTerritories = currentPlayer.getTerritories().size();
+			CombatMove combatMove;		// If a territory is claimed the player has to move the units he used during his attack to the claimed territoy, he can move more units to the new territory (atleast one unit has to stay behind)
 			while((combatMove = currentPlayer.getCombatMove()) != null){
-				visuals.update(combatMove);
+				//visuals.update(combatMove);
 				performCombatMove(combatMove);
 				if(StopGame){
 					break;
@@ -56,9 +57,15 @@ public class Risk {
 			currentPlayer.fortifyTerritory(board);
 			visuals.update();
 
+			int endingNrOfTerritories = currentPlayer.getTerritories().size();
+			if(startingNrOfTerritories < endingNrOfTerritories){
+				board.drawCard(currentPlayer);
+			}
+
 			nextCurrentPlayer();
+
 		}
-		visuals.update();
+		//visuals.update();
 		System.out.println(players.get(0) + " has won!");
 
 	}

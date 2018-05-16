@@ -21,8 +21,7 @@ public class Bot extends Player{
     public void turnInCards(Board board) {
         int reinforcements = 0;
         if(hand.getInfantry() > 0 && hand.getArtillery() > 0 && hand.getCavalry() > 0){
-            reinforcements = board.getGoldenCavalry();
-            board.moveGoldenCavalry();
+            reinforcements = board.getAndMoveGoldenCavalry();
             hand.setArtillery(hand.getArtillery() - 1);
             hand.setCavalry(hand.getCavalry() - 1);
             hand.setInfantry(hand.getInfantry() - 1);
@@ -31,22 +30,57 @@ public class Bot extends Player{
             board.setInfantry(board.getInfantry() + 1);
         }
         else if(hand.getInfantry() > 2){
-            reinforcements = board.getGoldenCavalry();
-            board.moveGoldenCavalry();
+            reinforcements = board.getAndMoveGoldenCavalry();
             hand.setInfantry(hand.getInfantry() - 3);
             board.setInfantry(board.getInfantry() + 3);
         }
         else if(hand.getCavalry() > 2){
-            reinforcements = board.getGoldenCavalry();
-            board.moveGoldenCavalry();
+            reinforcements = board.getAndMoveGoldenCavalry();
             hand.setCavalry(hand.getCavalry() - 3);
             board.setCavalry(board.getCavalry() + 3);
         }
         else if(hand.getArtillery() > 2){
-            reinforcements = board.getGoldenCavalry();
-            board.moveGoldenCavalry();
+            reinforcements = board.getAndMoveGoldenCavalry();
             hand.setArtillery(hand.getArtillery() - 3);
             board.setArtillery(board.getArtillery() + 3);
+        }
+        else if(hand.getWildcards() > 0){
+            if(hand.getArtillery() > 0 && hand.getCavalry() > 0){
+                reinforcements = board.getAndMoveGoldenCavalry();
+                hand.setArtillery(hand.getArtillery() - 1);
+                hand.setCavalry(hand.getCavalry() - 1);
+                board.setArtillery(board.getArtillery() + 1);
+                board.setCavalry(board.getCavalry() + 1);
+            }
+            else if(hand.getArtillery() > 0 && hand.getInfantry() > 0){
+                reinforcements = board.getAndMoveGoldenCavalry();
+                hand.setArtillery(hand.getArtillery() - 1);
+                hand.setInfantry(hand.getInfantry() - 1);
+                board.setArtillery(board.getArtillery() + 1);
+                board.setInfantry(board.getCavalry() + 1);
+            }
+            else if(hand.getCavalry() > 0 && hand.getInfantry() > 0){
+                reinforcements = board.getAndMoveGoldenCavalry();
+                hand.setCavalry(hand.getCavalry() - 1);
+                hand.setInfantry(hand.getInfantry() - 1);
+                board.setCavalry(board.getCavalry() + 1);
+                board.setInfantry(board.getCavalry() + 1);
+            }
+            else if(hand.getCavalry() > 1){
+                reinforcements = board.getAndMoveGoldenCavalry();
+                hand.setCavalry(hand.getCavalry() - 2);
+                board.setCavalry(board.getCavalry() + 2);
+            }
+            else if(hand.getArtillery() > 1){
+                reinforcements = board.getAndMoveGoldenCavalry();
+                hand.setArtillery(hand.getArtillery() - 2);
+                board.setArtillery(board.getArtillery() + 2);
+            }
+            else if(hand.getInfantry() > 1){
+                reinforcements = board.getAndMoveGoldenCavalry();
+                hand.setInfantry(hand.getInfantry() - 2);
+                board.setInfantry(board.getInfantry() + 2);
+            }
         }
 
         this.reinforcements += reinforcements;
