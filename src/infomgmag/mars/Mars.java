@@ -2,6 +2,7 @@ package infomgmag.mars;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import infomgmag.Board;
 import infomgmag.CombatMove;
@@ -18,20 +19,23 @@ public class Mars extends Player {
 
     private CardAgent cardAgent;
     private List<CountryAgent> countryAgents;
+    private Map<Territory,CountryAgent> countryAgentsByTerritory;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name) {
         super(objective, reinforcements, name);
 
         cardAgent = new CardAgent();
         countryAgents = new ArrayList<>();
-        for (Territory t : risk.getBoard().getTerritories())
-            countryAgents.add(new CountryAgent(t));
+        for (Territory t : risk.getBoard().getTerritories()) {
+            CountryAgent ca = new CountryAgent(t);
+            countryAgents.add(ca);
+            countryAgentsByTerritory.put(t, ca);
+        }
     }
 
     @Override
     public void turnInCards(Board board) {
-        // TODO Auto-generated method stub
-
+        cardAgent.tradeIn(board);
     }
 
     @Override

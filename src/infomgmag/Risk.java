@@ -52,7 +52,7 @@ public class Risk {
                                    // attack to the claimed territoy, he can move more units to the new territory
                                    // (atleast one unit has to stay behind)
             while ((combatMove = currentPlayer.getCombatMove()) != null) {
-                //visuals.update(combatMove);
+                visuals.update(combatMove);
                 performCombatMove(combatMove);
                 if (StopGame)
                     break;
