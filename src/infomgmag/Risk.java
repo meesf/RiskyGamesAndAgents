@@ -3,6 +3,8 @@ package infomgmag;
 import java.util.*;
 import java.util.ArrayList;
 
+import org.omg.CORBA.Current;
+
 /**
  * This class contains the main() method. This class is the bridge between the visual presentation of
  * the game (RiskVisual) and the data presentation of the game (RiskPhysics).
@@ -35,7 +37,7 @@ public class Risk {
 
 	public void run(){
 		while (!finished()) {
-			visuals.update();
+			//visuals.update();
 
 			System.out.println("Current Player: " + currentPlayer.toString());
 			Integer nrOfReinforcements = calculateReinforcements();
@@ -45,19 +47,28 @@ public class Risk {
 				visuals.logArea.append(("place single reinforecements " + currentPlayer.getName() + "\n"));
 				currentPlayer.placeSingleReinforcement(board);
 			}
-			CombatMove combatMove;
+			int startingNrOfTerritories = currentPlayer.getTerritories().size();
+			CombatMove combatMove;		// If a territory is claimed the player has to move the units he used during his attack to the claimed territoy, he can move more units to the new territory (atleast one unit has to stay behind)
 			while((combatMove = currentPlayer.getCombatMove()) != null){
-				visuals.update(combatMove);
+				//visuals.update(combatMove);
 				performCombatMove(combatMove);
 				if(StopGame){
 					break;
 				}
 			}
+			currentPlayer.fortifyTerritory(board);
+			visuals.update();
+
+			int endingNrOfTerritories = currentPlayer.getTerritories().size();
+			if(startingNrOfTerritories < endingNrOfTerritories){
+				board.drawCard(currentPlayer);
+			}
 
 			nextCurrentPlayer();
+
 			turn++;
 		}
-		visuals.update();
+		//visuals.update();
 		System.out.println(players.get(0) + " has won!");
 
 	}
@@ -76,7 +87,6 @@ public class Risk {
 	private void nextCurrentPlayer(){
 		currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
 		System.out.println("next current player set: " + currentPlayer);
-
 	}
 
 	private void performCombatMove(CombatMove combatMove){
@@ -128,6 +138,17 @@ public class Risk {
 			//System.out.println("territories of player: " + combatMove.getDefendingTerritory().getOwner().getTerritories());
 			if(isPlayerDead(defender)){
 				System.out.println("removed player: " + combatMove.getDefendingTerritory().getOwner());
+				// Attacker receives all the territory cards of the defender.
+				currentPlayer.hand.setWildCards(currentPlayer.hand.getWildcards() + defender.hand.getWildcards());
+				currentPlayer.hand.setArtillery(currentPlayer.hand.getArtillery() + defender.hand.getArtillery());
+				currentPlayer.hand.setCavalry(currentPlayer.hand.getCavalry() + defender.hand.getCavalry());
+				currentPlayer.hand.setInfantry(currentPlayer.hand.getInfantry() + defender.hand.getInfantry());
+				while(currentPlayer.hand.getNumberOfCards() > 4) {
+					currentPlayer.turnInCards(board);
+				}
+				while(currentPlayer.getReinforcements() != 0){
+					currentPlayer.placeSingleReinforcement(board);
+				}
 				players.remove(defender);
 			}
 			StopGame = playerHasReachedObjective(currentPlayer);
@@ -232,5 +253,9 @@ public class Risk {
 	 */
 	private boolean finished() {
 		return players.size() == 1 || StopGame;
+	}
+	
+	public static void println(String str) {
+		System.out.println(str);
 	}
 }

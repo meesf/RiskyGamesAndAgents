@@ -244,20 +244,8 @@ public class Board {
 	 * Move the golden cavalry one step forward.
 	 */
 	public void moveGoldenCavalry() {
-		if (goldenCavalry == 4) { this.goldenCavalry = 6; }
-		else if (goldenCavalry == 6) { this.goldenCavalry = 8; }
-		else if (goldenCavalry == 8) { this.goldenCavalry = 10; }
-		else if (goldenCavalry == 10) { this.goldenCavalry = 15; }
-		else if (goldenCavalry == 15) { this.goldenCavalry = 20; }
-		else if (goldenCavalry == 20) { this.goldenCavalry = 25; }
-		else if (goldenCavalry == 25) { this.goldenCavalry = 30; }
-		else if (goldenCavalry == 30) { this.goldenCavalry = 35; }
-		else if (goldenCavalry == 35) { this.goldenCavalry = 40; }
-		else if (goldenCavalry == 40) { this.goldenCavalry = 45; }
-		else if (goldenCavalry == 45) { this.goldenCavalry = 50; }
-		else if (goldenCavalry == 50) { this.goldenCavalry = 55; }
-		else if (goldenCavalry == 55) { this.goldenCavalry = 60; }
-		else if (goldenCavalry == 60) { this.goldenCavalry = 65; }
+		if(goldenCavalry < 10) {goldenCavalry += 2;}
+		else if(goldenCavalry < 65) {goldenCavalry += 5;} 
 	}
 	
 
@@ -271,6 +259,12 @@ public class Board {
 
 	public int getGoldenCavalry() {
 		return goldenCavalry;
+	}
+
+	public int getAndMoveGoldenCavalry(){
+		int result = goldenCavalry;
+		moveGoldenCavalry();
+		return result;
 	}
 
 	public ArrayList<Territory> getTerritories(){
@@ -299,6 +293,26 @@ public class Board {
 
 	public void setCavalry(int cavalry) {
 		this.cavalry = cavalry;
+	}
+
+	public void drawCard(Player player){
+		int val = Risk.random.nextInt(this.artillery + this.cavalry + this.infantry + this.wildcard);
+		if(val < this.artillery){
+			this.artillery--;
+			player.hand.setArtillery(player.hand.getArtillery() + 1);
+		}
+		else if(val < this.artillery + this.cavalry){
+			this.cavalry--;
+			player.hand.setCavalry(player.hand.getCavalry() + 1);
+		}
+		else if(val < this.artillery + this.cavalry + this.infantry){
+			this.infantry--;
+			player.hand.setInfantry(player.hand.getInfantry() + 1);
+		}
+		else{
+			this.wildcard--;
+			player.hand.setWildCards(player.hand.getWildcards() + 1);
+		}
 	}
 
 
