@@ -19,4 +19,9 @@ public class Human extends Player{
     public CombatMove getCombatMove() {
         return null;
     }
+
+	@Override
+	public void fortifyTerritory(Board board) {
+		
+	}
 }

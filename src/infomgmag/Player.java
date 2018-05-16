@@ -27,6 +27,7 @@ public abstract class Player {
 
 	public abstract void placeSingleReinforcement(Board board);
 	public abstract void turnInCards(Board board);
+	public abstract void fortifyTerritory(Board board);
 	public abstract CombatMove getCombatMove();
 
 	public String getName() {
