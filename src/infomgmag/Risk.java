@@ -183,7 +183,7 @@ public class Risk {
         // territorries
         for (int i = 0; i < 6; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-            Bot player = new Bot(objective, 0, "player" + i);
+            RandomBot player = new RandomBot(objective, 0, "player" + i);
             players.add(player);
         }
     }
