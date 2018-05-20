@@ -1,8 +1,7 @@
 package infomgmag.mars;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import infomgmag.Board;
 import infomgmag.CombatMove;
@@ -20,10 +19,12 @@ public class Mars extends Player {
     private CardAgent cardAgent;
     private List<CountryAgent> countryAgents;
     private Map<Territory,CountryAgent> countryAgentsByTerritory;
+    private Hashtable<CountryAgent, Double> agentValues;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name) {
         super(objective, reinforcements, name);
 
+        agentValues = new Hashtable<CountryAgent, Double>();
         cardAgent = new CardAgent();
         countryAgents = new ArrayList<>();
         for (Territory t : risk.getBoard().getTerritories()) {
@@ -39,9 +40,8 @@ public class Mars extends Player {
     }
 
     @Override
-    public void fortifyTerritory(Board board) {
-        // TODO Auto-generated method stub
-
+    public void fortifyTerritory(Board board) { //only uses the 'best' country right now
+        //todo: everything
     }
 
     @Override
@@ -57,8 +57,14 @@ public class Mars extends Player {
     }
 
     @Override
-    public void placeReinforcements(Board board) {
-        // TODO Auto-generated method stub
-
+    public void placeReinforcements(Board board) { //only uses the 'best' country right now
+        for (CountryAgent CA: countryAgents)
+        {
+            agentValues.put(CA, CA.calculateReinforceValue());
+        }
+        //TODO: Find out how to find the highest value in a hashtable and get key + value
+        while(getReinforcements() != 0){
+           // board.addUnits(this,);   Needs the territory the units will be getting placed on
+        }
     }
 }
