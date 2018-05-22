@@ -19,18 +19,33 @@ public class Mars extends Player {
     private CardAgent cardAgent;
     private List<CountryAgent> countryAgents;
     private Map<Territory,CountryAgent> countryAgentsByTerritory;
-    private Hashtable<CountryAgent, Double> agentValues;
+    private HashMap<CountryAgent, Double> agentValues;
+
+    private Double friendliesweight = 1.2;      //parameters used in calculation of territory value
+    private Double enemiesweight = -0.3;
+    private Double farmiesweight = 0.05;
+    private Double earmiesweight = -0.03;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name) {
         super(objective, reinforcements, name);
 
-        agentValues = new Hashtable<CountryAgent, Double>();
+        agentValues = new HashMap<CountryAgent, Double>();
         cardAgent = new CardAgent();
         countryAgents = new ArrayList<>();
+
+
         for (Territory t : risk.getBoard().getTerritories()) {
             CountryAgent ca = new CountryAgent(t);
             countryAgents.add(ca);
             countryAgentsByTerritory.put(t, ca);
+        }
+
+        for (CountryAgent ca : countryAgents){
+            for (Territory t : risk.getBoard().getTerritories()){
+                if (ca.getTerritory().getAdjacentTerritories().contains(t) && ca.adjacentAgents.contains(t) != true){
+                    ca.adjacentAgents.add(countryAgentsByTerritory.get(t));
+                }
+            }
         }
     }
 
@@ -57,11 +72,27 @@ public class Mars extends Player {
     }
 
     @Override
-    public void placeReinforcements(Board board) { //only uses the 'best' country right now
+    public void placeReinforcements(Board board) {
+        for (CountryAgent CA: countryAgents){
+            CA.clearlists();
+        }
         for (CountryAgent CA: countryAgents)
         {
-            agentValues.put(CA, CA.calculateReinforceValue());
+            if (CA.getTerritory().getOwner() != this) {
+                agentValues.put(CA, CA.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
+            }
         }
+        for (CountryAgent CA: countryAgents) {
+            for (CountryAgent receiver : CA.getAdjacentAgents()) {
+                if (receiver.getTerritory().getOwner() != CA.getTerritory().getOwner()){
+                    CA.receivemessage(receiver, agentValues.get(CA));
+                }
+                else {
+                    CA.receivemessagefriendly(receiver);
+                }
+            }
+        }
+
         //TODO: Find out how to find the highest value in a hashtable and get key + value
         while(getReinforcements() != 0){
            // board.addUnits(this,);   Needs the territory the units will be getting placed on

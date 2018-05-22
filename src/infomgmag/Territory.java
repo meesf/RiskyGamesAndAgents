@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Territory {
     private Player owner;
-    private int nUnits;
+    private Integer nUnits;
     private ArrayList<Territory> adjacentTerritories;
     private String name;
 
