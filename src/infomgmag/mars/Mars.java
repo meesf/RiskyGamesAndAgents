@@ -10,6 +10,10 @@ import infomgmag.Player;
 import infomgmag.Risk;
 import infomgmag.Territory;
 
+import javafx.util.Pair;
+
+import javax.print.attribute.IntegerSyntax;
+
 public class Mars extends Player {
 
     /*
@@ -18,13 +22,14 @@ public class Mars extends Player {
 
     private CardAgent cardAgent;
     private List<CountryAgent> countryAgents;
-    private Map<Territory,CountryAgent> countryAgentsByTerritory;
+    private HashMap<Territory,CountryAgent> countryAgentsByTerritory;
     private HashMap<CountryAgent, Double> agentValues;
 
     private Double friendliesweight = 1.2;      //parameters used in calculation of territory value
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
+    private Integer goalLength = 5;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name) {
         super(objective, reinforcements, name);
@@ -32,6 +37,7 @@ public class Mars extends Player {
         agentValues = new HashMap<CountryAgent, Double>();
         cardAgent = new CardAgent();
         countryAgents = new ArrayList<>();
+        countryAgentsByTerritory = new HashMap<Territory, CountryAgent>();
 
 
         for (Territory t : risk.getBoard().getTerritories()) {
@@ -82,20 +88,56 @@ public class Mars extends Player {
                 agentValues.put(CA, CA.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
             }
         }
-        for (CountryAgent CA: countryAgents) {
-            for (CountryAgent receiver : CA.getAdjacentAgents()) {
-                if (receiver.getTerritory().getOwner() != CA.getTerritory().getOwner()){
-                    CA.receivemessage(receiver, agentValues.get(CA));
-                }
-                else {
-                    CA.receivemessagefriendly(receiver);
+        for (CountryAgent sender: countryAgents) {
+            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
+            initialList.add(sender);
+            createGoal(sender, initialList);
+        }
+
+        for(CountryAgent ca : countryAgents){
+            System.out.println(" owner: " + ca.getTerritory().getOwner().toString() + "  name: "  + ca.getTerritory().getName() + " size: " + ca.getGoalList().size());
+        }
+
+        while(reinforcements > 0){
+            Pair<CountryAgent, Pair<Double, Integer>> bid = getBestBid(reinforcements);
+            board.addUnits(this, bid.getKey().getTerritory(), bid.getValue().getValue());
+            reinforcements =- bid.getValue().getValue();
+        }
+
+
+    }
+
+    private void createGoal(CountryAgent receiver, ArrayList<CountryAgent> countries){
+        if(receiver.getTerritory().getOwner() != this && !countries.contains(receiver) && goalLength >= countries.size()){
+            ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();
+            for(CountryAgent ca : countries){
+                copiedCountries.add(ca);
+            }
+            copiedCountries.add(receiver);
+            for(CountryAgent neighbour : receiver.getAdjacentAgents()){
+                createGoal(neighbour, copiedCountries);
+            }
+        }
+        else if(receiver.getTerritory().getOwner() == this){
+            receiver.receivemessagefriendly(countries);
+        }
+    }
+
+    private Pair<CountryAgent, Pair<Double, Integer>> getBestBid(int units){
+        CountryAgent bestCountry = countryAgents.get(0);
+        Pair<Double, Integer> bestBid = null;
+        for(CountryAgent ca : countryAgents){
+            if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){
+                Pair<Double, Integer> bid = ca.getBid(units);
+                if(bestBid == null || bid.getKey() > bestBid.getKey()){
+                    bestBid = bid;
+                    bestCountry = ca;
                 }
             }
         }
-
-        //TODO: Find out how to find the highest value in a hashtable and get key + value
-        while(getReinforcements() != 0){
-           // board.addUnits(this,);   Needs the territory the units will be getting placed on
-        }
+        return new Pair<CountryAgent, Pair<Double, Integer>>(bestCountry,  bestBid);
     }
+
+
+
 }

@@ -59,7 +59,7 @@ public class Territory {
 
     @Override
     public String toString() {
-        return "name: " + name + " owner: " + owner.toString() + " nrOfUnits: " + nUnits;
+        return "name: " + name + " nrOfUnits: " + nUnits;
     }
 
 }

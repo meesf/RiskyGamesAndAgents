@@ -1,5 +1,7 @@
 package infomgmag;
 
+import infomgmag.mars.Mars;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -187,11 +189,19 @@ public class Risk {
         players = new ArrayList<>();
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 2; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             RandomBot player = new RandomBot(objective, 0, "player" + i);
             players.add(player);
         }
+        addMarsAgent();
+
+    }
+
+    private void addMarsAgent(){
+        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
+        Mars player = new Mars(this, objective, 0, "Mars agent");
+        players.add(player);
     }
 
     // Divide players randomly over territories

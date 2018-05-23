@@ -1,5 +1,6 @@
 package infomgmag.mars;
 
+import infomgmag.Risk;
 import infomgmag.Territory;
 import javafx.util.Pair;
 
@@ -9,14 +10,14 @@ import java.util.ArrayList;
 
 public class CountryAgent {
     private Territory territory;
-    private ArrayList routeToGoal;
     public ArrayList<CountryAgent> adjacentAgents;
-    private Integer goalLength = 5; //given by paper, but adjustable
-    private ArrayList<ArrayList<Double>> goalList;
+    private ArrayList<ArrayList<CountryAgent>> goalList;
+    private ArrayList<CountryAgent> goal;
 
     CountryAgent(Territory territory) {
         this.territory = territory;
         goalList = new ArrayList<>();
+        goal = new ArrayList<CountryAgent>();
         this.adjacentAgents = new ArrayList<CountryAgent>();
     }
 
@@ -28,18 +29,13 @@ public class CountryAgent {
     {
         Double territoryvalue = 0.0;
         territoryvalue = (((friendlyNeighbours() * friendliesweight) + (enemyNeighbours() * enemyweight) + (friendlyArmies() * farmiesweight) + (enemyArmies() * earmiesweight)));
-        routeToGoal.add(territoryvalue);
         return territoryvalue;
         //TODO: Somehow, this value has to be linked to the amount of enemy troops on this territory, I tried Pairs but that didn't work great, maybe a list?
     }
 
-    public void receivemessage(CountryAgent ca, Double territoryvalue)  //adds own value of a territory to the chain of values received TODO: still need to implement GoalLength
-    {
-        routeToGoal.add(territoryvalue);
-    }
 
-    public void receivemessagefriendly(CountryAgent ca){    //adds the route to the goallist when a friendly country is reached
-        goalList.add(routeToGoal);
+    public void receivemessagefriendly(ArrayList<CountryAgent> countries){    //adds the route to the goallist when a friendly country is reached
+        goalList.add(countries);
     }
 
     public Integer friendlyNeighbours() //calculates how many friendly neighbouring territory border this territory
@@ -105,7 +101,6 @@ public class CountryAgent {
 
     public void clearlists(){   //clears the lists used in determining which country gets reinforcements
         goalList.clear();
-        routeToGoal.clear();
     }
 
     public void addAdjacentAgent(CountryAgent ca) {
@@ -113,6 +108,18 @@ public class CountryAgent {
     }
     public ArrayList<CountryAgent> getAdjacentAgents() {
         return adjacentAgents;
+    }
+
+    public Pair<Double, Integer> getBid(Integer unitsLeft) {
+        Double value = Risk.random.nextDouble() * 10;
+        Integer units = Risk.random.nextInt(unitsLeft);
+        Integer index = Risk.random.nextInt(goalList.size());
+        goal = goalList.get(index);
+        return new Pair<Double, Integer>(value, units);
+    }
+
+    public ArrayList<ArrayList<CountryAgent>> getGoalList() {
+        return goalList;
     }
 }
 
