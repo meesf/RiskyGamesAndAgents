@@ -24,8 +24,7 @@ public class CountryAgent {
         return territory;
     }
 
-    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight)  //calculates value of owning a territory, TODO: the actual final calculation has more factors includings continents and such
-    {
+    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight) { //calculates value of owning a territory, TODO: the actual final calculation has more factors includings continents and such
         Double territoryvalue = 0.0;
         territoryvalue = (((friendlyNeighbours() * friendliesweight) + (enemyNeighbours() * enemyweight) + (friendlyArmies() * farmiesweight) + (enemyArmies() * earmiesweight)));
         return territoryvalue;
@@ -109,12 +108,101 @@ public class CountryAgent {
         return adjacentAgents;
     }
     
-    public double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
-    	return Risk.random.nextDouble();
+    private int getTopD(int a, int attacking, int defending) {
+    	if(a%2 == attacking%2) {
+    		return defending;
+    	}
+    	return defending-1;
     }
     
-    public double getVD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
-    	return Risk.random.nextDouble();
+    private void calcTop(double[][] grid, int a, int d) {
+    	if(a%2 == grid[0].length%2) {
+    		grid[a][d] = grid[a-2][d] * Risk.DICE_ODDS_TWO.get(1).get(2);
+    	} else {
+    		grid[a][d-1] = grid[a-1][d+1] * Risk.DICE_ODDS_TWO.get(2).get(2);
+    	}
+    }
+    
+    private double calcDown(double[][] grid, int a, int d) {
+    	double prob = grid[a][d];
+    	for(int i = d; i > 0; i-=2) {
+    		if(i == 1) {
+    			if(a > 2) {
+    				prob *= Risk.DICE_ODDS_ONE.get(0).get(2);
+    			} else if(a > 1) {
+    				prob *= Risk.DICE_ODDS_ONE.get(0).get(1);
+    			} else {
+    				prob *= Risk.DICE_ODDS_ONE.get(0).get(0);
+    			}
+    			i = 0;
+    		} else {
+    			if(a > 2) {
+    				prob *= Risk.DICE_ODDS_TWO.get(0).get(2);
+    			} else if(a > 1) {
+    				prob *= Risk.DICE_ODDS_TWO.get(0).get(1);
+    			} else {
+    				prob *= Risk.DICE_ODDS_TWO.get(0).get(0);
+    			}
+    		}
+    	}
+    	return prob;
+    }
+    
+    private Double getP(Integer i, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size();
+    	if(attackingUnits < 1) {
+    		return 0.0;
+    	}
+    	Integer defendingUnits = 0;
+    	for(CountryAgent ca : goal) {
+    		defendingUnits += ca.getTerritory().getNUnits();
+    	}
+    	double p = 0.0;
+    	double[][] grid = new double[attackingUnits+1][defendingUnits+1];
+    	
+    	for(int a = attackingUnits; a > 0; a--) {
+    		int d = getTopD(a, attackingUnits, defendingUnits);
+    		if(grid[a][d] == 0.0) {
+    			calcTop(grid, a, d);
+    			p += calcDown(grid, a, d);
+    		} else {
+    			p += calcDown(grid, a, d);
+    		}
+    	}
+    	return p;
+    }
+    
+    private Double getW(HashMap<CountryAgent, Double> agentValues) {
+    	return agentValues.values().stream().mapToDouble(o -> o.doubleValue()).sum();
+    }
+    
+    private Double getD() {
+    	return 1.0;
+    }
+    
+    private double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
+//    	double p = getP(i, goal, agentValues);
+    	return 0.0;
+//    	double p = 1.0;
+//    	double w = getW(agentValues);
+//    	double d = getD();
+//    	if(i == 0) {
+//    		return p*w*d;
+//    	}
+//    	return (p*w*d)/i;
+    }
+    
+    private Double getV() {
+    	return 0.0;
+    }
+    
+    private double getVD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
+    	double v = getV();
+    	double d = getD();
+    	if(i == 0) {
+    		return v*d;
+    	}
+    	return (v*d)/i;
     }
     
     public Bid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
@@ -146,7 +234,9 @@ public class CountryAgent {
     
     private Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
     	Bid bestBid = null;
+    	System.out.println("unitsLeft:"+unitsLeft);
     	for(int i=0; i<=unitsLeft; i++) {
+    		System.out.println(i);
     		double bidUtil = getPWD(goal, agentValues, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new Bid(this, goal, i, bidUtil);

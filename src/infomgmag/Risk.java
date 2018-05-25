@@ -18,6 +18,7 @@ import java.util.Random;
 public class Risk {
 
     public static Random random;
+    public static ArrayList<ArrayList<Double>> DICE_ODDS_ONE, DICE_ODDS_TWO;
     
     private int turn = 0;
 
@@ -30,14 +31,45 @@ public class Risk {
 
     private ArrayList<Player> defeatedPlayers;
     private boolean visible = true;
-
+    
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
+        createDiceOdds();
         Risk risk = new Risk();
         risk.run();
     }
-
+    
+    public static void createDiceOdds() {
+    	DICE_ODDS_ONE = new ArrayList<ArrayList<Double>>();
+    	ArrayList<Double> oneA = new ArrayList<Double>();
+    	oneA.add(15.0/36);
+    	oneA.add(125.0/216);
+    	oneA.add(855.0/1296);
+    	DICE_ODDS_ONE.add(oneA);
+    	ArrayList<Double> oneD = new ArrayList<Double>();
+    	oneD.add(21.0/36);
+    	oneD.add(91.0/216);
+    	oneD.add(441.0/1296);
+    	DICE_ODDS_ONE.add(oneD);
+        DICE_ODDS_TWO = new ArrayList<ArrayList<Double>>();
+        ArrayList<Double> twoA = new ArrayList<Double>();
+        twoA.add(55.0/216);
+        twoA.add(295.0/1296);
+        twoA.add(2890.0/7776);
+    	DICE_ODDS_TWO.add(twoA);
+    	ArrayList<Double> twoD = new ArrayList<Double>();
+        twoD.add(161.0/216);
+        twoD.add(581.0/1296);
+        twoD.add(2275.0/7776);
+    	DICE_ODDS_TWO.add(twoD);
+    	ArrayList<Double> twoL = new ArrayList<Double>();
+        twoL.add(null);
+        twoL.add(420.0/1296);
+        twoL.add(2611.0/7776);
+    	DICE_ODDS_TWO.add(twoL);
+    }
+    
     public Risk() {
         initializeGame();
     }
