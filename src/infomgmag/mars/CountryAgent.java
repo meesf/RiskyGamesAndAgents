@@ -108,19 +108,43 @@ public class CountryAgent {
     public ArrayList<CountryAgent> getAdjacentAgents() {
         return adjacentAgents;
     }
-
-//    public Pair<Double, Integer> getBid(Integer unitsLeft) {
-//        Double value = Risk.random.nextDouble() * 10;
-//        Integer units = Risk.random.nextInt(unitsLeft + 1);
-//        Integer index = Risk.random.nextInt(goalList.size());
-//        return new Pair<Double, Integer>(value, units);
-//    }
     
     public double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
     	return Risk.random.nextDouble();
     }
     
-    public Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    public double getVD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
+    	return Risk.random.nextDouble();
+    }
+    
+    public Bid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
+    	Bid bestBid = null;
+    	for(ArrayList<CountryAgent> goal : goalList) {
+    		Bid offBid = getOffensiveBid(unitsLeft, goal, agentValues);
+    		if(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {
+    			bestBid = offBid;
+    		}
+    		
+    		Bid defBid = getDefensiveBid(unitsLeft, goal, agentValues);
+    		if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
+    			bestBid = defBid;
+    		}
+    	}
+    	return bestBid;
+    }
+    
+    private Bid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	Bid bestBid = null;
+    	for(int i=0; i<=unitsLeft; i++) {
+    		double bidUtil = getVD(goal, agentValues, i);
+    		if(bestBid == null || bidUtil > bestBid.getUtility()) {
+    			bestBid = new Bid(this, goal, i, bidUtil);
+    		}
+    	}
+    	return bestBid;
+    }
+    
+    private Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
     	Bid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getPWD(goal, agentValues, i);

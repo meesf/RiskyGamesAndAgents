@@ -126,12 +126,10 @@ public class Mars extends Player {
         Bid bestBid = null;
         for(CountryAgent ca : countryAgents){
             if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){
-            	for(ArrayList<CountryAgent> goal : ca.getGoalList()) {
-            		Bid bid = ca.getOffensiveBid(units, goal, agentValues);
-            		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
-                        bestBid = bid;
-                    }
-            	}
+        		Bid bid = ca.getBid(units, agentValues);
+        		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
+                    bestBid = bid;
+                }
             }
         }
         return bestBid;
