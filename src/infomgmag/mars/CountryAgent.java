@@ -5,6 +5,7 @@ import infomgmag.Territory;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 
@@ -116,6 +117,21 @@ public class CountryAgent {
         Integer index = Risk.random.nextInt(goalList.size());
         goal = goalList.get(index);
         return new Pair<Double, Integer>(value, units);
+    }
+    
+    public double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
+    	return Risk.random.nextDouble();
+    }
+    
+    public Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	Bid bestBid = null;
+    	for(int i=0; i<=unitsLeft; i++) {
+    		double bidUtil = getPWD(goal, agentValues, i);
+    		if(bestBid == null || bidUtil > bestBid.getUtility()) {
+    			bestBid = new Bid(goal, i, bidUtil);
+    		}
+    	}
+    	return bestBid;
     }
 
     public ArrayList<ArrayList<CountryAgent>> getGoalList() {
