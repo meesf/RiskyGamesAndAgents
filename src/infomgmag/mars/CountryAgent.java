@@ -13,12 +13,10 @@ public class CountryAgent {
     private Territory territory;
     public ArrayList<CountryAgent> adjacentAgents;
     private ArrayList<ArrayList<CountryAgent>> goalList;
-    private ArrayList<CountryAgent> goal;
 
     CountryAgent(Territory territory) {
         this.territory = territory;
         goalList = new ArrayList<>();
-        goal = new ArrayList<CountryAgent>();
         this.adjacentAgents = new ArrayList<CountryAgent>();
     }
 
@@ -111,13 +109,12 @@ public class CountryAgent {
         return adjacentAgents;
     }
 
-    public Pair<Double, Integer> getBid(Integer unitsLeft) {
-        Double value = Risk.random.nextDouble() * 10;
-        Integer units = Risk.random.nextInt(unitsLeft + 1);
-        Integer index = Risk.random.nextInt(goalList.size());
-        goal = goalList.get(index);
-        return new Pair<Double, Integer>(value, units);
-    }
+//    public Pair<Double, Integer> getBid(Integer unitsLeft) {
+//        Double value = Risk.random.nextDouble() * 10;
+//        Integer units = Risk.random.nextInt(unitsLeft + 1);
+//        Integer index = Risk.random.nextInt(goalList.size());
+//        return new Pair<Double, Integer>(value, units);
+//    }
     
     public double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
     	return Risk.random.nextDouble();
@@ -128,7 +125,7 @@ public class CountryAgent {
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getPWD(goal, agentValues, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
-    			bestBid = new Bid(goal, i, bidUtil);
+    			bestBid = new Bid(this, goal, i, bidUtil);
     		}
     	}
     	return bestBid;

@@ -79,61 +79,62 @@ public class Mars extends Player {
 
     @Override
     public void placeReinforcements(Board board) {
-        for (CountryAgent CA: countryAgents){
-            CA.clearlists();
+        for (CountryAgent ca: countryAgents){
+            ca.clearlists();
         }
-        for (CountryAgent CA: countryAgents)
-        {
-            if (CA.getTerritory().getOwner() != this) {
-                agentValues.put(CA, CA.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
+        
+        for (CountryAgent ca: countryAgents) {
+            if (ca.getTerritory().getOwner() != this) {
+                agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
             }
         }
+        
         for (CountryAgent sender: countryAgents) {
-            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
-            initialList.add(sender);
-            createGoal(sender, initialList);
+        	if(sender.getTerritory().getOwner() != this) {
+	            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
+	            initialList.add(sender);
+	            createGoal(sender, initialList);
+        	}
         }
-
-        //for(CountryAgent ca : countryAgents){
-        //    System.out.println(" owner: " + ca.getTerritory().getOwner().toString() + "  name: "  + ca.getTerritory().getName() + " size: " + ca.getGoalList().size());
-        //}
 
         while(getReinforcements() > 0){
-            Pair<CountryAgent, Pair<Double, Integer>> bid = getBestBid(getReinforcements());
-            board.addUnits(this, bid.getKey().getTerritory(), bid.getValue().getValue());
-            reinforcements -= bid.getValue().getValue();
+            Bid bid = getBestBid(getReinforcements());
+            board.addUnits(this, bid.getOrigin().getTerritory(), bid.getUnits());
+            reinforcements -= bid.getUnits();
         }
     }
-
+    
     private void createGoal(CountryAgent receiver, ArrayList<CountryAgent> countries){
-        if(receiver.getTerritory().getOwner() != this && !countries.contains(receiver) && goalLength >= countries.size()){
+    	if(receiver.getTerritory().getOwner() == this) {
+            receiver.receivemessagefriendly(countries);
+        } else if(goalLength >= countries.size()) {
             ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();
             for(CountryAgent ca : countries){
                 copiedCountries.add(ca);
             }
+            
             copiedCountries.add(receiver);
-            for(CountryAgent neighbour : receiver.getAdjacentAgents()){
-                createGoal(neighbour, copiedCountries);
+            for(CountryAgent neighbour : receiver.getAdjacentAgents()) {
+            	if(!countries.contains(neighbour)) {
+            		createGoal(neighbour, copiedCountries);
+            	}
             }
-        }
-        else if(receiver.getTerritory().getOwner() == this){
-            receiver.receivemessagefriendly(countries);
         }
     }
 
-    private Pair<CountryAgent, Pair<Double, Integer>> getBestBid(int units){
-        CountryAgent bestCountry = countryAgents.get(0);
-        Pair<Double, Integer> bestBid = null;
+    private Bid getBestBid(int units){
+        Bid bestBid = null;
         for(CountryAgent ca : countryAgents){
             if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){
-                Pair<Double, Integer> bid = ca.getBid(units);
-                if(bestBid == null || bid.getKey() > bestBid.getKey()){
-                    bestBid = bid;
-                    bestCountry = ca;
-                }
+            	for(ArrayList<CountryAgent> goal : ca.getGoalList()) {
+            		Bid bid = ca.getOffensiveBid(units, goal, agentValues);
+            		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
+                        bestBid = bid;
+                    }
+            	}
             }
         }
-        return new Pair<CountryAgent, Pair<Double, Integer>>(bestCountry,  bestBid);
+        return bestBid;
     }
 
 

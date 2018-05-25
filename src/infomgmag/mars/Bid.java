@@ -3,11 +3,13 @@ package infomgmag.mars;
 import java.util.ArrayList;
 
 public class Bid {
+	private CountryAgent origin;
 	private ArrayList<CountryAgent> goal;
 	private Integer units;
 	private Double utility;
 	
-	public Bid(ArrayList<CountryAgent> goal, Integer units, double utility) {
+	public Bid(CountryAgent origin, ArrayList<CountryAgent> goal, Integer units, double utility) {
+		this.origin = origin;
 		this.goal = goal;
 		this.units = units;
 		this.utility = utility;
@@ -17,11 +19,15 @@ public class Bid {
 		return goal;
 	}
 	
-	public Integer getUntis() {
+	public Integer getUnits() {
 		return units;
 	}
 	
 	public Double getUtility() {
 		return utility;
+	}
+	
+	public CountryAgent getOrigin() {
+		return origin;
 	}
 }
