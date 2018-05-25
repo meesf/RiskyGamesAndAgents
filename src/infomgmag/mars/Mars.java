@@ -79,7 +79,7 @@ public class Mars extends Player {
 
     @Override
     public void placeReinforcements(Board board) {
-    	System.out.println("----------------- Place "+reinforcements+" reinforcements -----------------");
+    	System.out.println("----------------- Place "+reinforcements+" reinforcement(s) -----------------");
         for (CountryAgent ca: countryAgents){
             ca.clearlists();
         }

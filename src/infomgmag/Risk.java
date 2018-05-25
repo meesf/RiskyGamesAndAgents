@@ -203,12 +203,16 @@ public class Risk {
     }
 
     private void initializeGame() {
+    	System.out.println("------------ Initialize Game ------------");
         visuals = new RiskVisual(this,visible);
         board = new Board();
         defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
+        System.out.println("------------ Initialize Players ------------");
         initializePlayers();
+        System.out.println("------------ Divide Territories ------------");
         Integer currentPlayerIndex = divideTerritories();
+        System.out.println("------------ Place Initial Reinforcements ------------");
         initialPlaceReinforcements(currentPlayerIndex);
         currentPlayer = players.get(0);
     }
