@@ -153,8 +153,8 @@ public class CountryAgent {
     
     private void printGrid(double[][] grid) {
     	System.out.println("Grid:");
-    	for(int i = 0; i < grid.length; i++) {
-    		for(int j = 0; j < grid[0].length; j++) {
+    	for(int i = grid.length-1; i >= 0 ; i--) {
+    		for(int j = grid[0].length-1; j >=0 ; j--) {
     			System.out.print(grid[i][j] + ", ");
     		}
     		System.out.println("");
@@ -170,9 +170,14 @@ public class CountryAgent {
     	for(CountryAgent ca : goal) {
     		defendingUnits += ca.getTerritory().getNUnits();
     	}
+    	
+    	System.out.println("goal:" + goal);
+    	System.out.println("attackingUnits:" + attackingUnits);
+    	System.out.println("defendingUnits:" + defendingUnits);
+    	
     	double p = 0.0;
     	double[][] grid = new double[attackingUnits+1][defendingUnits+1];
-    	
+    	grid[attackingUnits][defendingUnits] = 1.0;
     	
     	for(int a = attackingUnits; a > 0; a--) {
     		int d = getTopD(a, attackingUnits, defendingUnits);
@@ -247,10 +252,8 @@ public class CountryAgent {
     
     private Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
     	Bid bestBid = null;
-//    	System.out.println("Get Bo for:" + this + ", unitsLeft:"+unitsLeft + ", Goal:" + goal);
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getPWD(goal, agentValues, i);
-//    		System.out.println("Bid of " + this + ", goal:"+ goal + ", i:"+i+", u:"+bidUtil);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new Bid(this, goal, i, bidUtil);
     		}
@@ -263,7 +266,7 @@ public class CountryAgent {
     }
     
     public String toString() {
-    	return territory.getName();
+    	return territory.toString();
     }
 }
 
