@@ -94,17 +94,15 @@ public class Mars extends Player {
             createGoal(sender, initialList);
         }
 
-        for(CountryAgent ca : countryAgents){
-            System.out.println(" owner: " + ca.getTerritory().getOwner().toString() + "  name: "  + ca.getTerritory().getName() + " size: " + ca.getGoalList().size());
-        }
+        //for(CountryAgent ca : countryAgents){
+        //    System.out.println(" owner: " + ca.getTerritory().getOwner().toString() + "  name: "  + ca.getTerritory().getName() + " size: " + ca.getGoalList().size());
+        //}
 
-        while(reinforcements > 0){
-            Pair<CountryAgent, Pair<Double, Integer>> bid = getBestBid(reinforcements);
+        while(getReinforcements() > 0){
+            Pair<CountryAgent, Pair<Double, Integer>> bid = getBestBid(getReinforcements());
             board.addUnits(this, bid.getKey().getTerritory(), bid.getValue().getValue());
-            reinforcements =- bid.getValue().getValue();
+            reinforcements -= bid.getValue().getValue();
         }
-
-
     }
 
     private void createGoal(CountryAgent receiver, ArrayList<CountryAgent> countries){

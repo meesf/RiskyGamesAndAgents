@@ -113,7 +113,7 @@ public class CountryAgent {
 
     public Pair<Double, Integer> getBid(Integer unitsLeft) {
         Double value = Risk.random.nextDouble() * 10;
-        Integer units = Risk.random.nextInt(unitsLeft);
+        Integer units = Risk.random.nextInt(unitsLeft + 1);
         Integer index = Risk.random.nextInt(goalList.size());
         goal = goalList.get(index);
         return new Pair<Double, Integer>(value, units);
