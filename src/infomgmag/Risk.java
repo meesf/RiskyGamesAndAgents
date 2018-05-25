@@ -195,7 +195,6 @@ public class Risk {
             players.add(player);
         }
         addMarsAgent();
-
     }
 
     private void addMarsAgent(){

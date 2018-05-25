@@ -1,5 +1,6 @@
 package infomgmag;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -14,6 +15,7 @@ public class Territory {
     private Integer nUnits;
     private ArrayList<Territory> adjacentTerritories;
     private String name;
+    private Continent belongsTo;
 
     public double x, y;
 
@@ -55,6 +57,14 @@ public class Territory {
 
     public ArrayList<Territory> getAdjacentTerritories() {
         return adjacentTerritories;
+    }
+
+    public void setBelongsTo(Continent co) {
+        this.belongsTo = co;
+    }
+
+    public Continent getBelongsTo() {
+        return belongsTo;
     }
 
     @Override
