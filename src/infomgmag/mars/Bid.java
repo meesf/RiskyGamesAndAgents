@@ -30,4 +30,8 @@ public class Bid {
 	public CountryAgent getOrigin() {
 		return origin;
 	}
+	
+	public String toString() {
+		return "Bid of "+ origin.getTerritory().getName() + ", goal:" + goal + ", units:" + units + ", utility:"+utility;
+	}
 }

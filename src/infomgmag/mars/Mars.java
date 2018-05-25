@@ -29,7 +29,7 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
-    private Integer goalLength = 5;
+    private Integer goalLength = 1;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name) {
         super(objective, reinforcements, name);
@@ -79,6 +79,7 @@ public class Mars extends Player {
 
     @Override
     public void placeReinforcements(Board board) {
+    	System.out.println("----------------- Place "+reinforcements+" reinforcements -----------------");
         for (CountryAgent ca: countryAgents){
             ca.clearlists();
         }
@@ -92,13 +93,13 @@ public class Mars extends Player {
         for (CountryAgent sender: countryAgents) {
         	if(sender.getTerritory().getOwner() != this) {
 	            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
-	            initialList.add(sender);
 	            createGoal(sender, initialList);
         	}
         }
 
-        while(getReinforcements() > 0){
+        while(reinforcements > 0){
             Bid bid = getBestBid(getReinforcements());
+            System.out.println("Winning bid: " + bid);
             board.addUnits(this, bid.getOrigin().getTerritory(), bid.getUnits());
             reinforcements -= bid.getUnits();
         }
@@ -107,7 +108,7 @@ public class Mars extends Player {
     private void createGoal(CountryAgent receiver, ArrayList<CountryAgent> countries){
     	if(receiver.getTerritory().getOwner() == this) {
             receiver.receivemessagefriendly(countries);
-        } else if(goalLength >= countries.size()) {
+        } else if(goalLength > countries.size()) {
             ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();
             for(CountryAgent ca : countries){
                 copiedCountries.add(ca);

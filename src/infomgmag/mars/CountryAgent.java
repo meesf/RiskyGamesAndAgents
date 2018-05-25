@@ -116,10 +116,13 @@ public class CountryAgent {
     }
     
     private void calcTop(double[][] grid, int a, int d) {
+    	printGrid(grid);
+    	System.out.println("a:"+a);
+    	System.out.println("d:"+d);
     	if(a%2 == grid[0].length%2) {
     		grid[a][d] = grid[a-2][d] * Risk.DICE_ODDS_TWO.get(1).get(2);
     	} else {
-    		grid[a][d-1] = grid[a-1][d+1] * Risk.DICE_ODDS_TWO.get(2).get(2);
+    		grid[a][d-1] = grid[a-1][d+1] * Risk.DICE_ODDS_TWO.get(2).get(1);
     	}
     }
     
@@ -148,6 +151,16 @@ public class CountryAgent {
     	return prob;
     }
     
+    private void printGrid(double[][] grid) {
+    	System.out.println("Grid:");
+    	for(int i = 0; i < grid.length; i++) {
+    		for(int j = 0; j < grid[0].length; j++) {
+    			System.out.print(grid[i][j] + ", ");
+    		}
+    		System.out.println("");
+    	}
+    }
+    
     private Double getP(Integer i, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
     	Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size();
     	if(attackingUnits < 1) {
@@ -159,6 +172,7 @@ public class CountryAgent {
     	}
     	double p = 0.0;
     	double[][] grid = new double[attackingUnits+1][defendingUnits+1];
+    	
     	
     	for(int a = attackingUnits; a > 0; a--) {
     		int d = getTopD(a, attackingUnits, defendingUnits);
@@ -181,15 +195,14 @@ public class CountryAgent {
     }
     
     private double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
-//    	double p = getP(i, goal, agentValues);
-    	return 0.0;
-//    	double p = 1.0;
-//    	double w = getW(agentValues);
-//    	double d = getD();
-//    	if(i == 0) {
-//    		return p*w*d;
-//    	}
-//    	return (p*w*d)/i;
+    	double p = getP(i, goal, agentValues);
+//    	double p = Risk.random.nextDouble();
+    	double w = getW(agentValues);
+    	double d = getD();
+    	if(i == 0) {
+    		return p*w*d;
+    	}
+    	return (p*w*d)/i;
     }
     
     private Double getV() {
@@ -234,10 +247,10 @@ public class CountryAgent {
     
     private Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
     	Bid bestBid = null;
-    	System.out.println("unitsLeft:"+unitsLeft);
+//    	System.out.println("Get Bo for:" + this + ", unitsLeft:"+unitsLeft + ", Goal:" + goal);
     	for(int i=0; i<=unitsLeft; i++) {
-    		System.out.println(i);
     		double bidUtil = getPWD(goal, agentValues, i);
+//    		System.out.println("Bid of " + this + ", goal:"+ goal + ", i:"+i+", u:"+bidUtil);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new Bid(this, goal, i, bidUtil);
     		}
@@ -247,6 +260,10 @@ public class CountryAgent {
 
     public ArrayList<ArrayList<CountryAgent>> getGoalList() {
         return goalList;
+    }
+    
+    public String toString() {
+    	return territory.getName();
     }
 }
 
