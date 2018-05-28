@@ -46,6 +46,5 @@ public class Continent {
     public void addTerritory(Territory ter) {
         territories.add(ter);
         ter.setBelongsTo(this);
-        System.out.println(ter.getBelongsTo().GetName());
     }
 }

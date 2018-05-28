@@ -1,5 +1,7 @@
 package infomgmag;
 
+import infomgmag.mars.CountryAgent;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -16,6 +18,7 @@ public class Territory {
     private ArrayList<Territory> adjacentTerritories;
     private String name;
     private Continent belongsTo;
+    private CountryAgent territoryCountryAgent;
 
     public double x, y;
 
@@ -65,6 +68,14 @@ public class Territory {
 
     public Continent getBelongsTo() {
         return belongsTo;
+    }
+
+    public void setTerritoryCountryAgent(CountryAgent countryAgent){
+        this.territoryCountryAgent = countryAgent;
+    }
+
+    public CountryAgent getCountryAgent(){
+        return territoryCountryAgent;
     }
 
     @Override

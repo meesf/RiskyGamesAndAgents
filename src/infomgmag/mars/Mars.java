@@ -30,7 +30,7 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
-    private Integer goalLength = 5;
+    private Integer goalLength = 1;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
@@ -45,6 +45,7 @@ public class Mars extends Player {
             CountryAgent ca = new CountryAgent(t);
             countryAgents.add(ca);
             countryAgentsByTerritory.put(t, ca);
+            t.setTerritoryCountryAgent(ca);
         }
 
         for (CountryAgent ca : countryAgents){
@@ -68,73 +69,94 @@ public class Mars extends Player {
 
     @Override
     public CombatMove getCombatMove() {
-        // TODO Auto-generated method stub
+        CombatMove combatMove = new CombatMove();
+        for (CountryAgent ca : countryAgents) {
+            if (ca.getTerritory().getOwner() == this && ca.getGoalList().isEmpty() != true && ca.getTerritory().getNUnits() > 1){
+                for (CountryAgent target : ca.getGoalList().get(0)) {           //right now it assumes the first goal is the best goal
+                    combatMove.setAttackingTerritory(ca.getTerritory());
+                    combatMove.setDefendingTerritory(ca.getGoalList().get(0).get(ca.getGoalList().get(0).size() - 1).getTerritory());
+                    combatMove.setAttackingUnits(Integer.min(3, ca.getTerritory().getNUnits() - 1));
+                    combatMove.setDefendingUnits(Integer.min(2, ca.getGoalList().get(0).get(ca.getGoalList().get(0).size() - 1).getTerritory().getNUnits()));
+                    return combatMove;
+                    }
+                }
+            }
         return null;
     }
 
     @Override
     public void movingInAfterInvasion(CombatMove combatMove) {
-        // TODO Auto-generated method stub
-
+        int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
+        combatMove.getDefendingTerritory().setUnits(transferredunits);
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
+        combatMove.getAttackingTerritory().getCountryAgent().getGoalList().get(0).remove(combatMove.getAttackingTerritory().getCountryAgent().getGoalList().get(0).size() - 1); //removes the last country from a goal
+        combatMove.getDefendingTerritory().getCountryAgent().getGoalList().set(0, combatMove.getAttackingTerritory().getCountryAgent().getGoalList().get(0));   //sets goal of conquered territory to goal of attacking territory minus the conquered territory
+        combatMove.getAttackingTerritory().getCountryAgent().getGoalList().clear();
     }
 
     @Override
     public void placeReinforcements(Board board) {
-        for (CountryAgent CA: countryAgents){
-            CA.clearlists();
+    	System.out.println("----------------- Place "+reinforcements+" reinforcement(s) -----------------");
+        for (CountryAgent ca: countryAgents){
+            ca.clearlists();
         }
-        for (CountryAgent CA: countryAgents)
-        {
-            if (CA.getTerritory().getOwner() != this) {
-                agentValues.put(CA, CA.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
+        
+        for (CountryAgent ca: countryAgents) {
+            if (ca.getTerritory().getOwner() != this) {
+                agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
             }
         }
+        
         for (CountryAgent sender: countryAgents) {
-            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
-            initialList.add(sender);
-            createGoal(sender, initialList);
+        	if(sender.getTerritory().getOwner() != this) {
+	            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
+	            createGoal(sender, initialList);
+        	}
         }
 
-        //for(CountryAgent ca : countryAgents){
-        //    System.out.println(" owner: " + ca.getTerritory().getOwner().toString() + "  name: "  + ca.getTerritory().getName() + " size: " + ca.getGoalList().size());
-        //}
-
-        while(getReinforcements() > 0){
-            Pair<CountryAgent, Pair<Double, Integer>> bid = getBestBid(getReinforcements());
-            board.addUnits(this, bid.getKey().getTerritory(), bid.getValue().getValue());
-            reinforcements -= bid.getValue().getValue();
+        while(reinforcements > 0){
+            Bid bid = getBestBid(getReinforcements());
+            System.out.println("Winning bid: " + bid);
+            board.addUnits(this, bid.getOrigin().getTerritory(), bid.getUnits());
+            reinforcements -= bid.getUnits();
         }
     }
-
+    
     private void createGoal(CountryAgent receiver, ArrayList<CountryAgent> countries){
-        if(receiver.getTerritory().getOwner() != this && !countries.contains(receiver) && goalLength >= countries.size()){
+    	if(receiver.getTerritory().getOwner() == this) {
+            receiver.receivemessagefriendly(countries);
+        } else if(goalLength > countries.size()) {
             ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();
             for(CountryAgent ca : countries){
                 copiedCountries.add(ca);
             }
+            
             copiedCountries.add(receiver);
-            for(CountryAgent neighbour : receiver.getAdjacentAgents()){
-                createGoal(neighbour, copiedCountries);
+            for(CountryAgent neighbour : receiver.getAdjacentAgents()) {
+            	if(!countries.contains(neighbour)) {
+            		createGoal(neighbour, copiedCountries);
+            	}
             }
-        }
-        else if(receiver.getTerritory().getOwner() == this){
-            receiver.receivemessagefriendly(countries);
         }
     }
 
-    private Pair<CountryAgent, Pair<Double, Integer>> getBestBid(int units){
-        CountryAgent bestCountry = countryAgents.get(0);
-        Pair<Double, Integer> bestBid = null;
-        for(CountryAgent ca : countryAgents){
+    private Bid getBestBid(int units){
+        Bid bestBid = null;
+        /*for(CountryAgent ca : countryAgents){
             if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){
-                Pair<Double, Integer> bid = ca.getBid(units);
-                if(bestBid == null || bid.getKey() > bestBid.getKey()){
+        		Bid bid = ca.getBid(units, agentValues);
+        		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
                     bestBid = bid;
-                    bestCountry = ca;
                 }
             }
+        }*/
+        for (CountryAgent ca : countryAgents) {
+            if (ca.getTerritory().getOwner() == this){
+                Bid testbid = new Bid(ca, ca.getGoalList().get(0), reinforcements, 10);
+                bestBid = testbid;
+            }
         }
-        return new Pair<CountryAgent, Pair<Double, Integer>>(bestCountry,  bestBid);
+        return bestBid;
     }
 
 
