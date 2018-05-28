@@ -30,7 +30,7 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
-    private Integer goalLength = 1;
+    private Integer goalLength = 7;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
@@ -117,9 +117,9 @@ public class Mars extends Player {
     public CombatMove getCombatMove() {
         CombatMove combatMove = new CombatMove();
         for (CountryAgent ca : countryAgents) {
-            System.out.println(ca.getFinalGoal() + " is the final goal");
-            if (ca.getTerritory().getOwner() == this && (ca.getFinalGoal().size() >= 1) && ca.getTerritory().getNUnits() > 1){
-                for (CountryAgent target : ca.getFinalGoal()) {           //right now it assumes the first goal is the best goal
+            if (ca.getTerritory().getOwner() == this && ca.bordersEnemy() && (ca.getFinalGoal() != null) && ca.getTerritory().getNUnits() > 1){
+                System.out.println(ca.getFinalGoal() + " is the final goal");
+                for (CountryAgent target : ca.getFinalGoal()) {
                     combatMove.setAttackingTerritory(ca.getTerritory());
                     combatMove.setDefendingTerritory(ca.getFinalGoal().get(ca.getFinalGoal().size() - 1).getTerritory());
                     combatMove.setAttackingUnits(Integer.min(3, ca.getTerritory().getNUnits() - 1));
@@ -138,8 +138,15 @@ public class Mars extends Player {
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
 
         combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().remove(combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().size() - 1);
-        combatMove.getDefendingTerritory().getCountryAgent().setFinalGoal(combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal());
-        //System.out.println(combatMove.getDefendingTerritory().getCountryAgent().getFinalGoal() + " final goal of this agent");
+
+        ArrayList<CountryAgent> newGoals = new ArrayList<>();
+
+        for (CountryAgent ca : combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal()){
+            newGoals.add(ca);
+        }
+        combatMove.getDefendingTerritory().getCountryAgent().setFinalGoal(newGoals);
+
+        System.out.println(combatMove.getDefendingTerritory().getCountryAgent().getFinalGoal() + " final goal of this agent");
         combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().clear();
     }
 
@@ -150,9 +157,8 @@ public class Mars extends Player {
         }
         
         for (CountryAgent ca: countryAgents) {
-            if (ca.getTerritory().getOwner() != this) {
-                agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
-            }
+            //I removed the if statement here, so that all territories get a value instead of only the enemy territories
+            agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
         }
         
         for (CountryAgent sender: countryAgents) {
