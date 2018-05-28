@@ -39,7 +39,7 @@ public class Risk {
         random = new Random(System.currentTimeMillis());
         createDiceOdds();
         Risk risk = new Risk();
-        risk.run();
+        risk.run(); //this makes the game run
     }
     
     public static void createDiceOdds() {
