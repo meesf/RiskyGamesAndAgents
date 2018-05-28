@@ -1,5 +1,6 @@
 package infomgmag.mars;
 
+import java.awt.Color;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -31,8 +32,8 @@ public class Mars extends Player {
     private Double earmiesweight = -0.03;
     private Integer goalLength = 1;
 
-    public Mars(Risk risk, Objective objective, Integer reinforcements, String name) {
-        super(objective, reinforcements, name);
+    public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
+        super(objective, reinforcements, name, color);
 
         agentValues = new HashMap<CountryAgent, Double>();
         cardAgent = new CardAgent();
