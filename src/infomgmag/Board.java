@@ -34,7 +34,7 @@ public class Board {
         continents.add(southAmerica);
         Continent europe = new Continent(new Color(0.33f, 0f, 1f));
         continents.add(europe);
-        Continent asia = new Continent(new Color(0f, 1f, 0f));
+        Continent asia = new Continent(new Color(0.1f, 0.5f, 0.1f));
         continents.add(asia);
         Continent africa = new Continent(new Color(1f, 0.5f, 0f));
         continents.add(africa);
