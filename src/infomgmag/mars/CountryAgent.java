@@ -6,7 +6,9 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.function.IntToDoubleFunction;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 
 
 public class CountryAgent {
@@ -107,90 +109,21 @@ public class CountryAgent {
     public ArrayList<CountryAgent> getAdjacentAgents() {
         return adjacentAgents;
     }
-    
-    private int getTopD(int a, int attacking, int defending) {
-    	if(a%2 == attacking%2) {
-    		return defending;
-    	}
-    	return defending-1;
+
+    private double getP(Integer i, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+        Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size() - 1;
+        if(attackingUnits < 1) {
+            return 0.0;
+        }
+        Integer defendingUnits = 0;
+        for(CountryAgent ca : goal) {
+            defendingUnits += ca.getTerritory().getNUnits();
+        }
+
+        ProbabilityGrid grid = new ProbabilityGrid(attackingUnits, defendingUnits);
+        return grid.chanceOfWin();
     }
-    
-    private void calcTop(double[][] grid, int a, int d) {
-    	printGrid(grid);
-    	System.out.println("a:"+a);
-    	System.out.println("d:"+d);
-    	if(a%2 == grid[0].length%2) {
-    		grid[a][d] = grid[a-2][d] * Risk.DICE_ODDS_TWO.get(1).get(2);
-    	} else {
-    		grid[a][d-1] = grid[a-1][d+1] * Risk.DICE_ODDS_TWO.get(2).get(1);
-    	}
-    }
-    
-    private double calcDown(double[][] grid, int a, int d) {
-    	double prob = grid[a][d];
-    	for(int i = d; i > 0; i-=2) {
-    		if(i == 1) {
-    			if(a > 2) {
-    				prob *= Risk.DICE_ODDS_ONE.get(0).get(2);
-    			} else if(a > 1) {
-    				prob *= Risk.DICE_ODDS_ONE.get(0).get(1);
-    			} else {
-    				prob *= Risk.DICE_ODDS_ONE.get(0).get(0);
-    			}
-    			i = 0;
-    		} else {
-    			if(a > 2) {
-    				prob *= Risk.DICE_ODDS_TWO.get(0).get(2);
-    			} else if(a > 1) {
-    				prob *= Risk.DICE_ODDS_TWO.get(0).get(1);
-    			} else {
-    				prob *= Risk.DICE_ODDS_TWO.get(0).get(0);
-    			}
-    		}
-    	}
-    	return prob;
-    }
-    
-    private void printGrid(double[][] grid) {
-    	System.out.println("Grid:");
-    	for(int i = grid.length-1; i >= 0 ; i--) {
-    		for(int j = grid[0].length-1; j >=0 ; j--) {
-    			System.out.print(grid[i][j] + ", ");
-    		}
-    		System.out.println("");
-    	}
-    }
-    
-    private Double getP(Integer i, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
-    	Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size();
-    	if(attackingUnits < 1) {
-    		return 0.0;
-    	}
-    	Integer defendingUnits = 0;
-    	for(CountryAgent ca : goal) {
-    		defendingUnits += ca.getTerritory().getNUnits();
-    	}
-    	
-    	System.out.println("goal:" + goal);
-    	System.out.println("attackingUnits:" + attackingUnits);
-    	System.out.println("defendingUnits:" + defendingUnits);
-    	
-    	double p = 0.0;
-    	double[][] grid = new double[attackingUnits+1][defendingUnits+1];
-    	grid[attackingUnits][defendingUnits] = 1.0;
-    	
-    	for(int a = attackingUnits; a > 0; a--) {
-    		int d = getTopD(a, attackingUnits, defendingUnits);
-    		if(grid[a][d] == 0.0) {
-    			calcTop(grid, a, d);
-    			p += calcDown(grid, a, d);
-    		} else {
-    			p += calcDown(grid, a, d);
-    		}
-    	}
-    	return p;
-    }
-    
+
     private Double getW(HashMap<CountryAgent, Double> agentValues) {
     	return agentValues.values().stream().mapToDouble(o -> o.doubleValue()).sum();
     }
@@ -201,7 +134,6 @@ public class CountryAgent {
     
     private double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
     	double p = getP(i, goal, agentValues);
-//    	double p = Risk.random.nextDouble();
     	double w = getW(agentValues);
     	double d = getD();
     	if(i == 0) {
