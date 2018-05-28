@@ -59,7 +59,53 @@ public class Mars extends Player {
 
     @Override
     public void turnInCards(Board board) {
-        cardAgent.tradeIn(board);
+        int useInfantry = 0, useCavalry = 0, useArtillery = 0, useWildcards = 0;
+        if(hand.getNumberOfCards() > 4){
+            if(hand.getInfantry() > 0 && hand.getArtillery() > 0 && hand.getCavalry() > 0){
+                useInfantry = 1; useArtillery = 1; useCavalry = 1;
+            } else if(hand.getInfantry() > 2){
+                useInfantry = 3;
+            } else if(hand.getCavalry() > 2){
+                useCavalry = 3;
+            } else if(hand.getArtillery() > 2){
+                useArtillery = 3;
+            } else if(hand.getWildcards() == 1){
+                if(hand.getInfantry() > 1){
+                    useInfantry = 2; useWildcards = 1;
+                } else if(hand.getCavalry() > 1){
+                    useCavalry = 2; useWildcards = 1;
+                } else if(hand.getArtillery() > 1){
+                    useArtillery = 2; useWildcards = 1;
+                } else if(hand.getArtillery() > 0 && hand.getCavalry() > 0){
+                    useArtillery = 1; useCavalry = 1; useWildcards = 1;
+                } else if(hand.getArtillery() > 0 && hand.getInfantry() > 0){
+                    useArtillery = 1; useInfantry = 1; useWildcards = 1;
+                } else if(hand.getCavalry() > 0 && hand.getInfantry() > 0){
+                    useCavalry = 1; useInfantry = 1; useWildcards = 1;
+                }
+            } else if(hand.getWildcards() == 2){
+                if(hand.getInfantry() > 0){
+                    useInfantry = 1; useWildcards = 2;
+                } else if(hand.getCavalry() > 0){
+                    useCavalry = 1; useWildcards = 2;
+                } else if(hand.getArtillery() > 0){
+                    useArtillery = 1; useWildcards = 2;
+                }
+            }
+        }
+
+        if(useInfantry > 0 || useArtillery > 0 || useCavalry > 0){
+            int reinforcementsByCards = board.getAndMoveGoldenCavalry();
+            hand.setInfantry(hand.getInfantry() - useInfantry);
+            hand.setArtillery(hand.getArtillery() - useArtillery);
+            hand.setCavalry(hand.getCavalry() - useCavalry);
+            hand.setWildCards(hand.getWildcards() - useWildcards);
+            board.setArtillery(board.getArtillery() + useArtillery);
+            board.setCavalry(board.getCavalry() + useCavalry);
+            board.setInfantry(board.getInfantry() + useInfantry);
+            board.setWildcards(board.getWildcards() + useWildcards);
+            this.reinforcements += reinforcementsByCards;
+        }
     }
 
     @Override
@@ -71,12 +117,13 @@ public class Mars extends Player {
     public CombatMove getCombatMove() {
         CombatMove combatMove = new CombatMove();
         for (CountryAgent ca : countryAgents) {
-            if (ca.getTerritory().getOwner() == this && ca.getGoalList().isEmpty() != true && ca.getTerritory().getNUnits() > 1){
-                for (CountryAgent target : ca.getGoalList().get(0)) {           //right now it assumes the first goal is the best goal
+            System.out.println(ca.getFinalGoal() + " is the final goal");
+            if (ca.getTerritory().getOwner() == this && (ca.getFinalGoal().size() >= 1) && ca.getTerritory().getNUnits() > 1){
+                for (CountryAgent target : ca.getFinalGoal()) {           //right now it assumes the first goal is the best goal
                     combatMove.setAttackingTerritory(ca.getTerritory());
-                    combatMove.setDefendingTerritory(ca.getGoalList().get(0).get(ca.getGoalList().get(0).size() - 1).getTerritory());
+                    combatMove.setDefendingTerritory(ca.getFinalGoal().get(ca.getFinalGoal().size() - 1).getTerritory());
                     combatMove.setAttackingUnits(Integer.min(3, ca.getTerritory().getNUnits() - 1));
-                    combatMove.setDefendingUnits(Integer.min(2, ca.getGoalList().get(0).get(ca.getGoalList().get(0).size() - 1).getTerritory().getNUnits()));
+                    combatMove.setDefendingUnits(Integer.min(2, ca.getFinalGoal().get(ca.getFinalGoal().size()-1).getTerritory().getNUnits()));
                     return combatMove;
                     }
                 }
@@ -89,9 +136,11 @@ public class Mars extends Player {
         int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
         combatMove.getDefendingTerritory().setUnits(transferredunits);
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
-        combatMove.getAttackingTerritory().getCountryAgent().getGoalList().get(0).remove(combatMove.getAttackingTerritory().getCountryAgent().getGoalList().get(0).size() - 1); //removes the last country from a goal
-        combatMove.getDefendingTerritory().getCountryAgent().getGoalList().set(0, combatMove.getAttackingTerritory().getCountryAgent().getGoalList().get(0));   //sets goal of conquered territory to goal of attacking territory minus the conquered territory
-        combatMove.getAttackingTerritory().getCountryAgent().getGoalList().clear();
+
+        combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().remove(combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().size() - 1);
+        combatMove.getDefendingTerritory().getCountryAgent().setFinalGoal(combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal());
+        //System.out.println(combatMove.getDefendingTerritory().getCountryAgent().getFinalGoal() + " final goal of this agent");
+        combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().clear();
     }
 
     @Override
@@ -142,24 +191,15 @@ public class Mars extends Player {
 
     private Bid getBestBid(int units){
         Bid bestBid = null;
-        /*for(CountryAgent ca : countryAgents){
+        for(CountryAgent ca : countryAgents){
             if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){
         		Bid bid = ca.getBid(units, agentValues);
         		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
                     bestBid = bid;
                 }
             }
-        }*/
-        for (CountryAgent ca : countryAgents) {
-            if (ca.getTerritory().getOwner() == this){
-                Bid testbid = new Bid(ca, ca.getGoalList().get(0), reinforcements, 10);
-                bestBid = testbid;
-            }
         }
-        System.out.println(bestBid);
+        bestBid.getOrigin().setFinalGoal(bestBid.getGoal());
         return bestBid;
     }
-
-
-
 }

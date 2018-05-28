@@ -15,6 +15,7 @@ public class CountryAgent {
     private Territory territory;
     public ArrayList<CountryAgent> adjacentAgents;
     private ArrayList<ArrayList<CountryAgent>> goalList;
+    private ArrayList<CountryAgent> finalGoal;
 
     CountryAgent(Territory territory) {
         this.territory = territory;
@@ -32,7 +33,6 @@ public class CountryAgent {
         return territoryvalue;
         //TODO: Somehow, this value has to be linked to the amount of enemy troops on this territory, I tried Pairs but that didn't work great, maybe a list?
     }
-
 
     public void receivemessagefriendly(ArrayList<CountryAgent> countries){    //adds the route to the goallist when a friendly country is reached
         goalList.add(countries);
@@ -199,6 +199,14 @@ public class CountryAgent {
     
     public String toString() {
     	return territory.toString();
+    }
+
+    public void setFinalGoal(ArrayList<CountryAgent> finalGoal){
+        this.finalGoal = finalGoal;
+    }
+
+    public ArrayList<CountryAgent> getFinalGoal() {
+        return finalGoal;
     }
 }
 

@@ -1,0 +1,615 @@
+[1mdiff --git a/src/infomgmag/Board.java b/src/infomgmag/Board.java[m
+[1mindex 095c3f8..2941879 100644[m
+[1m--- a/src/infomgmag/Board.java[m
+[1m+++ b/src/infomgmag/Board.java[m
+[36m@@ -34,8 +34,7 @@[m [mpublic class Board {[m
+         continents.add(southAmerica);[m
+         Continent europe = new Continent(new Color(0.33f, 0f, 1f),"europe");[m
+         continents.add(europe);[m
+[31m-[m
+[31m-        Continent asia = new Continent(new Color(0.1f, 0.5f, 0.1f), "asia");[m
+[32m+[m[32m        Continent asia = new Continent(new Color(0f, 1f, 0f),"asia");[m
+         continents.add(asia);[m
+         Continent africa = new Continent(new Color(1f, 0.5f, 0f),"africa");[m
+         continents.add(africa);[m
+[1mdiff --git a/src/infomgmag/Human.java b/src/infomgmag/Human.java[m
+[1mindex f697bcf..ee965ca 100644[m
+[1m--- a/src/infomgmag/Human.java[m
+[1m+++ b/src/infomgmag/Human.java[m
+[36m@@ -1,11 +1,9 @@[m
+ package infomgmag;[m
+ [m
+[31m-import java.awt.Color;[m
+[31m-[m
+ public class Human extends Player {[m
+ [m
+[31m-    public Human(Objective o, Integer reinforcements, String name, Color color) {[m
+[31m-        super(o, reinforcements, name, color);[m
+[32m+[m[32m    public Human(Objective o, Integer reinforcements, String name) {[m
+[32m+[m[32m        super(o, reinforcements, name);[m
+     }[m
+ [m
+     @Override[m
+[1mdiff --git a/src/infomgmag/Player.java b/src/infomgmag/Player.java[m
+[1mindex 3676acd..37aae09 100644[m
+[1m--- a/src/infomgmag/Player.java[m
+[1m+++ b/src/infomgmag/Player.java[m
+[36m@@ -18,13 +18,14 @@[m [mpublic abstract class Player {[m
+     protected Hand hand;[m
+     protected Integer reinforcements;[m
+ [m
+[31m-    public Player(Objective objective, Integer reinforcements, String name, Color color) {[m
+[32m+[m[32m    public Player(Objective objective, Integer reinforcements, String name) {[m
+         this.objective = objective;[m
+         this.reinforcements = reinforcements;[m
+         this.name = name;[m
+         this.hand = new Hand();[m
+         this.territories = new ArrayList<>();[m
+[31m-        this.color = color;[m
+[32m+[m[32m        this.color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,[m
+[32m+[m[32m                Risk.random.nextFloat() * 0.8f + 0.2f);[m
+     }[m
+ [m
+     public abstract void turnInCards(Board board);[m
+[1mdiff --git a/src/infomgmag/RandomBot.java b/src/infomgmag/RandomBot.java[m
+[1mindex ffd0f3b..b9df302 100644[m
+[1m--- a/src/infomgmag/RandomBot.java[m
+[1m+++ b/src/infomgmag/RandomBot.java[m
+[36m@@ -1,13 +1,12 @@[m
+ package infomgmag;[m
+ [m
+[31m-import java.awt.Color;[m
+ import java.util.ArrayList;[m
+ import java.util.Collections;[m
+ [m
+ public class RandomBot extends Player {[m
+ [m
+[31m-    public RandomBot(Objective o, Integer reinforcements, String name, Color color) {[m
+[31m-        super(o, reinforcements, name, color);[m
+[32m+[m[32m    public RandomBot(Objective o, Integer reinforcements, String name) {[m
+[32m+[m[32m        super(o, reinforcements, name);[m
+     }[m
+ [m
+     @Override[m
+[1mdiff --git a/src/infomgmag/Risk.java b/src/infomgmag/Risk.java[m
+[1mindex 14ac5c6..44eb7ca 100644[m
+[1m--- a/src/infomgmag/Risk.java[m
+[1m+++ b/src/infomgmag/Risk.java[m
+[36m@@ -2,7 +2,6 @@[m [mpackage infomgmag;[m
+ [m
+ import infomgmag.mars.Mars;[m
+ [m
+[31m-import java.awt.Color;[m
+ import java.util.ArrayList;[m
+ import java.util.Collections;[m
+ import java.util.Random;[m
+[36m@@ -19,6 +18,7 @@[m [mimport java.util.Random;[m
+ public class Risk {[m
+ [m
+     public static Random random;[m
+[32m+[m[32m    public static ArrayList<ArrayList<Double>> DICE_ODDS_ONE, DICE_ODDS_TWO;[m
+     [m
+     private int turn = 0;[m
+ [m
+[36m@@ -31,14 +31,45 @@[m [mpublic class Risk {[m
+ [m
+     private ArrayList<Player> defeatedPlayers;[m
+     private boolean visible = true;[m
+[31m-    private int playerAmount = 6;[m
+[32m+[m[41m    [m
+ [m
+     public static void main(String[] args) {[m
+         random = new Random(System.currentTimeMillis());[m
+[32m+[m[32m        createDiceOdds();[m
+         Risk risk = new Risk();[m
+         risk.run();[m
+     }[m
+[31m-[m
+[32m+[m[41m    [m
+[32m+[m[32m    public static void createDiceOdds() {[m
+[32m+[m[41m    [m	[32mDICE_ODDS_ONE = new ArrayList<ArrayList<Double>>();[m
+[32m+[m[41m    [m	[32mArrayList<Double> oneA = new ArrayList<Double>();[m
+[32m+[m[41m    [m	[32moneA.add(15.0/36);[m
+[32m+[m[41m    [m	[32moneA.add(125.0/216);[m
+[32m+[m[41m    [m	[32moneA.add(855.0/1296);[m
+[32m+[m[41m    [m	[32mDICE_ODDS_ONE.add(oneA);[m
+[32m+[m[41m    [m	[32mArrayList<Double> oneD = new ArrayList<Double>();[m
+[32m+[m[41m    [m	[32moneD.add(21.0/36);[m
+[32m+[m[41m    [m	[32moneD.add(91.0/216);[m
+[32m+[m[41m    [m	[32moneD.add(441.0/1296);[m
+[32m+[m[41m    [m	[32mDICE_ODDS_ONE.add(oneD);[m
+[32m+[m[32m        DICE_ODDS_TWO = new ArrayList<ArrayList<Double>>();[m
+[32m+[m[32m        ArrayList<Double> twoA = new ArrayList<Double>();[m
+[32m+[m[32m        twoA.add(55.0/216);[m
+[32m+[m[32m        twoA.add(295.0/1296);[m
+[32m+[m[32m        twoA.add(2890.0/7776);[m
+[32m+[m[41m    [m	[32mDICE_ODDS_TWO.add(twoA);[m
+[32m+[m[41m    [m	[32mArrayList<Double> twoD = new ArrayList<Double>();[m
+[32m+[m[32m        twoD.add(161.0/216);[m
+[32m+[m[32m        twoD.add(581.0/1296);[m
+[32m+[m[32m        twoD.add(2275.0/7776);[m
+[32m+[m[41m    [m	[32mDICE_ODDS_TWO.add(twoD);[m
+[32m+[m[41m    [m	[32mArrayList<Double> twoL = new ArrayList<Double>();[m
+[32m+[m[32m        twoL.add(null);[m
+[32m+[m[32m        twoL.add(420.0/1296);[m
+[32m+[m[32m        twoL.add(2611.0/7776);[m
+[32m+[m[41m    [m	[32mDICE_ODDS_TWO.add(twoL);[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+     public Risk() {[m
+         initializeGame();[m
+     }[m
+[36m@@ -46,11 +77,14 @@[m [mpublic class Risk {[m
+     public void run() {[m
+         while (!finished()) {[m
+             visuals.update();[m
+[32m+[m[32m            System.out.println("\n------------ "+ currentPlayer +" ------------\n");[m
+[32m+[m[32m            System.out.println("------------ Reinforcement phase ------------");[m
+             Integer nrOfReinforcements = calculateReinforcements();[m
+             currentPlayer.setReinforcements(nrOfReinforcements);[m
+             currentPlayer.turnInCards(board);[m
+             currentPlayer.placeReinforcements(board);[m
+             [m
+[32m+[m[32m            System.out.println("------------ Combat phase ------------");[m
+             int startingNrOfTerritories = currentPlayer.getTerritories().size();[m
+             CombatMove combatMove; // If a territory is claimed the player has to move the units he used during his[m
+                                    // attack to the claimed territoy, he can move more units to the new territory[m
+[36m@@ -61,6 +95,7 @@[m [mpublic class Risk {[m
+                 if (StopGame)[m
+                     break;[m
+             }[m
+[32m+[m[32m            System.out.println("------------ Fortify phase ------------");[m
+             currentPlayer.fortifyTerritory(board);[m
+             visuals.update();[m
+ [m
+[36m@@ -168,12 +203,16 @@[m [mpublic class Risk {[m
+     }[m
+ [m
+     private void initializeGame() {[m
+[32m+[m[41m    [m	[32mSystem.out.println("------------ Initialize Game ------------");[m
+         visuals = new RiskVisual(this,visible);[m
+         board = new Board();[m
+         defeatedPlayers = new ArrayList<Player>();[m
+         nrOfStartingUnits = 30;[m
+[32m+[m[32m        System.out.println("------------ Initialize Players ------------");[m
+         initializePlayers();[m
+[32m+[m[32m        System.out.println("------------ Divide Territories ------------");[m
+         Integer currentPlayerIndex = divideTerritories();[m
+[32m+[m[32m        System.out.println("------------ Place Initial Reinforcements ------------");[m
+         initialPlaceReinforcements(currentPlayerIndex);[m
+         currentPlayer = players.get(0);[m
+     }[m
+[36m@@ -186,42 +225,21 @@[m [mpublic class Risk {[m
+         return currentPlayer;[m
+     }[m
+ [m
+[31m-    private Color[] playerColors = {[m
+[31m-            Color.RED,[m
+[31m-            Color.BLUE,[m
+[31m-            Color.BLACK,[m
+[31m-            Color.GREEN,[m
+[31m-            Color.ORANGE,[m
+[31m-            Color.MAGENTA[m
+[31m-    };[m
+[31m-[m
+     private void initializePlayers() {[m
+         players = new ArrayList<>();[m
+         // TODO deciding number of startingUnits using number of players and evt. number[m
+         // territorries[m
+[31m-        int i;[m
+[31m-        for (i = 0; i < 2; i++) {[m
+[32m+[m[32m        for (int i = 0; i < 2; i++) {[m
+             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);[m
+[31m-            Color color;[m
+[31m-            if (i < playerColors.length) {[m
+[31m-                color = playerColors[i];[m
+[31m-            } else {[m
+[31m-                color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,[m
+[31m-                        Risk.random.nextFloat() * 0.8f + 0.2f);[m
+[31m-            }[m
+[31m-            RandomBot player = new RandomBot(objective, 0, "player" + i,color);[m
+[32m+[m[32m            RandomBot player = new RandomBot(objective, 0, "player" + i);[m
+             players.add(player);[m
+         }[m
+[31m-        // Add mars agent[m
+[31m-        Color color;[m
+[31m-        if (i < playerColors.length) {[m
+[31m-            color = playerColors[i];[m
+[31m-        } else {[m
+[31m-            color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,[m
+[31m-                    Risk.random.nextFloat() * 0.8f + 0.2f);[m
+[31m-        }[m
+[32m+[m[32m        addMarsAgent();[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private void addMarsAgent(){[m
+         Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);[m
+[31m-        Mars player = new Mars(this, objective, 0, "Mars agent",color);[m
+[32m+[m[32m        Mars player = new Mars(this, objective, 0, "Mars agent");[m
+         players.add(player);[m
+     }[m
+ [m
+[1mdiff --git a/src/infomgmag/RiskVisual.java b/src/infomgmag/RiskVisual.java[m
+[1mindex 40e5991..0467bb1 100644[m
+[1m--- a/src/infomgmag/RiskVisual.java[m
+[1m+++ b/src/infomgmag/RiskVisual.java[m
+[36m@@ -159,7 +159,7 @@[m [mpublic class RiskVisual extends JFrame {[m
+             g.drawImage(map, 0, 0, gameWidth, gameHeight, null);[m
+     }[m
+ [m
+[31m-    long targetFrameDuration = (1000);[m
+[32m+[m[32m    long targetFrameDuration = (1);[m
+     long frameDuration = 1000;[m
+     long lastFrameTime;[m
+ [m
+[1mdiff --git a/src/infomgmag/mars/Bid.java b/src/infomgmag/mars/Bid.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..55d8aae[m
+[1m--- /dev/null[m
+[1m+++ b/src/infomgmag/mars/Bid.java[m
+[36m@@ -0,0 +1,37 @@[m
+[32m+[m[32mpackage infomgmag.mars;[m
+[32m+[m
+[32m+[m[32mimport java.util.ArrayList;[m
+[32m+[m
+[32m+[m[32mpublic class Bid {[m
+[32m+[m	[32mprivate CountryAgent origin;[m
+[32m+[m	[32mprivate ArrayList<CountryAgent> goal;[m
+[32m+[m	[32mprivate Integer units;[m
+[32m+[m	[32mprivate Double utility;[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic Bid(CountryAgent origin, ArrayList<CountryAgent> goal, Integer units, double utility) {[m
+[32m+[m		[32mthis.origin = origin;[m
+[32m+[m		[32mthis.goal = goal;[m
+[32m+[m		[32mthis.units = units;[m
+[32m+[m		[32mthis.utility = utility;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic ArrayList<CountryAgent> getGoal() {[m
+[32m+[m		[32mreturn goal;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic Integer getUnits() {[m
+[32m+[m		[32mreturn units;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic Double getUtility() {[m
+[32m+[m		[32mreturn utility;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic CountryAgent getOrigin() {[m
+[32m+[m		[32mreturn origin;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic String toString() {[m
+[32m+[m		[32mreturn "Bid of "+ origin.getTerritory().getName() + ", goal:" + goal + ", units:" + units + ", utility:"+utility;[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/infomgmag/mars/CountryAgent.java b/src/infomgmag/mars/CountryAgent.java[m
+[1mindex 91311cb..16743cc 100644[m
+[1m--- a/src/infomgmag/mars/CountryAgent.java[m
+[1m+++ b/src/infomgmag/mars/CountryAgent.java[m
+[36m@@ -5,6 +5,7 @@[m [mimport infomgmag.Territory;[m
+ import javafx.util.Pair;[m
+ [m
+ import java.util.ArrayList;[m
+[32m+[m[32mimport java.util.HashMap;[m
+ [m
+ [m
+ [m
+[36m@@ -12,12 +13,10 @@[m [mpublic class CountryAgent {[m
+     private Territory territory;[m
+     public ArrayList<CountryAgent> adjacentAgents;[m
+     private ArrayList<ArrayList<CountryAgent>> goalList;[m
+[31m-    private ArrayList<CountryAgent> goal;[m
+ [m
+     CountryAgent(Territory territory) {[m
+         this.territory = territory;[m
+         goalList = new ArrayList<>();[m
+[31m-        goal = new ArrayList<CountryAgent>();[m
+         this.adjacentAgents = new ArrayList<CountryAgent>();[m
+     }[m
+ [m
+[36m@@ -25,8 +24,7 @@[m [mpublic class CountryAgent {[m
+         return territory;[m
+     }[m
+ [m
+[31m-    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight)  //calculates value of owning a territory, TODO: the actual final calculation has more factors includings continents and such[m
+[31m-    {[m
+[32m+[m[32m    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight) { //calculates value of owning a territory, TODO: the actual final calculation has more factors includings continents and such[m
+         Double territoryvalue = 0.0;[m
+         territoryvalue = (((friendlyNeighbours() * friendliesweight) + (enemyNeighbours() * enemyweight) + (friendlyArmies() * farmiesweight) + (enemyArmies() * earmiesweight)));[m
+         return territoryvalue;[m
+[36m@@ -109,18 +107,167 @@[m [mpublic class CountryAgent {[m
+     public ArrayList<CountryAgent> getAdjacentAgents() {[m
+         return adjacentAgents;[m
+     }[m
+[31m-[m
+[31m-    public Pair<Double, Integer> getBid(Integer unitsLeft) {[m
+[31m-        Double value = Risk.random.nextDouble() * 10;[m
+[31m-        Integer units = Risk.random.nextInt(unitsLeft + 1);[m
+[31m-        Integer index = Risk.random.nextInt(goalList.size());[m
+[31m-        goal = goalList.get(index);[m
+[31m-        return new Pair<Double, Integer>(value, units);[m
+[32m+[m[41m    [m
+[32m+[m[32m    private int getTopD(int a, int attacking, int defending) {[m
+[32m+[m[41m    [m	[32mif(a%2 == attacking%2) {[m
+[32m+[m[41m    [m		[32mreturn defending;[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mreturn defending-1;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private void calcTop(double[][] grid, int a, int d) {[m
+[32m+[m[41m    [m	[32mprintGrid(grid);[m
+[32m+[m[41m    [m	[32mSystem.out.println("a:"+a);[m
+[32m+[m[41m    [m	[32mSystem.out.println("d:"+d);[m
+[32m+[m[41m    [m	[32mif(a%2 == grid[0].length%2) {[m
+[32m+[m[41m    [m		[32mgrid[a][d] = grid[a-2][d] * Risk.DICE_ODDS_TWO.get(1).get(2);[m
+[32m+[m[41m    [m	[32m} else {[m
+[32m+[m[41m    [m		[32mgrid[a][d-1] = grid[a-1][d+1] * Risk.DICE_ODDS_TWO.get(2).get(1);[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private double calcDown(double[][] grid, int a, int d) {[m
+[32m+[m[41m    [m	[32mdouble prob = grid[a][d];[m
+[32m+[m[41m    [m	[32mfor(int i = d; i > 0; i-=2) {[m
+[32m+[m[41m    [m		[32mif(i == 1) {[m
+[32m+[m[41m    [m			[32mif(a > 2) {[m
+[32m+[m[41m    [m				[32mprob *= Risk.DICE_ODDS_ONE.get(0).get(2);[m
+[32m+[m[41m    [m			[32m} else if(a > 1) {[m
+[32m+[m[41m    [m				[32mprob *= Risk.DICE_ODDS_ONE.get(0).get(1);[m
+[32m+[m[41m    [m			[32m} else {[m
+[32m+[m[41m    [m				[32mprob *= Risk.DICE_ODDS_ONE.get(0).get(0);[m
+[32m+[m[41m    [m			[32m}[m
+[32m+[m[41m    [m			[32mi = 0;[m
+[32m+[m[41m    [m		[32m} else {[m
+[32m+[m[41m    [m			[32mif(a > 2) {[m
+[32m+[m[41m    [m				[32mprob *= Risk.DICE_ODDS_TWO.get(0).get(2);[m
+[32m+[m[41m    [m			[32m} else if(a > 1) {[m
+[32m+[m[41m    [m				[32mprob *= Risk.DICE_ODDS_TWO.get(0).get(1);[m
+[32m+[m[41m    [m			[32m} else {[m
+[32m+[m[41m    [m				[32mprob *= Risk.DICE_ODDS_TWO.get(0).get(0);[m
+[32m+[m[41m    [m			[32m}[m
+[32m+[m[41m    [m		[32m}[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mreturn prob;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private void printGrid(double[][] grid) {[m
+[32m+[m[41m    [m	[32mSystem.out.println("Grid:");[m
+[32m+[m[41m    [m	[32mfor(int i = grid.length-1; i >= 0 ; i--) {[m
+[32m+[m[41m    [m		[32mfor(int j = grid[0].length-1; j >=0 ; j--) {[m
+[32m+[m[41m    [m			[32mSystem.out.print(grid[i][j] + ", ");[m
+[32m+[m[41m    [m		[32m}[m
+[32m+[m[41m    [m		[32mSystem.out.println("");[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private Double getP(Integer i, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {[m
+[32m+[m[41m    [m	[32mInteger attackingUnits = this.getTerritory().getNUnits() + i - goal.size();[m
+[32m+[m[41m    [m	[32mif(attackingUnits < 1) {[m
+[32m+[m[41m    [m		[32mreturn 0.0;[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mInteger defendingUnits = 0;[m
+[32m+[m[41m    [m	[32mfor(CountryAgent ca : goal) {[m
+[32m+[m[41m    [m		[32mdefendingUnits += ca.getTerritory().getNUnits();[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    	[m
+[32m+[m[41m    [m	[32mSystem.out.println("goal:" + goal);[m
+[32m+[m[41m    [m	[32mSystem.out.println("attackingUnits:" + attackingUnits);[m
+[32m+[m[41m    [m	[32mSystem.out.println("defendingUnits:" + defendingUnits);[m
+[32m+[m[41m    	[m
+[32m+[m[41m    [m	[32mdouble p = 0.0;[m
+[32m+[m[41m    [m	[32mdouble[][] grid = new double[attackingUnits+1][defendingUnits+1];[m
+[32m+[m[41m    [m	[32mgrid[attackingUnits][defendingUnits] = 1.0;[m
+[32m+[m[41m    	[m
+[32m+[m[41m    [m	[32mfor(int a = attackingUnits; a > 0; a--) {[m
+[32m+[m[41m    [m		[32mint d = getTopD(a, attackingUnits, defendingUnits);[m
+[32m+[m[41m    [m		[32mif(grid[a][d] == 0.0) {[m
+[32m+[m[41m    [m			[32mcalcTop(grid, a, d);[m
+[32m+[m[41m    [m			[32mp += calcDown(grid, a, d);[m
+[32m+[m[41m    [m		[32m} else {[m
+[32m+[m[41m    [m			[32mp += calcDown(grid, a, d);[m
+[32m+[m[41m    [m		[32m}[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mreturn p;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private Double getW(HashMap<CountryAgent, Double> agentValues) {[m
+[32m+[m[41m    [m	[32mreturn agentValues.values().stream().mapToDouble(o -> o.doubleValue()).sum();[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private Double getD() {[m
+[32m+[m[41m    [m	[32mreturn 1.0;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {[m
+[32m+[m[41m    [m	[32mdouble p = getP(i, goal, agentValues);[m
+[32m+[m[32m//    	double p = Risk.random.nextDouble();[m
+[32m+[m[41m    [m	[32mdouble w = getW(agentValues);[m
+[32m+[m[41m    [m	[32mdouble d = getD();[m
+[32m+[m[41m    [m	[32mif(i == 0) {[m
+[32m+[m[41m    [m		[32mreturn p*w*d;[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mreturn (p*w*d)/i;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private Double getV() {[m
+[32m+[m[41m    [m	[32mreturn 0.0;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private double getVD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {[m
+[32m+[m[41m    [m	[32mdouble v = getV();[m
+[32m+[m[41m    [m	[32mdouble d = getD();[m
+[32m+[m[41m    [m	[32mif(i == 0) {[m
+[32m+[m[41m    [m		[32mreturn v*d;[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mreturn (v*d)/i;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    public Bid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {[m
+[32m+[m[41m    [m	[32mBid bestBid = null;[m
+[32m+[m[41m    [m	[32mfor(ArrayList<CountryAgent> goal : goalList) {[m
+[32m+[m[41m    [m		[32mBid offBid = getOffensiveBid(unitsLeft, goal, agentValues);[m
+[32m+[m[41m    [m		[32mif(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {[m
+[32m+[m[41m    [m			[32mbestBid = offBid;[m
+[32m+[m[41m    [m		[32m}[m
+[32m+[m[41m    		[m
+[32m+[m[41m    [m		[32mBid defBid = getDefensiveBid(unitsLeft, goal, agentValues);[m
+[32m+[m[41m    [m		[32mif(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {[m
+[32m+[m[41m    [m			[32mbestBid = defBid;[m
+[32m+[m[41m    [m		[32m}[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mreturn bestBid;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private Bid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {[m
+[32m+[m[41m    [m	[32mBid bestBid = null;[m
+[32m+[m[41m    [m	[32mfor(int i=0; i<=unitsLeft; i++) {[m
+[32m+[m[41m    [m		[32mdouble bidUtil = getVD(goal, agentValues, i);[m
+[32m+[m[41m    [m		[32mif(bestBid == null || bidUtil > bestBid.getUtility()) {[m
+[32m+[m[41m    [m			[32mbestBid = new Bid(this, goal, i, bidUtil);[m
+[32m+[m[41m    [m		[32m}[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mreturn bestBid;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    private Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {[m
+[32m+[m[41m    [m	[32mBid bestBid = null;[m
+[32m+[m[41m    [m	[32mfor(int i=0; i<=unitsLeft; i++) {[m
+[32m+[m[41m    [m		[32mdouble bidUtil = getPWD(goal, agentValues, i);[m
+[32m+[m[41m    [m		[32mif(bestBid == null || bidUtil > bestBid.getUtility()) {[m
+[32m+[m[41m    [m			[32mbestBid = new Bid(this, goal, i, bidUtil);[m
+[32m+[m[41m    [m		[32m}[m
+[32m+[m[41m    [m	[32m}[m
+[32m+[m[41m    [m	[32mreturn bestBid;[m
+     }[m
+ [m
+     public ArrayList<ArrayList<CountryAgent>> getGoalList() {[m
+         return goalList;[m
+     }[m
+[32m+[m[41m    [m
+[32m+[m[32m    public String toString() {[m
+[32m+[m[41m    [m	[32mreturn territory.toString();[m
+[32m+[m[32m    }[m
+ }[m
+ [m
+ [m
+[1mdiff --git a/src/infomgmag/mars/Mars.java b/src/infomgmag/mars/Mars.java[m
+[1mindex 7a75291..92eddfd 100644[m
+[1m--- a/src/infomgmag/mars/Mars.java[m
+[1m+++ b/src/infomgmag/mars/Mars.java[m
+[36m@@ -1,6 +1,5 @@[m
+ package infomgmag.mars;[m
+ [m
+[31m-import java.awt.Color;[m
+ import java.lang.reflect.Array;[m
+ import java.util.*;[m
+ [m
+[36m@@ -30,10 +29,10 @@[m [mpublic class Mars extends Player {[m
+     private Double enemiesweight = -0.3;[m
+     private Double farmiesweight = 0.05;[m
+     private Double earmiesweight = -0.03;[m
+[31m-    private Integer goalLength = 5;[m
+[32m+[m[32m    private Integer goalLength = 1;[m
+ [m
+[31m-    public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {[m
+[31m-        super(objective, reinforcements, name, color);[m
+[32m+[m[32m    public Mars(Risk risk, Objective objective, Integer reinforcements, String name) {[m
+[32m+[m[32m        super(objective, reinforcements, name);[m
+ [m
+         agentValues = new HashMap<CountryAgent, Double>();[m
+         cardAgent = new CardAgent();[m
+[36m@@ -80,61 +79,61 @@[m [mpublic class Mars extends Player {[m
+ [m
+     @Override[m
+     public void placeReinforcements(Board board) {[m
+[31m-        for (CountryAgent CA: countryAgents){[m
+[31m-            CA.clearlists();[m
+[32m+[m[41m    [m	[32mSystem.out.println("----------------- Place "+reinforcements+" reinforcement(s) -----------------");[m
+[32m+[m[32m        for (CountryAgent ca: countryAgents){[m
+[32m+[m[32m            ca.clearlists();[m
+         }[m
+[31m-        for (CountryAgent CA: countryAgents)[m
+[31m-        {[m
+[31m-            if (CA.getTerritory().getOwner() != this) {[m
+[31m-                agentValues.put(CA, CA.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));[m
+[32m+[m[41m        [m
+[32m+[m[32m        for (CountryAgent ca: countryAgents) {[m
+[32m+[m[32m            if (ca.getTerritory().getOwner() != this) {[m
+[32m+[m[32m                agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));[m
+             }[m
+         }[m
+[32m+[m[41m        [m
+         for (CountryAgent sender: countryAgents) {[m
+[31m-            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();[m
+[31m-            initialList.add(sender);[m
+[31m-            createGoal(sender, initialList);[m
+[32m+[m[41m        [m	[32mif(sender.getTerritory().getOwner() != this) {[m
+[32m+[m	[32m            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();[m
+[32m+[m	[32m            createGoal(sender, initialList);[m
+[32m+[m[41m        [m	[32m}[m
+         }[m
+ [m
+[31m-        //for(CountryAgent ca : countryAgents){[m
+[31m-        //    System.out.println(" owner: " + ca.getTerritory().getOwner().toString() + "  name: "  + ca.getTerritory().getName() + " size: " + ca.getGoalList().size());[m
+[31m-        //}[m
+[31m-[m
+[31m-        while(getReinforcements() > 0){[m
+[31m-            Pair<CountryAgent, Pair<Double, Integer>> bid = getBestBid(getReinforcements());[m
+[31m-            board.addUnits(this, bid.getKey().getTerritory(), bid.getValue().getValue());[m
+[31m-            reinforcements -= bid.getValue().getValue();[m
+[32m+[m[32m        while(reinforcements > 0){[m
+[32m+[m[32m            Bid bid = getBestBid(getReinforcements());[m
+[32m+[m[32m            System.out.println("Winning bid: " + bid);[m
+[32m+[m[32m            board.addUnits(this, bid.getOrigin().getTerritory(), bid.getUnits());[m
+[32m+[m[32m            reinforcements -= bid.getUnits();[m
+         }[m
+     }[m
+[31m-[m
+[32m+[m[41m    [m
+     private void createGoal(CountryAgent receiver, ArrayList<CountryAgent> countries){[m
+[31m-        if(receiver.getTerritory().getOwner() != this && !countries.contains(receiver) && goalLength >= countries.size()){[m
+[32m+[m[41m    [m	[32mif(receiver.getTerritory().getOwner() == this) {[m
+[32m+[m[32m            receiver.receivemessagefriendly(countries);[m
+[32m+[m[32m        } else if(goalLength > countries.size()) {[m
+             ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();[m
+             for(CountryAgent ca : countries){[m
+                 copiedCountries.add(ca);[m
+             }[m
+[32m+[m[41m            [m
+             copiedCountries.add(receiver);[m
+[31m-            for(CountryAgent neighbour : receiver.getAdjacentAgents()){[m
+[31m-                createGoal(neighbour, copiedCountries);[m
+[32m+[m[32m            for(CountryAgent neighbour : receiver.getAdjacentAgents()) {[m
+[32m+[m[41m            [m	[32mif(!countries.contains(neighbour)) {[m
+[32m+[m[41m            [m		[32mcreateGoal(neighbour, copiedCountries);[m
+[32m+[m[41m            [m	[32m}[m
+             }[m
+         }[m
+[31m-        else if(receiver.getTerritory().getOwner() == this){[m
+[31m-            receiver.receivemessagefriendly(countries);[m
+[31m-        }[m
+     }[m
+ [m
+[31m-    private Pair<CountryAgent, Pair<Double, Integer>> getBestBid(int units){[m
+[31m-        CountryAgent bestCountry = countryAgents.get(0);[m
+[31m-        Pair<Double, Integer> bestBid = null;[m
+[32m+[m[32m    private Bid getBestBid(int units){[m
+[32m+[m[32m        Bid bestBid = null;[m
+         for(CountryAgent ca : countryAgents){[m
+             if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){[m
+[31m-                Pair<Double, Integer> bid = ca.getBid(units);[m
+[31m-                if(bestBid == null || bid.getKey() > bestBid.getKey()){[m
+[32m+[m[41m        [m		[32mBid bid = ca.getBid(units, agentValues);[m
+[32m+[m[41m        [m		[32mif(bestBid == null || bid.getUtility() > bestBid.getUtility()){[m
+                     bestBid = bid;[m
+[31m-                    bestCountry = ca;[m
+                 }[m
+             }[m
+         }[m
+[31m-        return new Pair<CountryAgent, Pair<Double, Integer>>(bestCountry,  bestBid);[m
+[32m+[m[32m        return bestBid;[m
+     }[m
+ [m
+ [m
