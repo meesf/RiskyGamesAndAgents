@@ -1,5 +1,6 @@
 package infomgmag;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -28,7 +29,7 @@ public class Risk {
 
     private ArrayList<Player> defeatedPlayers;
     private boolean visible = true;
-
+    private int playerAmount = 6;
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
@@ -183,13 +184,29 @@ public class Risk {
         return currentPlayer;
     }
 
+    private Color[] playerColors = {
+            Color.RED,
+            Color.BLUE,
+            Color.BLACK,
+            Color.GREEN,
+            Color.ORANGE,
+            Color.MAGENTA
+    };
+
     private void initializePlayers() {
         players = new ArrayList<>();
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < playerAmount; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-            RandomBot player = new RandomBot(objective, 0, "player" + i);
+            Color color;
+            if (i < playerColors.length) {
+                color = playerColors[i];
+            } else {
+                color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
+                        Risk.random.nextFloat() * 0.8f + 0.2f);
+            }
+            RandomBot player = new RandomBot(objective, 0, "player" + i,color);
             players.add(player);
         }
     }
