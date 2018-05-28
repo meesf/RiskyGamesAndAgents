@@ -18,14 +18,13 @@ public abstract class Player {
     protected Hand hand;
     protected Integer reinforcements;
 
-    public Player(Objective objective, Integer reinforcements, String name) {
+    public Player(Objective objective, Integer reinforcements, String name, Color color) {
         this.objective = objective;
         this.reinforcements = reinforcements;
         this.name = name;
         this.hand = new Hand();
         this.territories = new ArrayList<>();
-        this.color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
-                Risk.random.nextFloat() * 0.8f + 0.2f);
+        this.color = color;
     }
 
     public abstract void turnInCards(Board board);

@@ -1,12 +1,13 @@
 package infomgmag;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class RandomBot extends Player {
 
-    public RandomBot(Objective o, Integer reinforcements, String name) {
-        super(o, reinforcements, name);
+    public RandomBot(Objective o, Integer reinforcements, String name, Color color) {
+        super(o, reinforcements, name, color);
     }
 
     @Override

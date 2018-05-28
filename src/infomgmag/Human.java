@@ -1,9 +1,11 @@
 package infomgmag;
 
+import java.awt.Color;
+
 public class Human extends Player {
 
-    public Human(Objective o, Integer reinforcements, String name) {
-        super(o, reinforcements, name);
+    public Human(Objective o, Integer reinforcements, String name, Color color) {
+        super(o, reinforcements, name, color);
     }
 
     @Override

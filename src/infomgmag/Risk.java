@@ -2,6 +2,7 @@ package infomgmag;
 
 import infomgmag.mars.Mars;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -30,7 +31,7 @@ public class Risk {
 
     private ArrayList<Player> defeatedPlayers;
     private boolean visible = true;
-
+    private int playerAmount = 6;
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
@@ -185,21 +186,42 @@ public class Risk {
         return currentPlayer;
     }
 
+    private Color[] playerColors = {
+            Color.RED,
+            Color.BLUE,
+            Color.BLACK,
+            Color.GREEN,
+            Color.ORANGE,
+            Color.MAGENTA
+    };
+
     private void initializePlayers() {
         players = new ArrayList<>();
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
-        for (int i = 0; i < 2; i++) {
+        int i;
+        for (i = 0; i < 2; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-            RandomBot player = new RandomBot(objective, 0, "player" + i);
+            Color color;
+            if (i < playerColors.length) {
+                color = playerColors[i];
+            } else {
+                color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
+                        Risk.random.nextFloat() * 0.8f + 0.2f);
+            }
+            RandomBot player = new RandomBot(objective, 0, "player" + i,color);
             players.add(player);
         }
-        addMarsAgent();
-    }
-
-    private void addMarsAgent(){
+        // Add mars agent
+        Color color;
+        if (i < playerColors.length) {
+            color = playerColors[i];
+        } else {
+            color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
+                    Risk.random.nextFloat() * 0.8f + 0.2f);
+        }
         Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-        Mars player = new Mars(this, objective, 0, "Mars agent");
+        Mars player = new Mars(this, objective, 0, "Mars agent",color);
         players.add(player);
     }
 
