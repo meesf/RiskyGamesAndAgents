@@ -5,19 +5,20 @@ import infomgmag.Territory;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.function.IntToDoubleFunction;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 
 
 public class CountryAgent {
     private Territory territory;
     public ArrayList<CountryAgent> adjacentAgents;
     private ArrayList<ArrayList<CountryAgent>> goalList;
-    private ArrayList<CountryAgent> goal;
 
     CountryAgent(Territory territory) {
         this.territory = territory;
         goalList = new ArrayList<>();
-        goal = new ArrayList<CountryAgent>();
         this.adjacentAgents = new ArrayList<CountryAgent>();
     }
 
@@ -25,8 +26,7 @@ public class CountryAgent {
         return territory;
     }
 
-    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight)  //calculates value of owning a territory, TODO: the actual final calculation has more factors includings continents and such
-    {
+    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight) { //calculates value of owning a territory, TODO: the actual final calculation has more factors includings continents and such
         Double territoryvalue = 0.0;
         territoryvalue = (((friendlyNeighbours() * friendliesweight) + (enemyNeighbours() * enemyweight) + (friendlyArmies() * farmiesweight) + (enemyArmies() * earmiesweight)));
         return territoryvalue;
@@ -110,16 +110,95 @@ public class CountryAgent {
         return adjacentAgents;
     }
 
-    public Pair<Double, Integer> getBid(Integer unitsLeft) {
-        Double value = Risk.random.nextDouble() * 10;
-        Integer units = Risk.random.nextInt(unitsLeft + 1);
-        Integer index = Risk.random.nextInt(goalList.size());
-        goal = goalList.get(index);
-        return new Pair<Double, Integer>(value, units);
+    private double getP(Integer i, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+        Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size() - 1;
+        if(attackingUnits < 1) {
+            return 0.0;
+        }
+        Integer defendingUnits = 0;
+        for(CountryAgent ca : goal) {
+            defendingUnits += ca.getTerritory().getNUnits();
+        }
+
+        ProbabilityGrid grid = new ProbabilityGrid(attackingUnits, defendingUnits);
+        return grid.chanceOfWin();
+    }
+
+    private Double getW(HashMap<CountryAgent, Double> agentValues) {
+    	return agentValues.values().stream().mapToDouble(o -> o.doubleValue()).sum();
+    }
+    
+    private Double getD() {
+    	return 1.0;
+    }
+    
+    private double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
+    	double p = getP(i, goal, agentValues);
+    	double w = getW(agentValues);
+    	double d = getD();
+    	if(i == 0) {
+    		return p*w*d;
+    	}
+    	return (p*w*d)/i;
+    }
+    
+    private Double getV() {
+    	return 0.0;
+    }
+    
+    private double getVD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
+    	double v = getV();
+    	double d = getD();
+    	if(i == 0) {
+    		return v*d;
+    	}
+    	return (v*d)/i;
+    }
+    
+    public Bid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
+    	Bid bestBid = null;
+    	for(ArrayList<CountryAgent> goal : goalList) {
+    		Bid offBid = getOffensiveBid(unitsLeft, goal, agentValues);
+    		if(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {
+    			bestBid = offBid;
+    		}
+    		
+    		Bid defBid = getDefensiveBid(unitsLeft, goal, agentValues);
+    		if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
+    			bestBid = defBid;
+    		}
+    	}
+    	return bestBid;
+    }
+    
+    private Bid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	Bid bestBid = null;
+    	for(int i=0; i<=unitsLeft; i++) {
+    		double bidUtil = getVD(goal, agentValues, i);
+    		if(bestBid == null || bidUtil > bestBid.getUtility()) {
+    			bestBid = new Bid(this, goal, i, bidUtil);
+    		}
+    	}
+    	return bestBid;
+    }
+    
+    private Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	Bid bestBid = null;
+    	for(int i=0; i<=unitsLeft; i++) {
+    		double bidUtil = getPWD(goal, agentValues, i);
+    		if(bestBid == null || bidUtil > bestBid.getUtility()) {
+    			bestBid = new Bid(this, goal, i, bidUtil);
+    		}
+    	}
+    	return bestBid;
     }
 
     public ArrayList<ArrayList<CountryAgent>> getGoalList() {
         return goalList;
+    }
+    
+    public String toString() {
+    	return territory.toString();
     }
 }
 
