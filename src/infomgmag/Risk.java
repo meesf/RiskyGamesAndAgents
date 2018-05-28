@@ -30,7 +30,7 @@ public class Risk {
     private boolean StopGame;
 
     private ArrayList<Player> defeatedPlayers;
-    private boolean visible = true;
+    private boolean visible = false;
     
 
     public static void main(String[] args) {
@@ -77,14 +77,11 @@ public class Risk {
     public void run() {
         while (!finished()) {
             visuals.update();
-            System.out.println("\n------------ "+ currentPlayer +" ------------\n");
-            System.out.println("------------ Reinforcement phase ------------");
             Integer nrOfReinforcements = calculateReinforcements();
             currentPlayer.setReinforcements(nrOfReinforcements);
             currentPlayer.turnInCards(board);
             currentPlayer.placeReinforcements(board);
-            
-            System.out.println("------------ Combat phase ------------");
+
             int startingNrOfTerritories = currentPlayer.getTerritories().size();
             CombatMove combatMove; // If a territory is claimed the player has to move the units he used during his
                                    // attack to the claimed territoy, he can move more units to the new territory
@@ -95,7 +92,6 @@ public class Risk {
                 if (StopGame)
                     break;
             }
-            System.out.println("------------ Fortify phase ------------");
             currentPlayer.fortifyTerritory(board);
             visuals.update();
 
@@ -203,16 +199,12 @@ public class Risk {
     }
 
     private void initializeGame() {
-    	System.out.println("------------ Initialize Game ------------");
         visuals = new RiskVisual(this,visible);
         board = new Board();
         defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
-        System.out.println("------------ Initialize Players ------------");
         initializePlayers();
-        System.out.println("------------ Divide Territories ------------");
         Integer currentPlayerIndex = divideTerritories();
-        System.out.println("------------ Place Initial Reinforcements ------------");
         initialPlaceReinforcements(currentPlayerIndex);
         currentPlayer = players.get(0);
     }

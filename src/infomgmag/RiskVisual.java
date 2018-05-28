@@ -119,6 +119,7 @@ public class RiskVisual extends JFrame {
     }
 
     public void log(String s) {
+        s += "\n";
         if (visible)
             logArea.append(s);
         else

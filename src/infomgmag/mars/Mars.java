@@ -79,7 +79,6 @@ public class Mars extends Player {
 
     @Override
     public void placeReinforcements(Board board) {
-    	System.out.println("----------------- Place "+reinforcements+" reinforcement(s) -----------------");
         for (CountryAgent ca: countryAgents){
             ca.clearlists();
         }
@@ -99,9 +98,10 @@ public class Mars extends Player {
 
         while(reinforcements > 0){
             Bid bid = getBestBid(getReinforcements());
-            System.out.println("Winning bid: " + bid);
             board.addUnits(this, bid.getOrigin().getTerritory(), bid.getUnits());
             reinforcements -= bid.getUnits();
+            if(bid.getUnits() == 0)
+                break;
         }
     }
     
@@ -133,6 +133,7 @@ public class Mars extends Player {
                 }
             }
         }
+        System.out.println(bestBid);
         return bestBid;
     }
 
