@@ -32,4 +32,10 @@ public class Human extends Player {
     public void fortifyTerritory(Board board) {
 
     }
+
+    @Override
+    public int getDefensiveDice(CombatMove combatMove) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

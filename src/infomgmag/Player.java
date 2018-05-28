@@ -35,6 +35,8 @@ public abstract class Player {
 
     public abstract void movingInAfterInvasion(CombatMove combatMove);
 
+    public abstract int getDefensiveDice(CombatMove combatMove);
+
     public String getName() {
         return name;
     }

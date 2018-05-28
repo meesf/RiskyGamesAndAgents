@@ -122,4 +122,12 @@ public class RandomBot extends Player {
         return combatMove.getAttackingTerritory().getNUnits() - 1;
     }
 
+    public int getDefensiveDice(CombatMove combatMove) {
+        if (combatMove.getDefendingTerritory().getNUnits() >= 2) {
+            return Risk.random.nextInt(2) + 1;
+        } else {
+            return 1;
+        }
+    }
+
 }
