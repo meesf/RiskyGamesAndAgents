@@ -124,31 +124,40 @@ public class CountryAgent {
         return grid.chanceOfWin();
     }
 
-    private Double getW(HashMap<CountryAgent, Double> agentValues) {
-    	return agentValues.values().stream().mapToDouble(o -> o.doubleValue()).sum();
+    private Double getW(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+        double value = 0.0;
+        for(CountryAgent ca : goal){
+            value += agentValues.get(ca);
+        }
+    	return value;
     }
     
-    private Double getD() {
-    	return 1.0;
+    private Double getD(int units) {
+        int totalEnemyUnits = 0;
+        for(Territory t : getTerritory().getAdjacentTerritories()){
+            totalEnemyUnits += t.getNUnits();
+        }
+        ProbabilityGrid grid = new ProbabilityGrid(units, totalEnemyUnits);
+    	return grid.chanceOfWin();
     }
     
     private double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
     	double p = getP(i, goal, agentValues);
-    	double w = getW(agentValues);
-    	double d = getD();
+    	double w = getW(goal, agentValues);
+    	double d = getD(i);
     	if(i == 0) {
     		return p*w*d;
     	}
     	return (p*w*d)/i;
     }
     
-    private Double getV() {
-    	return 0.0;
+    private Double getV(HashMap<CountryAgent, Double> agentValues) {
+    	return agentValues.get(this);
     }
     
-    private double getVD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
-    	double v = getV();
-    	double d = getD();
+    private double getVD(HashMap<CountryAgent, Double> agentValues, Integer i)  {
+    	double v = getV(agentValues);
+    	double d = getD(this.getTerritory().getNUnits() + i);
     	if(i == 0) {
     		return v*d;
     	}
@@ -174,7 +183,7 @@ public class CountryAgent {
     private Bid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
     	Bid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
-    		double bidUtil = getVD(goal, agentValues, i);
+    		double bidUtil = getVD(agentValues, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new Bid(this, goal, i, bidUtil);
     		}

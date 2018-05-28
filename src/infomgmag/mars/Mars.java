@@ -85,9 +85,8 @@ public class Mars extends Player {
         }
         
         for (CountryAgent ca: countryAgents) {
-            if (ca.getTerritory().getOwner() != this) {
-                agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
-            }
+            //I removed the if statement here, so that all territories get a value instead of only the enemy territories
+            agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
         }
         
         for (CountryAgent sender: countryAgents) {
@@ -134,7 +133,6 @@ public class Mars extends Player {
                 }
             }
         }
-        System.out.println(bestBid);
         return bestBid;
     }
 
