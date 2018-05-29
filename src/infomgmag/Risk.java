@@ -63,7 +63,11 @@ public class Risk {
                                    // attack to the claimed territoy, he can move more units to the new territory
                                    // (atleast one unit has to stay behind)
             while ((combatMove = currentPlayer.getCombatMove()) != null) {
-                //visuals.update(combatMove);
+                int defendingAmount = combatMove.getDefendingTerritory().getOwner().getDefensiveDice(combatMove);
+                if (defendingAmount > combatMove.getDefendingTerritory().getNUnits() || defendingAmount > 2 || defendingAmount < 1)
+                    throw new RuntimeException("Rule breach: Defending amount not allowed: " + combatMove);
+                combatMove.setDefendingUnits(defendingAmount);
+                visuals.update(combatMove);
                 performCombatMove(combatMove);
                 if (StopGame)
                     break;
@@ -78,8 +82,12 @@ public class Risk {
 
             turn++;
         }
-        visuals.update();
+
         visuals.log(activePlayers.get(0) + " has won!");
+
+        while(true) {
+            visuals.update();
+        }
     }
 
     public int getTurn() {
