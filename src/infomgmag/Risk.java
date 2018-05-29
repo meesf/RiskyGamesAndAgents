@@ -16,20 +16,22 @@ import java.util.Random;
  */
 public class Risk {
 
-    public static Random random;
-    
-    private int turn = 0;
-
-    private ArrayList<Player> players;
-    private Board board;
-    private Player currentPlayer;
-    private RiskVisual visuals;
-    private Integer nrOfStartingUnits;
-    private boolean StopGame;
-
-    private ArrayList<Player> defeatedPlayers;
+    // Variables to be customized by debugger
     private boolean visible = true;
     private int playerAmount = 6;
+
+    public static Random random;
+
+    private ArrayList<Player> activePlayers;
+    private ArrayList<Player> defeatedPlayers;
+    private Player currentPlayer;
+
+    private Board board;
+    private RiskVisual visuals;
+
+    private int turn = 0;
+    private Integer nrOfStartingUnits;
+    private boolean StopGame;
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
@@ -38,7 +40,14 @@ public class Risk {
     }
 
     public Risk() {
-        initializeGame();
+        visuals = new RiskVisual(this,visible);
+        board = new Board();
+        defeatedPlayers = new ArrayList<Player>();
+        nrOfStartingUnits = 30;
+        initializePlayers();
+        Integer currentPlayerIndex = divideTerritories();
+        initialPlaceReinforcements(currentPlayerIndex);
+        currentPlayer = activePlayers.get(0);
     }
 
     public void run() {
@@ -74,7 +83,7 @@ public class Risk {
             turn++;
         }
 
-        visuals.log(players.get(0) + " has won!");
+        visuals.log(activePlayers.get(0) + " has won!");
 
         while(true) {
             visuals.update();
@@ -87,12 +96,12 @@ public class Risk {
 
     private boolean playerHasReachedObjective(Player player) {
         if (player.objective.getType() == Objective.type.TOTAL_DOMINATION)
-            return players.size() == 1;
+            return activePlayers.size() == 1;
         return false;
     }
 
     private void nextCurrentPlayer() {
-        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+        currentPlayer = activePlayers.get((activePlayers.indexOf(currentPlayer) + 1) % activePlayers.size());
     }
 
     private void performCombatMove(CombatMove combatMove) {
@@ -144,7 +153,7 @@ public class Risk {
                 while (currentPlayer.hand.getNumberOfCards() > 4)
                     currentPlayer.turnInCards(board);
                 currentPlayer.placeReinforcements(board);
-                players.remove(defender);
+                activePlayers.remove(defender);
                 defeatedPlayers.add(defender);
             }
             StopGame = playerHasReachedObjective(currentPlayer);
@@ -173,19 +182,8 @@ public class Risk {
         return bonus;
     }
 
-    private void initializeGame() {
-        visuals = new RiskVisual(this,visible);
-        board = new Board();
-        defeatedPlayers = new ArrayList<Player>();
-        nrOfStartingUnits = 30;
-        initializePlayers();
-        Integer currentPlayerIndex = divideTerritories();
-        initialPlaceReinforcements(currentPlayerIndex);
-        currentPlayer = players.get(0);
-    }
-
-    public ArrayList<Player> getPlayers() {
-        return players;
+    public ArrayList<Player> getActivePlayers() {
+        return activePlayers;
     }
 
     public Player getCurrentPlayer() {
@@ -202,7 +200,7 @@ public class Risk {
     };
 
     private void initializePlayers() {
-        players = new ArrayList<>();
+        activePlayers = new ArrayList<>();
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
         for (int i = 0; i < playerAmount; i++) {
@@ -215,7 +213,7 @@ public class Risk {
                         Risk.random.nextFloat() * 0.8f + 0.2f);
             }
             RandomBot player = new RandomBot(objective, 0, "player" + i,color);
-            players.add(player);
+            activePlayers.add(player);
         }
     }
 
@@ -224,18 +222,18 @@ public class Risk {
         Collections.shuffle(board.getTerritories(), Risk.random);
         int player = 0;
         for (Territory territory : board.getTerritories()) {
-            territory.setOwner(players.get(player % players.size()));
+            territory.setOwner(activePlayers.get(player % activePlayers.size()));
             territory.setUnits(1);
             player++;
         }
-        return player % players.size();
+        return player % activePlayers.size();
     }
 
     private void initialPlaceReinforcements(Integer currentPlayerIndex) {
         int player = currentPlayerIndex;
-        for (int i = 0; i < (players.size() * nrOfStartingUnits) - board.getTerritories().size(); i++) {
-            players.get(player % players.size()).setReinforcements(1);
-            players.get(player % players.size()).placeReinforcements(board);
+        for (int i = 0; i < (activePlayers.size() * nrOfStartingUnits) - board.getTerritories().size(); i++) {
+            activePlayers.get(player % activePlayers.size()).setReinforcements(1);
+            activePlayers.get(player % activePlayers.size()).placeReinforcements(board);
             player++;
         }
     }
@@ -252,7 +250,7 @@ public class Risk {
      * Returns true if there is a winner.
      */
     private boolean finished() {
-        return players.size() == 1 || StopGame;
+        return activePlayers.size() == 1 || StopGame;
     }
     
     public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
