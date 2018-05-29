@@ -69,8 +69,12 @@ public class Risk {
 
             turn++;
         }
-        visuals.update();
+
         visuals.log(players.get(0) + " has won!");
+
+        while(true) {
+            visuals.update();
+        }
     }
 
     public int getTurn() {
