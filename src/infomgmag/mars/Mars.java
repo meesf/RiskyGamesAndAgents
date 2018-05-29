@@ -136,6 +136,9 @@ public class Mars extends Player {
         return bestBid;
     }
 
-
-
+    @Override
+    public int getDefensiveDice(CombatMove combatMove) {
+        // TODO Auto-generated method stub
+        return Math.min(2,combatMove.getDefendingTerritory().getNUnits());
+    }
 }

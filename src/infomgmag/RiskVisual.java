@@ -186,7 +186,7 @@ public class RiskVisual extends JFrame {
         info += "Current state:\n\n";
         info += "Value golden cavalry: " + risk.getBoard().getGoldenCavalry() + "\n\n";
 
-        for (Player p : risk.getPlayers()) {
+        for (Player p : risk.getActivePlayers()) {
             info += p.getName();
             if (risk.getCurrentPlayer() == p)
                 info += " (current)";
@@ -293,7 +293,7 @@ public class RiskVisual extends JFrame {
         }
 
         int offset = 10;
-        for (Player p : risk.getPlayers()) {
+        for (Player p : risk.getActivePlayers()) {
             g.setColor(p.getColor());
             g.fillRect(0, offset + 10, 20, 20);
             g.setColor(Color.WHITE);

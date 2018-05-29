@@ -18,22 +18,24 @@ import java.util.Random;
  */
 public class Risk {
 
-    public static Random random;
-    public static ArrayList<ArrayList<Double>> DICE_ODDS_ONE, DICE_ODDS_TWO;
-    
-    private int turn = 0;
+    // Variables to be customized by debugger
+    private boolean visible = true;
+    private int playerAmount = 6;
 
-    private ArrayList<Player> players;
-    private Board board;
+    public static Random random;
+
+    public static ArrayList<ArrayList<Double>> DICE_ODDS_ONE, DICE_ODDS_TWO;
+
+    private ArrayList<Player> activePlayers;
+    private ArrayList<Player> defeatedPlayers;
     private Player currentPlayer;
+
+    private Board board;
     private RiskVisual visuals;
+
+    private int turn = 0;
     private Integer nrOfStartingUnits;
     private boolean StopGame;
-
-    private ArrayList<Player> defeatedPlayers;
-
-    private boolean visible = false;
-    private int playerAmount = 6;
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
@@ -73,7 +75,14 @@ public class Risk {
     }
     
     public Risk() {
-        initializeGame();
+        visuals = new RiskVisual(this,visible);
+        board = new Board();
+        defeatedPlayers = new ArrayList<Player>();
+        nrOfStartingUnits = 30;
+        initializePlayers();
+        Integer currentPlayerIndex = divideTerritories();
+        initialPlaceReinforcements(currentPlayerIndex);
+        currentPlayer = activePlayers.get(0);
     }
 
     public void run() {
@@ -89,6 +98,10 @@ public class Risk {
                                    // attack to the claimed territoy, he can move more units to the new territory
                                    // (atleast one unit has to stay behind)
             while ((combatMove = currentPlayer.getCombatMove()) != null) {
+                int defendingAmount = combatMove.getDefendingTerritory().getOwner().getDefensiveDice(combatMove);
+                if (defendingAmount > combatMove.getDefendingTerritory().getNUnits() || defendingAmount > 2 || defendingAmount < 1)
+                    throw new RuntimeException("Rule breach: Defending amount not allowed: " + combatMove);
+                combatMove.setDefendingUnits(defendingAmount);
                 visuals.update(combatMove);
                 performCombatMove(combatMove);
                 if (StopGame)
@@ -104,8 +117,12 @@ public class Risk {
 
             turn++;
         }
-        visuals.update();
-        visuals.log(players.get(0) + " has won!");
+
+        visuals.log(activePlayers.get(0) + " has won!");
+
+        while(true) {
+            visuals.update();
+        }
     }
 
     public int getTurn() {
@@ -114,12 +131,12 @@ public class Risk {
 
     private boolean playerHasReachedObjective(Player player) {
         if (player.objective.getType() == Objective.type.TOTAL_DOMINATION)
-            return players.size() == 1;
+            return activePlayers.size() == 1;
         return false;
     }
 
     private void nextCurrentPlayer() {
-        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+        currentPlayer = activePlayers.get((activePlayers.indexOf(currentPlayer) + 1) % activePlayers.size());
     }
 
     private void performCombatMove(CombatMove combatMove) {
@@ -171,7 +188,7 @@ public class Risk {
                 while (currentPlayer.hand.getNumberOfCards() > 4)
                     currentPlayer.turnInCards(board);
                 currentPlayer.placeReinforcements(board);
-                players.remove(defender);
+                activePlayers.remove(defender);
                 defeatedPlayers.add(defender);
             }
             StopGame = playerHasReachedObjective(currentPlayer);
@@ -200,19 +217,8 @@ public class Risk {
         return bonus;
     }
 
-    private void initializeGame() {
-        visuals = new RiskVisual(this,visible);
-        board = new Board();
-        defeatedPlayers = new ArrayList<Player>();
-        nrOfStartingUnits = 30;
-        initializePlayers();
-        Integer currentPlayerIndex = divideTerritories();
-        initialPlaceReinforcements(currentPlayerIndex);
-        currentPlayer = players.get(0);
-    }
-
-    public ArrayList<Player> getPlayers() {
-        return players;
+    public ArrayList<Player> getActivePlayers() {
+        return activePlayers;
     }
 
     public Player getCurrentPlayer() {
@@ -229,7 +235,7 @@ public class Risk {
     };
 
     private void initializePlayers() {
-        players = new ArrayList<>();
+        activePlayers = new ArrayList<>();
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
         int i;
@@ -243,7 +249,7 @@ public class Risk {
                         Risk.random.nextFloat() * 0.8f + 0.2f);
             }
             RandomBot player = new RandomBot(objective, 0, "player" + i,color);
-            players.add(player);
+            activePlayers.add(player);
         }
         // Add mars agent
         Color color;
@@ -255,7 +261,7 @@ public class Risk {
         }
         Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
         Mars player = new Mars(this, objective, 0, "Mars agent",color);
-        players.add(player);
+        activePlayers.add(player);
     }
 
     // Divide players randomly over territories
@@ -263,18 +269,18 @@ public class Risk {
         Collections.shuffle(board.getTerritories(), Risk.random);
         int player = 0;
         for (Territory territory : board.getTerritories()) {
-            territory.setOwner(players.get(player % players.size()));
+            territory.setOwner(activePlayers.get(player % activePlayers.size()));
             territory.setUnits(1);
             player++;
         }
-        return player % players.size();
+        return player % activePlayers.size();
     }
 
     private void initialPlaceReinforcements(Integer currentPlayerIndex) {
         int player = currentPlayerIndex;
-        for (int i = 0; i < (players.size() * nrOfStartingUnits) - board.getTerritories().size(); i++) {
-            players.get(player % players.size()).setReinforcements(1);
-            players.get(player % players.size()).placeReinforcements(board);
+        for (int i = 0; i < (activePlayers.size() * nrOfStartingUnits) - board.getTerritories().size(); i++) {
+            activePlayers.get(player % activePlayers.size()).setReinforcements(1);
+            activePlayers.get(player % activePlayers.size()).placeReinforcements(board);
             player++;
         }
     }
@@ -291,7 +297,7 @@ public class Risk {
      * Returns true if there is a winner.
      */
     private boolean finished() {
-        return players.size() == 1 || StopGame;
+        return activePlayers.size() == 1 || StopGame;
     }
     
     public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
