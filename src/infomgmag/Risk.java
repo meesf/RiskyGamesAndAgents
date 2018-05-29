@@ -41,7 +41,7 @@ public class Risk {
         random = new Random(System.currentTimeMillis());
         createDiceOdds();
         Risk risk = new Risk();
-        risk.run();
+        risk.run(); //this makes the game run
     }
     
     public static void createDiceOdds() {
@@ -95,7 +95,7 @@ public class Risk {
 
             int startingNrOfTerritories = currentPlayer.getTerritories().size();
             CombatMove combatMove; // If a territory is claimed the player has to move the units he used during his
-                                   // attack to the claimed territoy, he can move more units to the new territory
+                                   // attack to the claimed territory, he can move more units to the new territory
                                    // (atleast one unit has to stay behind)
             while ((combatMove = currentPlayer.getCombatMove()) != null) {
                 int defendingAmount = combatMove.getDefendingTerritory().getOwner().getDefensiveDice(combatMove);

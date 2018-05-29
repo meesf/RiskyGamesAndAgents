@@ -30,7 +30,7 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
-    private Integer goalLength = 1;
+    private Integer goalLength = 7;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
@@ -45,6 +45,7 @@ public class Mars extends Player {
             CountryAgent ca = new CountryAgent(t);
             countryAgents.add(ca);
             countryAgentsByTerritory.put(t, ca);
+            t.setTerritoryCountryAgent(ca);
         }
 
         for (CountryAgent ca : countryAgents){
@@ -58,7 +59,53 @@ public class Mars extends Player {
 
     @Override
     public void turnInCards(Board board) {
-        cardAgent.tradeIn(board);
+        int useInfantry = 0, useCavalry = 0, useArtillery = 0, useWildcards = 0;
+        if(hand.getNumberOfCards() > 4){
+            if(hand.getInfantry() > 0 && hand.getArtillery() > 0 && hand.getCavalry() > 0){
+                useInfantry = 1; useArtillery = 1; useCavalry = 1;
+            } else if(hand.getInfantry() > 2){
+                useInfantry = 3;
+            } else if(hand.getCavalry() > 2){
+                useCavalry = 3;
+            } else if(hand.getArtillery() > 2){
+                useArtillery = 3;
+            } else if(hand.getWildcards() == 1){
+                if(hand.getInfantry() > 1){
+                    useInfantry = 2; useWildcards = 1;
+                } else if(hand.getCavalry() > 1){
+                    useCavalry = 2; useWildcards = 1;
+                } else if(hand.getArtillery() > 1){
+                    useArtillery = 2; useWildcards = 1;
+                } else if(hand.getArtillery() > 0 && hand.getCavalry() > 0){
+                    useArtillery = 1; useCavalry = 1; useWildcards = 1;
+                } else if(hand.getArtillery() > 0 && hand.getInfantry() > 0){
+                    useArtillery = 1; useInfantry = 1; useWildcards = 1;
+                } else if(hand.getCavalry() > 0 && hand.getInfantry() > 0){
+                    useCavalry = 1; useInfantry = 1; useWildcards = 1;
+                }
+            } else if(hand.getWildcards() == 2){
+                if(hand.getInfantry() > 0){
+                    useInfantry = 1; useWildcards = 2;
+                } else if(hand.getCavalry() > 0){
+                    useCavalry = 1; useWildcards = 2;
+                } else if(hand.getArtillery() > 0){
+                    useArtillery = 1; useWildcards = 2;
+                }
+            }
+        }
+
+        if(useInfantry > 0 || useArtillery > 0 || useCavalry > 0){
+            int reinforcementsByCards = board.getAndMoveGoldenCavalry();
+            hand.setInfantry(hand.getInfantry() - useInfantry);
+            hand.setArtillery(hand.getArtillery() - useArtillery);
+            hand.setCavalry(hand.getCavalry() - useCavalry);
+            hand.setWildCards(hand.getWildcards() - useWildcards);
+            board.setArtillery(board.getArtillery() + useArtillery);
+            board.setCavalry(board.getCavalry() + useCavalry);
+            board.setInfantry(board.getInfantry() + useInfantry);
+            board.setWildcards(board.getWildcards() + useWildcards);
+            this.reinforcements += reinforcementsByCards;
+        }
     }
 
     @Override
@@ -68,14 +115,39 @@ public class Mars extends Player {
 
     @Override
     public CombatMove getCombatMove() {
-        // TODO Auto-generated method stub
+        CombatMove combatMove = new CombatMove();
+        for (CountryAgent ca : countryAgents) {
+            if (ca.getTerritory().getOwner() == this && ca.bordersEnemy() && (ca.getFinalGoal() != null) && ca.getTerritory().getNUnits() > 1){
+                System.out.println(ca.getFinalGoal() + " is the final goal");
+                for (CountryAgent target : ca.getFinalGoal()) {
+                    combatMove.setAttackingTerritory(ca.getTerritory());
+                    combatMove.setDefendingTerritory(ca.getFinalGoal().get(ca.getFinalGoal().size() - 1).getTerritory());
+                    combatMove.setAttackingUnits(Integer.min(3, ca.getTerritory().getNUnits() - 1));
+                    combatMove.setDefendingUnits(Integer.min(2, ca.getFinalGoal().get(ca.getFinalGoal().size()-1).getTerritory().getNUnits()));
+                    return combatMove;
+                    }
+                }
+            }
         return null;
     }
 
     @Override
     public void movingInAfterInvasion(CombatMove combatMove) {
-        // TODO Auto-generated method stub
+        int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
+        combatMove.getDefendingTerritory().setUnits(transferredunits);
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
 
+        combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().remove(combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().size() - 1);
+
+        ArrayList<CountryAgent> newGoals = new ArrayList<>();
+
+        for (CountryAgent ca : combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal()){
+            newGoals.add(ca);
+        }
+        combatMove.getDefendingTerritory().getCountryAgent().setFinalGoal(newGoals);
+
+        System.out.println(combatMove.getDefendingTerritory().getCountryAgent().getFinalGoal() + " final goal of this agent");
+        combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().clear();
     }
 
     @Override
@@ -133,6 +205,7 @@ public class Mars extends Player {
                 }
             }
         }
+        bestBid.getOrigin().setFinalGoal(bestBid.getGoal());
         return bestBid;
     }
 
