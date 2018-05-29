@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 import infomgmag.Board;
+import infomgmag.CombatInterface;
 import infomgmag.CombatMove;
 import infomgmag.Objective;
 import infomgmag.Player;
@@ -31,6 +32,8 @@ public class Mars extends Player {
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
     private Integer goalLength = 7;
+    
+    static final double WIN_PERCENTAGE = 0.5;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
@@ -70,8 +73,11 @@ public class Mars extends Player {
     @Override
     public CombatMove getCombatMove() {
         CombatMove combatMove = new CombatMove();
+        Map<CountryAgent,Double> odds = new HashMap<CountryAgent,Double>();
+
         for (CountryAgent ca : countryAgents) {
             if (ca.getTerritory().getOwner() == this && ca.bordersEnemy() && (ca.getFinalGoal() != null) && ca.getTerritory().getNUnits() > 1){
+                
                 System.out.println(ca.getFinalGoal() + " is the final goal");
                 for (CountryAgent target : ca.getFinalGoal()) {
                     combatMove.setAttackingTerritory(ca.getTerritory());
@@ -167,5 +173,13 @@ public class Mars extends Player {
     public int getDefensiveDice(CombatMove combatMove) {
         // TODO Auto-generated method stub
         return Math.min(2,combatMove.getDefendingTerritory().getNUnits());
+    }
+
+    @Override
+    public void attackPhase(CombatInterface ci) {
+        CombatMove cm;
+        while(!reachedObjective(ci) && (cm = this.getCombatMove()) != null) {
+            ci.performCombatMove(cm);
+        }
     }
 }

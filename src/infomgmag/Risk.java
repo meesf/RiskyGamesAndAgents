@@ -16,10 +16,10 @@ import java.util.Random;
  * @version FirstPrototype
  * @date 4/5/2018
  */
-public class Risk {
+public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
-    private boolean visible = true;
+    private boolean visible = false;
     private int playerAmount = 6;
 
     public static Random random;
@@ -84,7 +84,7 @@ public class Risk {
         initialPlaceReinforcements(currentPlayerIndex);
         currentPlayer = activePlayers.get(0);
     }
-
+    
     public void run() {
         while (!finished()) {
             visuals.update();
@@ -94,19 +94,11 @@ public class Risk {
             currentPlayer.placeReinforcements(board);
 
             int startingNrOfTerritories = currentPlayer.getTerritories().size();
+            
+            currentPlayer.attackPhase((CombatInterface) this);
             CombatMove combatMove; // If a territory is claimed the player has to move the units he used during his
                                    // attack to the claimed territory, he can move more units to the new territory
                                    // (atleast one unit has to stay behind)
-            while ((combatMove = currentPlayer.getCombatMove()) != null) {
-                int defendingAmount = combatMove.getDefendingTerritory().getOwner().getDefensiveDice(combatMove);
-                if (defendingAmount > combatMove.getDefendingTerritory().getNUnits() || defendingAmount > 2 || defendingAmount < 1)
-                    throw new RuntimeException("Rule breach: Defending amount not allowed: " + combatMove);
-                combatMove.setDefendingUnits(defendingAmount);
-                visuals.update(combatMove);
-                performCombatMove(combatMove);
-                if (StopGame)
-                    break;
-            }
             currentPlayer.fortifyTerritory(board);
             visuals.update();
 
@@ -129,17 +121,17 @@ public class Risk {
         return turn;
     }
 
-    private boolean playerHasReachedObjective(Player player) {
-        if (player.objective.getType() == Objective.type.TOTAL_DOMINATION)
-            return activePlayers.size() == 1;
-        return false;
-    }
-
     private void nextCurrentPlayer() {
         currentPlayer = activePlayers.get((activePlayers.indexOf(currentPlayer) + 1) % activePlayers.size());
     }
 
-    private void performCombatMove(CombatMove combatMove) {
+    public void performCombatMove(CombatMove combatMove) {
+        int defendingAmount = combatMove.getDefendingTerritory().getOwner().getDefensiveDice(combatMove);
+        if (defendingAmount > combatMove.getDefendingTerritory().getNUnits() || defendingAmount > 2 || defendingAmount < 1)
+            throw new RuntimeException("Rule breach: Defending amount not allowed: " + combatMove);
+        combatMove.setDefendingUnits(defendingAmount);
+
+        visuals.update(combatMove);
         ArrayList<Integer> attackThrows = new ArrayList<>();
         ArrayList<Integer> defenseThrows = new ArrayList<>();
 
@@ -191,7 +183,6 @@ public class Risk {
                 activePlayers.remove(defender);
                 defeatedPlayers.add(defender);
             }
-            StopGame = playerHasReachedObjective(currentPlayer);
         }
     }
 
@@ -260,8 +251,8 @@ public class Risk {
                     Risk.random.nextFloat() * 0.8f + 0.2f);
         }
         Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-        Mars player = new Mars(this, objective, 0, "Mars agent",color);
-        activePlayers.add(player);
+        //Mars player = new Mars(this, objective, 0, "Mars agent",color);
+        //activePlayers.add(player);
     }
 
     // Divide players randomly over territories
@@ -332,4 +323,7 @@ public class Risk {
         return this.defeatedPlayers;
     }
 
+    public int getActivePlayerAmount() {
+        return activePlayers.size();
+    }
 }

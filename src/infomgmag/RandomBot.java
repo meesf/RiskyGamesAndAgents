@@ -130,4 +130,12 @@ public class RandomBot extends Player {
         }
     }
 
+    @Override
+    public void attackPhase(CombatInterface ci) {
+        CombatMove cm;
+        while(!reachedObjective(ci) && (cm = this.getCombatMove()) != null) {
+            ci.performCombatMove(cm);
+        }
+    }
+
 }
