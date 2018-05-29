@@ -42,6 +42,6 @@ public class CombatMove {
     @Override
     public String toString() {
         return "AttackingTerritory: " + attackingTerritory.toString() + " DefendingTerritory: "
-                + defendingTerritory.toString();
+                + defendingTerritory.toString() + " DefendingUnits: " + defendingUnits;
     }
 }
