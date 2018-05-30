@@ -210,7 +210,7 @@ public class Board {
 
         territories = new ArrayList<>();
         for (Continent continent : continents)
-            for (Territory territory : continent.getMembers())
+            for (Territory territory : continent.getTerritories())
                 territories.add(territory);
     }
 

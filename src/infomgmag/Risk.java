@@ -196,7 +196,7 @@ public class Risk implements CombatInterface{
         int bonus = 0;
         for (Continent continent : board.getContinents()) {
             boolean controlsContinent = true;
-            for (Territory territory : continent.getMembers())
+            for (Territory territory : continent.getTerritories())
                 if (territory.getOwner() != currentPlayer) {
                     controlsContinent = false;
                     break;
