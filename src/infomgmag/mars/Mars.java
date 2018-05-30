@@ -26,8 +26,13 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
-    private Integer goalLength = 7;
-    
+    private Double continentBorderWeight = 0.5;
+    private Double ownWholeContinentWeight = 20.0;
+    private Double enemyOwnsWholeContinentWeight = 4.0;
+    private Double percentageOfContinentWeight = 10.0;
+
+    private Integer goalLength = 4;
+
     static final double WIN_PERCENTAGE = 0.5;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
@@ -37,7 +42,6 @@ public class Mars extends Player {
         cardAgent = new CardAgent(hand);
         countryAgents = new ArrayList<>();
         countryAgentsByTerritory = new HashMap<Territory, CountryAgent>();
-
 
         for (Territory t : risk.getBoard().getTerritories()) {
             CountryAgent ca = new CountryAgent(t);
@@ -71,7 +75,6 @@ public class Mars extends Player {
 
         for (CountryAgent ca : countryAgents) {
             if (ca.getTerritory().getOwner() == this && ca.bordersEnemy() && (ca.getFinalGoal() != null) && ca.getTerritory().getNUnits() > 1){
-                System.out.println(ca.getFinalGoal() + " is the final goal");
                 for (CountryAgent target : ca.getFinalGoal()) {
                     combatMove.setAttackingTerritory(ca.getTerritory());
                     combatMove.setDefendingTerritory(ca.getFinalGoal().get(ca.getFinalGoal().size() - 1).getTerritory());
@@ -99,7 +102,6 @@ public class Mars extends Player {
         }
         combatMove.getDefendingTerritory().getCountryAgent().setFinalGoal(newGoals);
 
-        System.out.println(combatMove.getDefendingTerritory().getCountryAgent().getFinalGoal() + " final goal of this agent");
         combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().clear();
     }
 
@@ -111,7 +113,7 @@ public class Mars extends Player {
         
         for (CountryAgent ca: countryAgents) {
             //I removed the if statement here, so that all territories get a value instead of only the enemy territories
-            agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
+            agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight, continentBorderWeight, ownWholeContinentWeight, enemyOwnsWholeContinentWeight, percentageOfContinentWeight));
         }
         
         for (CountryAgent sender: countryAgents) {

@@ -1,5 +1,6 @@
 package infomgmag.mars;
 
+import infomgmag.Continent;
 import infomgmag.Territory;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +22,24 @@ public class CountryAgent {
         return territory;
     }
 
-    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight) { //calculates value of owning a territory, TODO: the actual final calculation has more factors includings continents and such
+    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight
+        ,Double continentBorderWeight, Double ownWholeContinentWeight, Double enemyOwnsWholeContinentWeight, Double percentageOfContinentWeight) { //calculates value of owning a territory
+
         Double territoryvalue = 0.0;
-        territoryvalue = (((friendlyNeighbours() * friendliesweight) + (enemyNeighbours() * enemyweight) + (friendlyArmies() * farmiesweight) + (enemyArmies() * earmiesweight)));
+        int x = 0;
+        int y = 0;
+        if (ownWholeContinent() == true) {
+            x = 1;
+        }
+        if (enemyOwnsAnEntireContinent() == true){
+            y = 1;
+        }
+
+        territoryvalue = (((friendlyNeighbours() * friendliesweight) + (enemyNeighbours() * enemyweight) + (friendlyArmies() * farmiesweight) + (enemyArmies() * earmiesweight)
+                + (numberOfContinentsBordered() * continentBorderWeight) + (x * ownWholeContinentWeight) + (y * enemyOwnsWholeContinentWeight) + (percentageOfContinentOwned() * percentageOfContinentWeight)));
+        if (ownWholeContinent() == true){
+            territoryvalue += 1;
+        }
         return territoryvalue;
         //TODO: Somehow, this value has to be linked to the amount of enemy troops on this territory, I tried Pairs but that didn't work great, maybe a list?
     }
@@ -87,9 +103,59 @@ public class CountryAgent {
         return bordersenemies;
     }
 
-    public double ownWholeContinent() {
+    public boolean ownWholeContinent(){     //checks if the agents owns the whole continent except this territory
+        int territoriesOwned = 0;
+        for (Territory ter : territory.getBelongsTo().getTerritories()){
+            if (ter.getOwner() == territory.getOwner()){
+                territoriesOwned += 1;
+            }
+        }
+        if (territoriesOwned == territory.getBelongsTo().getTerritories().size() - 1){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean enemyOwnsAnEntireContinent(){
+        int territoriesOwned = 0;
+        for (Territory ter : territory.getBelongsTo().getTerritories()){
+            if (ter.getOwner() == territory.getOwner()){
+                territoriesOwned += 1;
+            }
+        }
+        if (territoriesOwned == territory.getBelongsTo().getTerritories().size()){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public int numberOfContinentsBordered(){       //checks the amount of continents bordered that are not the territories 'home' continent
+        int continentsBordered = 0;
+        ArrayList<Continent> adjacentContinents = new ArrayList<>();
+        adjacentContinents.add(territory.getBelongsTo());
+        for (Territory ter: territory.getAdjacentTerritories()){
+            if (adjacentContinents.contains(ter.getBelongsTo())){ }
+            else {
+                adjacentContinents.add(ter.getBelongsTo());
+                continentsBordered += 1;
+            }
+        }
+        return continentsBordered;
+    }
+
+    public double percentageOfContinentOwned() {        //checks the percentage of continent owned
         double percentageofcontinent = 0;
-        //todo: calculate how much of the current continent is yours, question: how does a territory know which continent it belongs to?
+        double territoriesOwned = 0;
+        for (Territory ter: territory.getBelongsTo().getTerritories()){
+            if (ter.getOwner() == territory.getOwner()){
+                territoriesOwned += 1;
+            }
+        }
+        percentageofcontinent = territoriesOwned / territory.getBelongsTo().getTerritories().size();
         return percentageofcontinent;
     }
 
