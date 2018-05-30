@@ -20,7 +20,7 @@ public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
     private boolean visible = true;
-    private int playerAmount = 6;
+    private int playerAmount = 5;
 
     public static Random random;
 
@@ -231,7 +231,7 @@ public class Risk implements CombatInterface{
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
         int i;
-        for (i = 0; i < playerAmount - 1; i++) {
+        for (i = 0; i < playerAmount; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Color color;
             if (i < playerColors.length) {
