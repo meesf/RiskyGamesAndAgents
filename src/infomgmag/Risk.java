@@ -20,8 +20,8 @@ public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
     private boolean visible = true;
-    private int randomPlayers = 5;
-    private int marsPlayers = 1;
+    private int randomPlayers = 4;
+    private int marsPlayers = 2;
 
     public static Random random;
 

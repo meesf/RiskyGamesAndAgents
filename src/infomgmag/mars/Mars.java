@@ -28,7 +28,7 @@ public class Mars extends Player {
     private Double earmiesweight = -0.03;
     public static final Integer goalLength = 4;
     
-    public static final Double WIN_PERCENTAGE = 0.5;
+    public static final Double WIN_PERCENTAGE = 0.6;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
@@ -123,20 +123,6 @@ public class Mars extends Player {
         int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
         combatMove.getDefendingTerritory().setUnits(transferredunits);
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
-
-        combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().remove(combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().size() - 1);
-
-        ArrayList<CountryAgent> newGoals = new ArrayList<>();
-
-        for (CountryAgent ca : combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal()){
-            newGoals.add(ca);
-        }
-        combatMove.getDefendingTerritory().getCountryAgent().setFinalGoal(newGoals);
-
-        combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().clear();
-        
-        countryAgentsByTerritory.get(combatMove.getAttackingTerritory()).updateFinalGoal();
-        
     }
 
     @Override
