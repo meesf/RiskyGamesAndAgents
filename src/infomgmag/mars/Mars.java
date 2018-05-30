@@ -29,7 +29,7 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
-    public Integer goalLength = 3;
+    public static final Integer goalLength = 4;
     
     public static final Double WIN_PERCENTAGE = 0.7375;
 

@@ -1,5 +1,7 @@
 package infomgmag;
 
+import infomgmag.mars.Mars;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +21,7 @@ import infomgmag.mars.Mars;
 public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
-    private boolean visible = false;
+    private boolean visible = true;
     private int playerAmount = 5;
 
     public static Random random;

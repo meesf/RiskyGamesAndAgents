@@ -131,7 +131,9 @@ public class CountryAgent {
     public Double getD(int units) {
         int totalEnemyUnits = 0;
         for(Territory t : getTerritory().getAdjacentTerritories()){
-            totalEnemyUnits += t.getNUnits();
+            if(t.getOwner() != this.getTerritory().getOwner()){
+                totalEnemyUnits += t.getNUnits();
+            }
         }
         ProbabilityGrid grid = new ProbabilityGrid(units, totalEnemyUnits);
     	return grid.chanceOfWin();
