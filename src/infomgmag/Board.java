@@ -210,7 +210,7 @@ public class Board {
 
         territories = new ArrayList<>();
         for (Continent continent : continents)
-            for (Territory territory : continent.getMembers())
+            for (Territory territory : continent.getTerritories())
                 territories.add(territory);
     }
 
@@ -258,7 +258,7 @@ public class Board {
     public void moveGoldenCavalry() {
         if (goldenCavalry < 10)
             goldenCavalry += 2;
-        else if (goldenCavalry < 15)
+        else if (goldenCavalry < 20)
             goldenCavalry += 5;
     }
 
