@@ -1,5 +1,7 @@
 package infomgmag;
 
+import infomgmag.mars.Mars;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -229,7 +231,7 @@ public class Risk implements CombatInterface{
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
         int i;
-        for (i = 0; i < playerAmount; i++) {
+        for (i = 0; i < playerAmount - 1; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Color color;
             if (i < playerColors.length) {
@@ -250,8 +252,8 @@ public class Risk implements CombatInterface{
                     Risk.random.nextFloat() * 0.8f + 0.2f);
         }
         Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-        //Mars player = new Mars(this, objective, 0, "Mars agent",color);
-        //activePlayers.add(player);
+        Mars player = new Mars(this, objective, 0, "Mars agent",color);
+        activePlayers.add(player);
     }
 
     // Divide players randomly over territories
