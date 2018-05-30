@@ -195,7 +195,7 @@ public class Risk implements CombatInterface{
         int bonus = 0;
         for (Continent continent : board.getContinents()) {
             boolean controlsContinent = true;
-            for (Territory territory : continent.getMembers())
+            for (Territory territory : continent.getTerritories())
                 if (territory.getOwner() != currentPlayer) {
                     controlsContinent = false;
                     break;
@@ -228,7 +228,7 @@ public class Risk implements CombatInterface{
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
         int i;
-        for (i = 0; i < 1; i++) {
+        for (i = 0; i < playerAmount - 1; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Color color;
             if (i < playerColors.length) {
