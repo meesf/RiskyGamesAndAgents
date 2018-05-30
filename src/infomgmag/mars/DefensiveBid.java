@@ -11,6 +11,6 @@ public class DefensiveBid extends ReinforcementBid {
 	}
 	
 	public String toString() {
-		return "fortifyingTerritory:"+fortifyingAgent.getTerritory().getName()+", reinforcedTerritory:" + reinforcedAgent.getTerritory().getName()+ " with "+units+ " units";
+		return "fortifyingTerritory:"+fortifyingAgent.getTerritory().getName()+", reinforcedTerritory:" + reinforcedAgent.getTerritory().getName()+ " with "+units+ " units" + " Utility: " + utility;
 	}
 }

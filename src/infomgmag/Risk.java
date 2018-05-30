@@ -19,7 +19,7 @@ import infomgmag.mars.Mars;
 public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
-    private boolean visible = true;
+    private boolean visible = false;
     private int playerAmount = 5;
 
     public static Random random;

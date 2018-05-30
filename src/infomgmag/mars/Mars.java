@@ -2,6 +2,7 @@ package infomgmag.mars;
 
 import java.awt.Color;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import infomgmag.Board;
@@ -89,6 +90,7 @@ public class Mars extends Player {
 
     @Override
     public void fortifyTerritory(Board board) { //only uses the 'best' country right now
+
     	ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
     	DefensiveBid bestBid = null;
     	for(ArrayList<CountryAgent> cluster : clusters) {
@@ -109,13 +111,15 @@ public class Mars extends Player {
     		for(CountryAgent a : cluster) {
     			for(CountryAgent seller : sellers.keySet()) {
     				DefensiveBid bid = a.getDefensiveBid(seller, a.getTerritory().getNUnits() + sellers.get(seller), agentValues);
-    				if(bestBid == null || bestBid.getUtility() < bid.getUtility()) 
+    				if(bestBid == null || bestBid.getUtility() < bid.getUtility())
     					bestBid = bid;
     			}
     		}
     	}
-    	if(bestBid != null)
-    		board.moveUnits(bestBid.getFortifyingAgent().getTerritory(), bestBid.getReinforcedAgent().getTerritory(), bestBid.getUnits());
+
+    	if(bestBid != null){
+            board.moveUnits(bestBid.getFortifyingAgent().getTerritory(), bestBid.getReinforcedAgent().getTerritory(), bestBid.getUnits());
+        }
     }
 
     @Override
@@ -149,7 +153,7 @@ public class Mars extends Player {
             //I removed the if statement here, so that all territories get a value instead of only the enemy territories
             agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
         }
-        
+
         for (CountryAgent sender: countryAgents) {
         	if(sender.getTerritory().getOwner() != this) {
 	            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
