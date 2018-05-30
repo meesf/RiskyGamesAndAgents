@@ -126,7 +126,7 @@ public class CountryAgent {
     	return value;
     }
     
-    private Double getD(int units) {
+    public Double getD(int units) {
         int totalEnemyUnits = 0;
         for(Territory t : getTerritory().getAdjacentTerritories()){
             totalEnemyUnits += t.getNUnits();
@@ -158,15 +158,15 @@ public class CountryAgent {
     	return (v*d)/i;
     }
     
-    public Bid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
-    	Bid bestBid = null;
+    public ReinforcementBid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
+    	ReinforcementBid bestBid = null;
     	for(ArrayList<CountryAgent> goal : goalList) {
-    		Bid offBid = getOffensiveBid(unitsLeft, goal, agentValues);
+    		OffensiveBid offBid = getOffensiveBid(unitsLeft, goal, agentValues);
     		if(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {
     			bestBid = offBid;
     		}
     		
-    		Bid defBid = getDefensiveBid(unitsLeft, goal, agentValues);
+    		DefensiveBid defBid = getDefensiveBid(unitsLeft, goal, agentValues);
     		if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
     			bestBid = defBid;
     		}
@@ -174,23 +174,23 @@ public class CountryAgent {
     	return bestBid;
     }
     
-    private Bid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
-    	Bid bestBid = null;
+    public DefensiveBid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	DefensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getVD(agentValues, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
-    			bestBid = new Bid(this, goal, i, bidUtil);
+    			bestBid = new DefensiveBid(this, i, bidUtil);
     		}
     	}
     	return bestBid;
     }
     
-    private Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
-    	Bid bestBid = null;
+    private OffensiveBid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	OffensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getPWD(goal, agentValues, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
-    			bestBid = new Bid(this, goal, i, bidUtil);
+    			bestBid = new OffensiveBid(this, goal, i, bidUtil);
     		}
     	}
     	return bestBid;
