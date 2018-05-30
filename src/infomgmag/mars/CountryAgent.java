@@ -10,11 +10,13 @@ public class CountryAgent {
     public ArrayList<CountryAgent> adjacentAgents;
     private ArrayList<ArrayList<CountryAgent>> goalList;
     private ArrayList<CountryAgent> finalGoal;
+    private Mars mars;
 
-    CountryAgent(Territory territory) {
+    CountryAgent(Territory territory, Mars mars) {
         this.territory = territory;
         goalList = new ArrayList<>();
         this.adjacentAgents = new ArrayList<CountryAgent>();
+        this.mars = mars;
     }
 
     public Territory getTerritory() {
@@ -210,6 +212,37 @@ public class CountryAgent {
 
     public ArrayList<CountryAgent> getFinalGoal() {
         return finalGoal;
+    }
+
+    public AttackBid getAttackBid() {
+        return new AttackBid(territory, finalGoal.get(finalGoal.size() - 1).getTerritory());
+    }
+    
+    public void createGoal() {
+        createGoal(new ArrayList<CountryAgent>());
+    }
+    
+    public void createGoal(ArrayList<CountryAgent> countries){
+        if(this.getTerritory().getOwner() == mars) {
+            this.receivemessagefriendly(countries);
+        } else if(mars.goalLength > countries.size()) {
+            ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();
+            for(CountryAgent ca : countries){
+                copiedCountries.add(ca);
+            }
+            
+            copiedCountries.add(this);
+            for(CountryAgent neighbour : this.getAdjacentAgents()) {
+                if(!countries.contains(neighbour)) {
+                    neighbour.createGoal(copiedCountries);
+                }
+            }
+        }
+    }
+
+    public void updateFinalGoal() {
+        if(finalGoal.isEmpty())
+            createGoal();
     }
 }
 

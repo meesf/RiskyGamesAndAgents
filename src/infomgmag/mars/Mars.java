@@ -2,6 +2,7 @@ package infomgmag.mars;
 
 import java.awt.Color;
 import java.util.*;
+import java.util.stream.Stream;
 
 import infomgmag.Board;
 import infomgmag.CombatInterface;
@@ -10,6 +11,7 @@ import infomgmag.Objective;
 import infomgmag.Player;
 import infomgmag.Risk;
 import infomgmag.Territory;
+import sun.net.www.content.audio.x_aiff;
 
 public class Mars extends Player {
 
@@ -26,7 +28,7 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
-    private Integer goalLength = 7;
+    public Integer goalLength = 3;
     
     public static final Double WIN_PERCENTAGE = 0.7375;
 
@@ -40,7 +42,7 @@ public class Mars extends Player {
 
 
         for (Territory t : risk.getBoard().getTerritories()) {
-            CountryAgent ca = new CountryAgent(t);
+            CountryAgent ca = new CountryAgent(t,this);
             countryAgents.add(ca);
             countryAgentsByTerritory.put(t, ca);
             t.setTerritoryCountryAgent(ca);
@@ -114,25 +116,6 @@ public class Mars extends Player {
     }
 
     @Override
-    public CombatMove getCombatMove() {
-        CombatMove combatMove = new CombatMove();
-
-        for (CountryAgent ca : countryAgents) {
-            if (ca.getTerritory().getOwner() == this && ca.bordersEnemy() && (ca.getFinalGoal() != null) && ca.getTerritory().getNUnits() > 1){
-                System.out.println(ca.getFinalGoal() + " is the final goal");
-                for (CountryAgent target : ca.getFinalGoal()) {
-                    combatMove.setAttackingTerritory(ca.getTerritory());
-                    combatMove.setDefendingTerritory(ca.getFinalGoal().get(ca.getFinalGoal().size() - 1).getTerritory());
-                    combatMove.setAttackingUnits(Integer.min(3, ca.getTerritory().getNUnits() - 1));
-                    combatMove.setDefendingUnits(Integer.min(2, ca.getFinalGoal().get(ca.getFinalGoal().size()-1).getTerritory().getNUnits()));
-                    return combatMove;
-                    }
-                }
-            }
-        return null;
-    }
-
-    @Override
     public void movingInAfterInvasion(CombatMove combatMove) {
         int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
         combatMove.getDefendingTerritory().setUnits(transferredunits);
@@ -147,8 +130,10 @@ public class Mars extends Player {
         }
         combatMove.getDefendingTerritory().getCountryAgent().setFinalGoal(newGoals);
 
-        System.out.println(combatMove.getDefendingTerritory().getCountryAgent().getFinalGoal() + " final goal of this agent");
         combatMove.getAttackingTerritory().getCountryAgent().getFinalGoal().clear();
+        
+        countryAgentsByTerritory.get(combatMove.getAttackingTerritory()).updateFinalGoal();
+        
     }
 
     @Override
@@ -165,7 +150,7 @@ public class Mars extends Player {
         for (CountryAgent sender: countryAgents) {
         	if(sender.getTerritory().getOwner() != this) {
 	            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
-	            createGoal(sender, initialList);
+	            sender.createGoal();
         	}
         }
 
@@ -178,23 +163,7 @@ public class Mars extends Player {
         }
     }
     
-    private void createGoal(CountryAgent receiver, ArrayList<CountryAgent> countries){
-    	if(receiver.getTerritory().getOwner() == this) {
-            receiver.receivemessagefriendly(countries);
-        } else if(goalLength > countries.size()) {
-            ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();
-            for(CountryAgent ca : countries){
-                copiedCountries.add(ca);
-            }
-            
-            copiedCountries.add(receiver);
-            for(CountryAgent neighbour : receiver.getAdjacentAgents()) {
-            	if(!countries.contains(neighbour)) {
-            		createGoal(neighbour, copiedCountries);
-            	}
-            }
-        }
-    }
+    
 
     private ReinforcementBid getBestBid(int units){
     	ReinforcementBid bestBid = null;
@@ -217,11 +186,30 @@ public class Mars extends Player {
         return Math.min(2,combatMove.getDefendingTerritory().getNUnits());
     }
 
+    private Optional<AttackBid> bestAttackBid () {
+        return countryAgents
+                .stream()
+                .filter(ca -> ca.getTerritory().getOwner() == this)
+                .filter(ca -> ca.bordersEnemy())
+                .filter(ca -> ca.getFinalGoal() != null && !ca.getFinalGoal().isEmpty())
+                .filter(ca -> ca.getTerritory().getNUnits() > 1)
+                .map(ca -> ca.getAttackBid())
+                .sorted((x,y) -> x.getOdds() > y.getOdds() ? -1 : (x.getOdds() == y.getOdds() ? 0 : 1))
+                .findFirst();
+    }
+    
     @Override
     public void attackPhase(CombatInterface ci) {
-        CombatMove cm;
-        while(!reachedObjective(ci) && (cm = this.getCombatMove()) != null) {
-            ci.performCombatMove(cm);
+        while(true) {
+            if (ci.getActivePlayerAmount() == 1) {
+                return;
+            }
+            Optional<AttackBid> ab = bestAttackBid();
+            if (ab.isPresent() && ab.get().getOdds() >= WIN_PERCENTAGE) {
+                ci.performCombatMove(ab.get().toCombatMove());
+            } else {
+                return;
+            }
         }
     }
 }
