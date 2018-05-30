@@ -31,8 +31,6 @@ public abstract class Player {
 
     public abstract void fortifyTerritory(Board board);
 
-    public abstract CombatMove getCombatMove();
-
     public abstract void movingInAfterInvasion(CombatMove combatMove);
 
     public abstract int getDefensiveDice(CombatMove combatMove);

@@ -10,11 +10,13 @@ public class CountryAgent {
     public ArrayList<CountryAgent> adjacentAgents;
     private ArrayList<ArrayList<CountryAgent>> goalList;
     private ArrayList<CountryAgent> finalGoal;
+    private Mars mars;
 
-    CountryAgent(Territory territory) {
+    CountryAgent(Territory territory, Mars mars) {
         this.territory = territory;
         goalList = new ArrayList<>();
         this.adjacentAgents = new ArrayList<CountryAgent>();
+        this.mars = mars;
     }
 
     public Territory getTerritory() {
@@ -126,7 +128,7 @@ public class CountryAgent {
     	return value;
     }
     
-    private Double getD(int units) {
+    public Double getD(int units) {
         int totalEnemyUnits = 0;
         for(Territory t : getTerritory().getAdjacentTerritories()){
             if(t.getOwner() != this.getTerritory().getOwner()){
@@ -160,15 +162,15 @@ public class CountryAgent {
     	return (v*d)/i;
     }
     
-    public Bid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
-    	Bid bestBid = null;
+    public ReinforcementBid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
+    	ReinforcementBid bestBid = null;
     	for(ArrayList<CountryAgent> goal : goalList) {
-    		Bid offBid = getOffensiveBid(unitsLeft, goal, agentValues);
+    		OffensiveBid offBid = getOffensiveBid(unitsLeft, goal, agentValues);
     		if(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {
     			bestBid = offBid;
     		}
     		
-    		Bid defBid = getDefensiveBid(unitsLeft, goal, agentValues);
+    		DefensiveBid defBid = getDefensiveBid(unitsLeft, goal, agentValues);
     		if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
     			bestBid = defBid;
     		}
@@ -176,23 +178,23 @@ public class CountryAgent {
     	return bestBid;
     }
     
-    private Bid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
-    	Bid bestBid = null;
+    public DefensiveBid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	DefensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getVD(agentValues, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
-    			bestBid = new Bid(this, goal, i, bidUtil);
+    			bestBid = new DefensiveBid(this, i, bidUtil);
     		}
     	}
     	return bestBid;
     }
     
-    private Bid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
-    	Bid bestBid = null;
+    private OffensiveBid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    	OffensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getPWD(goal, agentValues, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
-    			bestBid = new Bid(this, goal, i, bidUtil);
+    			bestBid = new OffensiveBid(this, goal, i, bidUtil);
     		}
     	}
     	return bestBid;
@@ -212,6 +214,37 @@ public class CountryAgent {
 
     public ArrayList<CountryAgent> getFinalGoal() {
         return finalGoal;
+    }
+
+    public AttackBid getAttackBid() {
+        return new AttackBid(territory, finalGoal.get(finalGoal.size() - 1).getTerritory());
+    }
+    
+    public void createGoal() {
+        createGoal(new ArrayList<CountryAgent>());
+    }
+    
+    public void createGoal(ArrayList<CountryAgent> countries){
+        if(this.getTerritory().getOwner() == mars) {
+            this.receivemessagefriendly(countries);
+        } else if(mars.goalLength > countries.size()) {
+            ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();
+            for(CountryAgent ca : countries){
+                copiedCountries.add(ca);
+            }
+            
+            copiedCountries.add(this);
+            for(CountryAgent neighbour : this.getAdjacentAgents()) {
+                if(!countries.contains(neighbour)) {
+                    neighbour.createGoal(copiedCountries);
+                }
+            }
+        }
+    }
+
+    public void updateFinalGoal() {
+        if(finalGoal.isEmpty())
+            createGoal();
     }
 }
 
