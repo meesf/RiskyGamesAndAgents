@@ -75,5 +75,13 @@ public abstract class Player {
     public String toString() {
         return name;
     }
+    
+    protected boolean reachedObjective(CombatInterface ci) {
+        if (objective.getType() == Objective.type.TOTAL_DOMINATION)
+            return ci.getActivePlayerAmount() == 1;
+        return false;
+    }
+
+    abstract public void attackPhase(CombatInterface combatInterface);
 
 }

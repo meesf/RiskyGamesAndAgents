@@ -1,5 +1,7 @@
 package infomgmag;
 
+import infomgmag.mars.CountryAgent;
+
 import java.util.ArrayList;
 
 /**
@@ -11,9 +13,11 @@ import java.util.ArrayList;
  */
 public class Territory {
     private Player owner;
-    private int nUnits;
+    private Integer nUnits;
     private ArrayList<Territory> adjacentTerritories;
     private String name;
+    private Continent belongsTo;
+    private CountryAgent territoryCountryAgent;
 
     public double x, y;
 
@@ -57,9 +61,25 @@ public class Territory {
         return adjacentTerritories;
     }
 
+    public void setBelongsTo(Continent co) {
+        this.belongsTo = co;
+    }
+
+    public Continent getBelongsTo() {
+        return belongsTo;
+    }
+
+    public void setTerritoryCountryAgent(CountryAgent countryAgent){
+        this.territoryCountryAgent = countryAgent;
+    }
+
+    public CountryAgent getCountryAgent(){
+        return territoryCountryAgent;
+    }
+
     @Override
     public String toString() {
-        return "name: " + name + " owner: " + owner.toString() + " nrOfUnits: " + nUnits;
+        return "name: " + name + " nrOfUnits: " + nUnits;
     }
 
 }

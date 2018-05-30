@@ -28,18 +28,20 @@ public class Board {
         this.infantry = 14;
         this.wildcard = 2;
 
-        Continent northAmerica = new Continent(new Color(1.0f, 1.0f, 0.0f));
+        Continent northAmerica = new Continent(new Color(1.0f, 1.0f, 0.0f), "northAmerica");
         continents.add(northAmerica);
-        Continent southAmerica = new Continent(new Color(0.6f, 0f, 0f));
+        Continent southAmerica = new Continent(new Color(0.6f, 0f, 0f), "southAmerica");
         continents.add(southAmerica);
-        Continent europe = new Continent(new Color(0.33f, 0f, 1f));
+        Continent europe = new Continent(new Color(0.33f, 0f, 1f),"europe");
         continents.add(europe);
-        Continent asia = new Continent(new Color(0.1f, 0.5f, 0.1f));
+
+        Continent asia = new Continent(new Color(0.1f, 0.5f, 0.1f), "asia");
         continents.add(asia);
-        Continent africa = new Continent(new Color(1f, 0.5f, 0f));
+        Continent africa = new Continent(new Color(1f, 0.5f, 0f),"africa");
         continents.add(africa);
-        Continent australia = new Continent(new Color(1f, 0.4f, 0.55f));
+        Continent australia = new Continent(new Color(1f, 0.4f, 0.55f),"australia");
         continents.add(australia);
+
 
         Territory yakutsk = new Territory("Yakutsk", 0.84, 0.79);
         asia.addTerritory(yakutsk);
@@ -219,7 +221,7 @@ public class Board {
 
     /**
      * Add the given amount of units to the given territory.
-     * 
+     *
      * @return boolean if the action succeeded, in other words if the action was
      *         possible and has been executed.
      */
