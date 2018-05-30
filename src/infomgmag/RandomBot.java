@@ -63,7 +63,6 @@ public class RandomBot extends Player {
 
     // TODO: deciding whether and which territories to use in an combat is random
     // now, this should be changed when we want to make it smarter
-    @Override
     public CombatMove getCombatMove() {
         int val = Risk.random.nextInt(10);
         if (val > 0) {

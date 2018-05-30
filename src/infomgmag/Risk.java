@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import infomgmag.mars.Mars;
+
 /**
  * This class contains the main() method. This class is the bridge between the
  * visual presentation of the game (RiskVisual) and the data presentation of the
@@ -17,7 +19,7 @@ import java.util.Random;
 public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
-    private boolean visible = false;
+    private boolean visible = true;
     private int playerAmount = 6;
 
     public static Random random;
@@ -94,9 +96,6 @@ public class Risk implements CombatInterface{
             int startingNrOfTerritories = currentPlayer.getTerritories().size();
             
             currentPlayer.attackPhase((CombatInterface) this);
-            CombatMove combatMove; // If a territory is claimed the player has to move the units he used during his
-                                   // attack to the claimed territory, he can move more units to the new territory
-                                   // (atleast one unit has to stay behind)
             currentPlayer.fortifyTerritory(board);
             visuals.update();
 
@@ -229,7 +228,7 @@ public class Risk implements CombatInterface{
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
         int i;
-        for (i = 0; i < 2; i++) {
+        for (i = 0; i < 1; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Color color;
             if (i < playerColors.length) {
@@ -250,8 +249,8 @@ public class Risk implements CombatInterface{
                     Risk.random.nextFloat() * 0.8f + 0.2f);
         }
         Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-        //Mars player = new Mars(this, objective, 0, "Mars agent",color);
-        //activePlayers.add(player);
+        Mars player = new Mars(this, objective, 0, "Mars agent",color);
+        activePlayers.add(player);
     }
 
     // Divide players randomly over territories
