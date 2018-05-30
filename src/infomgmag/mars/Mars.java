@@ -157,7 +157,7 @@ public class Mars extends Player {
         for (CountryAgent sender: countryAgents) {
         	if(sender.getTerritory().getOwner() != this) {
 	            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
-	            sender.createGoal();
+	            sender.createGoals();
         	}
         }
 
@@ -169,8 +169,6 @@ public class Mars extends Player {
                 break;
         }
     }
-    
-    
 
     private ReinforcementBid getBestBid(int units){
     	ReinforcementBid bestBid = null;

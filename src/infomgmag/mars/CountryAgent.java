@@ -169,12 +169,12 @@ public class CountryAgent {
     		if(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {
     			bestBid = offBid;
     		}
-    		
-    		DefensiveBid defBid = getDefensiveBid(null, unitsLeft, agentValues);
-    		if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
-    			bestBid = defBid;
-    		}
     	}
+    	this.finalGoal = ((OffensiveBid)bestBid).getGoal();
+    	DefensiveBid defBid = getDefensiveBid(null, unitsLeft, agentValues);
+        if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
+            bestBid = defBid;
+        }
     	return bestBid;
     }
     
@@ -220,23 +220,26 @@ public class CountryAgent {
         return new AttackBid(territory, finalGoal.get(finalGoal.size() - 1).getTerritory());
     }
     
-    public void createGoal() {
-        createGoal(new ArrayList<CountryAgent>());
+    public void createGoals() {
+        for (CountryAgent ca : adjacentAgents) {
+            ArrayList<CountryAgent> goal = new ArrayList<CountryAgent>();
+            goal.add(this);
+            ca.createGoals(goal);
+        }
     }
     
-    public void createGoal(ArrayList<CountryAgent> countries){
-        if(this.getTerritory().getOwner() == mars) {
-            this.receivemessagefriendly(countries);
-        } else if(mars.goalLength > countries.size()) {
-            ArrayList<CountryAgent> copiedCountries = new ArrayList<CountryAgent>();
-            for(CountryAgent ca : countries){
-                copiedCountries.add(ca);
-            }
-            
-            copiedCountries.add(this);
-            for(CountryAgent neighbour : this.getAdjacentAgents()) {
-                if(!countries.contains(neighbour)) {
-                    neighbour.createGoal(copiedCountries);
+    public void createGoals(ArrayList<CountryAgent> goal) {
+        if(goal.size() >= Mars.goalLength)
+            return;
+
+        if(territory.getOwner() == mars) {
+            goalList.add(goal);
+        } else {
+            for(CountryAgent ca : adjacentAgents) {
+                if (!goal.contains(ca)) {
+                    ArrayList<CountryAgent> newGoal = (ArrayList<CountryAgent>) goal.clone();
+                    newGoal.add(this);
+                    createGoals(newGoal);
                 }
             }
         }
@@ -244,7 +247,7 @@ public class CountryAgent {
 
     public void updateFinalGoal() {
         if(finalGoal.isEmpty())
-            createGoal();
+            createGoals();
     }
 }
 
