@@ -178,8 +178,9 @@ public class Risk implements CombatInterface{
                 currentPlayer.hand.setInfantry(currentPlayer.hand.getInfantry() + defender.hand.getInfantry());
                 while (currentPlayer.hand.getNumberOfCards() > 4)
                     currentPlayer.turnInCards(board);
-                currentPlayer.placeReinforcements(board);
                 activePlayers.remove(defender);
+                if (activePlayers.size() > 1)
+                	currentPlayer.placeReinforcements(board);
                 defeatedPlayers.add(defender);
             }
         }
