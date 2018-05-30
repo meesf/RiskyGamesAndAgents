@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import infomgmag.mars.Mars;
+
 /**
  * This class contains the main() method. This class is the bridge between the
  * visual presentation of the game (RiskVisual) and the data presentation of the
@@ -18,7 +20,7 @@ public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
     private boolean visible = true;
-    private int playerAmount = 6;
+    private int playerAmount = 5;
 
     public static Random random;
 
@@ -250,8 +252,8 @@ public class Risk implements CombatInterface{
                     Risk.random.nextFloat() * 0.8f + 0.2f);
         }
         Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-        //Mars player = new Mars(this, objective, 0, "Mars agent",color);
-        //activePlayers.add(player);
+        Mars player = new Mars(this, objective, 0, "Mars agent",color);
+        activePlayers.add(player);
     }
 
     // Divide players randomly over territories

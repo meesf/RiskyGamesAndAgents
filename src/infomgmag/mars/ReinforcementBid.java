@@ -1,9 +1,9 @@
 package infomgmag.mars;
 
 public abstract class ReinforcementBid {
-	private CountryAgent reinforcedAgent, fortifyingAgent;
-	private Integer units;
-	private Double utility;
+	protected CountryAgent reinforcedAgent, fortifyingAgent;
+	protected Integer units;
+	protected Double utility;
 	
 	public ReinforcementBid(CountryAgent reinforcedAgent, CountryAgent fortifyingAgent, Integer units, double utility) {
 		this.reinforcedAgent = reinforcedAgent;
