@@ -1,7 +1,6 @@
 package infomgmag.mars;
 
 import java.awt.Color;
-import java.lang.reflect.Array;
 import java.util.*;
 
 import infomgmag.Board;
@@ -11,10 +10,6 @@ import infomgmag.Objective;
 import infomgmag.Player;
 import infomgmag.Risk;
 import infomgmag.Territory;
-
-import javafx.util.Pair;
-
-import javax.print.attribute.IntegerSyntax;
 
 public class Mars extends Player {
 

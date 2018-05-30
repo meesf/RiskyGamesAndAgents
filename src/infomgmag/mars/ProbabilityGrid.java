@@ -2,8 +2,6 @@ package infomgmag.mars;
 
 import infomgmag.Risk;
 
-import java.util.function.DoubleFunction;
-import java.util.function.IntToDoubleFunction;
 import java.util.stream.IntStream;
 
 public class ProbabilityGrid {

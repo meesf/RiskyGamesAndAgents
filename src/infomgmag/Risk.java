@@ -1,7 +1,5 @@
 package infomgmag;
 
-import infomgmag.mars.Mars;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;

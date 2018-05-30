@@ -1,14 +1,8 @@
 package infomgmag.mars;
 
-import infomgmag.Risk;
 import infomgmag.Territory;
-import javafx.util.Pair;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.IntToDoubleFunction;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
 
 
 public class CountryAgent {
