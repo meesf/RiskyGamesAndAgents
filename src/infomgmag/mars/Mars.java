@@ -28,7 +28,7 @@ public class Mars extends Player {
     private Double earmiesweight = -0.03;
     private Integer goalLength = 7;
     
-    static final double WIN_PERCENTAGE = 0.5;
+    public static final Double WIN_PERCENTAGE = 0.7375;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
@@ -59,10 +59,58 @@ public class Mars extends Player {
     public void turnInCards(Board board) {
         this.reinforcements += cardAgent.tradeIn(board);
     }
+    
+    private ArrayList<CountryAgent> getCountryAgentList(ArrayList<Territory> cluster) {
+    	ArrayList<CountryAgent> agents = new ArrayList<CountryAgent>();
+    	for(Territory t : cluster) {
+    		agents.add(countryAgentsByTerritory.get(t));
+    	}
+    	return agents;
+    }
+    
+    private ArrayList<ArrayList<CountryAgent>> getClusters() {
+    	ArrayList<ArrayList<CountryAgent>> clusters = new ArrayList<ArrayList<CountryAgent>>();
+    	for(Territory t : territories) {
+    		boolean contains = false;
+    		for(ArrayList<CountryAgent> cl : clusters) {
+    			if(cl.contains(countryAgentsByTerritory.get(t))) {
+    				contains = true;
+    			}
+    		}
+    		if(!contains) {
+    			ArrayList<Territory> cluster = Risk.getConnectedTerritories(t);
+    			clusters.add(getCountryAgentList(cluster));
+    		}
+    	}
+    	return clusters;
+    }
 
     @Override
     public void fortifyTerritory(Board board) { //only uses the 'best' country right now
-        //todo: everything
+//    	ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
+//    	for(ArrayList<CountryAgent> cluster : clusters) {
+//    		HashMap<CountryAgent, Integer> sellers = new HashMap<CountryAgent, Integer>();
+//    		
+//    		for(CountryAgent a : cluster) {
+//    			int bestI = 0;
+//    			for(int i = a.getTerritory().getNUnits()-1; i > 0; i--) {
+//    				double d = a.getD(i);
+//    				if(d > WIN_PERCENTAGE) {
+//    					bestI = i;
+//    				}
+//    			}
+//    			if(bestI != 0) {
+//    				sellers.put(a, bestI);
+//    			}
+//    		}
+//    		DefensiveBid bestBid = null;
+//    		for(CountryAgent a : cluster) {
+//    			for(CountryAgent seller : sellers.keySet()) {
+//    				DefensiveBid defBid = a.getDefensiveBid(a.getTerritory().getNUnits() + sellers.get(seller), null, agentValues);
+//    			}
+//    		}
+//    		
+//    	}
     }
 
     @Override
@@ -122,8 +170,8 @@ public class Mars extends Player {
         }
 
         while(reinforcements > 0){
-            Bid bid = getBestBid(getReinforcements());
-            board.addUnits(this, bid.getOrigin().getTerritory(), bid.getUnits());
+            ReinforcementBid bid = getBestBid(getReinforcements());
+            board.addUnits(this, bid.getReinforcedAgent().getTerritory(), bid.getUnits());
             reinforcements -= bid.getUnits();
             if(bid.getUnits() == 0)
                 break;
@@ -148,17 +196,18 @@ public class Mars extends Player {
         }
     }
 
-    private Bid getBestBid(int units){
-        Bid bestBid = null;
+    private ReinforcementBid getBestBid(int units){
+    	ReinforcementBid bestBid = null;
         for(CountryAgent ca : countryAgents){
             if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){
-        		Bid bid = ca.getBid(units, agentValues);
+            	ReinforcementBid bid = ca.getBid(units, agentValues);
         		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
                     bestBid = bid;
                 }
             }
         }
-        bestBid.getOrigin().setFinalGoal(bestBid.getGoal());
+        if(bestBid instanceof OffensiveBid)
+        	bestBid.getReinforcedAgent().setFinalGoal(((OffensiveBid) bestBid).getGoal());
         return bestBid;
     }
 
