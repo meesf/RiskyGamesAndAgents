@@ -22,7 +22,7 @@ public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
     private boolean visible = true;
-    private int playerAmount = 5;
+    private static final int playerAmount = 5;
 
     public static Random random;
 
