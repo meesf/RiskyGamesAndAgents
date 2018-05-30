@@ -27,10 +27,6 @@ public class Continent {
         return name;
     }
 
-    public ArrayList<Territory> getMembers() {
-        return territories;
-    }
-
     public Color getColor() {
         return this.color;
     }
