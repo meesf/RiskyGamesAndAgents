@@ -170,7 +170,7 @@ public class CountryAgent {
     			bestBid = offBid;
     		}
     		
-    		DefensiveBid defBid = getDefensiveBid(unitsLeft, goal, agentValues);
+    		DefensiveBid defBid = getDefensiveBid(null, unitsLeft, agentValues);
     		if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
     			bestBid = defBid;
     		}
@@ -178,12 +178,12 @@ public class CountryAgent {
     	return bestBid;
     }
     
-    public DefensiveBid getDefensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    public DefensiveBid getDefensiveBid(CountryAgent fortifyingAgent, Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
     	DefensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getVD(agentValues, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
-    			bestBid = new DefensiveBid(this, i, bidUtil);
+    			bestBid = new DefensiveBid(this, fortifyingAgent, i, bidUtil);
     		}
     	}
     	return bestBid;

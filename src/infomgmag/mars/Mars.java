@@ -2,6 +2,7 @@ package infomgmag.mars;
 
 import java.awt.Color;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import infomgmag.Board;
@@ -28,7 +29,7 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
-    private Integer goalLength = 4;
+    public static final Integer goalLength = 4;
     
     public static final Double WIN_PERCENTAGE = 0.7375;
 
@@ -89,30 +90,36 @@ public class Mars extends Player {
 
     @Override
     public void fortifyTerritory(Board board) { //only uses the 'best' country right now
-//    	ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
-//    	for(ArrayList<CountryAgent> cluster : clusters) {
-//    		HashMap<CountryAgent, Integer> sellers = new HashMap<CountryAgent, Integer>();
-//    		
-//    		for(CountryAgent a : cluster) {
-//    			int bestI = 0;
-//    			for(int i = a.getTerritory().getNUnits()-1; i > 0; i--) {
-//    				double d = a.getD(i);
-//    				if(d > WIN_PERCENTAGE) {
-//    					bestI = i;
-//    				}
-//    			}
-//    			if(bestI != 0) {
-//    				sellers.put(a, bestI);
-//    			}
-//    		}
-//    		DefensiveBid bestBid = null;
-//    		for(CountryAgent a : cluster) {
-//    			for(CountryAgent seller : sellers.keySet()) {
-//    				DefensiveBid defBid = a.getDefensiveBid(a.getTerritory().getNUnits() + sellers.get(seller), null, agentValues);
-//    			}
-//    		}
-//    		
-//    	}
+
+    	ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
+    	DefensiveBid bestBid = null;
+    	for(ArrayList<CountryAgent> cluster : clusters) {
+    		HashMap<CountryAgent, Integer> sellers = new HashMap<CountryAgent, Integer>();
+    		
+    		for(CountryAgent a : cluster) {
+    			int bestI = 0;
+    			for(int i = a.getTerritory().getNUnits()-1; i > 0; i--) {
+    				double d = a.getD(i);
+    				if(d > WIN_PERCENTAGE) {
+    					bestI = i;
+    				}
+    			}
+    			if(bestI != 0) {
+    				sellers.put(a, bestI);
+    			}
+    		}
+    		for(CountryAgent a : cluster) {
+    			for(CountryAgent seller : sellers.keySet()) {
+    				DefensiveBid bid = a.getDefensiveBid(seller, a.getTerritory().getNUnits() + sellers.get(seller), agentValues);
+    				if(bestBid == null || bestBid.getUtility() < bid.getUtility())
+    					bestBid = bid;
+    			}
+    		}
+    	}
+
+    	if(bestBid != null){
+            board.moveUnits(bestBid.getFortifyingAgent().getTerritory(), bestBid.getReinforcedAgent().getTerritory(), bestBid.getUnits());
+        }
     }
 
     @Override
@@ -146,7 +153,7 @@ public class Mars extends Player {
             //I removed the if statement here, so that all territories get a value instead of only the enemy territories
             agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
         }
-        
+
         for (CountryAgent sender: countryAgents) {
         	if(sender.getTerritory().getOwner() != this) {
 	            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
