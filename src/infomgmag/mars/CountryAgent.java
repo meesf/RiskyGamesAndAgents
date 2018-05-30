@@ -170,7 +170,11 @@ public class CountryAgent {
     			bestBid = offBid;
     		}
     	}
-    	this.finalGoal = ((OffensiveBid)bestBid).getGoal();
+    	if (bestBid == null) {
+    		this.finalGoal = new ArrayList<>();
+    	} else {
+    		this.finalGoal = ((OffensiveBid)bestBid).getGoal();
+    	}
     	DefensiveBid defBid = getDefensiveBid(null, unitsLeft, agentValues);
         if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
             bestBid = defBid;

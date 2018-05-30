@@ -2,9 +2,6 @@ package infomgmag.mars;
 
 import java.awt.Color;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import infomgmag.Board;
 import infomgmag.CombatInterface;
 import infomgmag.CombatMove;
@@ -12,7 +9,6 @@ import infomgmag.Objective;
 import infomgmag.Player;
 import infomgmag.Risk;
 import infomgmag.Territory;
-import sun.net.www.content.audio.x_aiff;
 
 public class Mars extends Player {
 
@@ -23,6 +19,7 @@ public class Mars extends Player {
     private CardAgent cardAgent;
     private List<CountryAgent> countryAgents;
     private HashMap<Territory,CountryAgent> countryAgentsByTerritory;
+    // Is this ever cleared?
     private HashMap<CountryAgent, Double> agentValues;
 
     private Double friendliesweight = 1.2;      //parameters used in calculation of territory value
@@ -31,7 +28,7 @@ public class Mars extends Player {
     private Double earmiesweight = -0.03;
     public static final Integer goalLength = 4;
     
-    public static final Double WIN_PERCENTAGE = 0.7375;
+    public static final Double WIN_PERCENTAGE = 0.5;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
@@ -40,7 +37,6 @@ public class Mars extends Player {
         cardAgent = new CardAgent(hand);
         countryAgents = new ArrayList<>();
         countryAgentsByTerritory = new HashMap<Territory, CountryAgent>();
-
 
         for (Territory t : risk.getBoard().getTerritories()) {
             CountryAgent ca = new CountryAgent(t,this);
@@ -148,6 +144,7 @@ public class Mars extends Player {
         for (CountryAgent ca: countryAgents){
             ca.clearlists();
         }
+        agentValues = new HashMap<>();
         
         for (CountryAgent ca: countryAgents) {
             //I removed the if statement here, so that all territories get a value instead of only the enemy territories
@@ -156,7 +153,6 @@ public class Mars extends Player {
 
         for (CountryAgent sender: countryAgents) {
         	if(sender.getTerritory().getOwner() != this) {
-	            ArrayList<CountryAgent> initialList = new ArrayList<CountryAgent>();
 	            sender.createGoals();
         	}
         }
@@ -206,15 +202,25 @@ public class Mars extends Player {
     @Override
     public void attackPhase(CombatInterface ci) {
         while(true) {
+        	for (CountryAgent ca : countryAgents) {
+        		ca.clearlists();
+        	}
+        	for (CountryAgent sender: countryAgents) {
+            	if(sender.getTerritory().getOwner() != this) {
+    	            sender.createGoals();
+            	}
+            }
+        	for (CountryAgent ca : countryAgents) {
+        		ca.getBid(0, agentValues);
+        	}
             if (ci.getActivePlayerAmount() == 1) {
                 return;
             }
             Optional<AttackBid> ab = bestAttackBid();
             if (ab.isPresent() && ab.get().getOdds() >= WIN_PERCENTAGE) {
                 ci.performCombatMove(ab.get().toCombatMove());
-            } else {
+            } else
                 return;
-            }
         }
     }
 }
