@@ -20,7 +20,8 @@ public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
     private boolean visible = true;
-    private int playerAmount = 5;
+    private int randomPlayers = 5;
+    private int marsPlayers = 1;
 
     public static Random random;
 
@@ -79,7 +80,7 @@ public class Risk implements CombatInterface{
         board = new Board();
         defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
-        initializePlayers();
+        initializePlayers(randomPlayers,marsPlayers);
         Integer currentPlayerIndex = divideTerritories();
         initialPlaceReinforcements(currentPlayerIndex);
         currentPlayer = activePlayers.get(0);
@@ -223,12 +224,12 @@ public class Risk implements CombatInterface{
             Color.MAGENTA
     };
 
-    private void initializePlayers() {
+    private void initializePlayers(int randoms, int marses) {
         activePlayers = new ArrayList<>();
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
         int i;
-        for (i = 0; i < playerAmount - 1; i++) {
+        for (i = 0; i < randoms; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Color color;
             if (i < playerColors.length) {
@@ -237,20 +238,22 @@ public class Risk implements CombatInterface{
                 color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
                         Risk.random.nextFloat() * 0.8f + 0.2f);
             }
-            RandomBot player = new RandomBot(objective, 0, "player" + i,color);
+            RandomBot player = new RandomBot(objective, 0, "Player " + i + " (Random Bot)",color);
             activePlayers.add(player);
         }
-        // Add mars agent
-        Color color;
-        if (i < playerColors.length) {
-            color = playerColors[i];
-        } else {
-            color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
-                    Risk.random.nextFloat() * 0.8f + 0.2f);
+
+        for (; i < randoms + marses; i++) {
+	        Color color;
+	        if (i < playerColors.length) {
+	            color = playerColors[i];
+	        } else {
+	            color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
+	                    Risk.random.nextFloat() * 0.8f + 0.2f);
+	        }
+	        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
+	        Mars player = new Mars(this, objective, 0, "Player " + i + " (MARS)",color);
+	        activePlayers.add(player);
         }
-        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-        Mars player = new Mars(this, objective, 0, "Mars agent",color);
-        activePlayers.add(player);
     }
 
     // Divide players randomly over territories
