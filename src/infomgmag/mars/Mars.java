@@ -25,10 +25,10 @@ public class Mars extends Player {
     private HashMap<Territory,CountryAgent> countryAgentsByTerritory;
     private HashMap<CountryAgent, Double> agentValues;
 
-    private Double friendliesweight = 1.2;      //parameters used in calculation of territory value
-    private Double enemiesweight = -0.3;
-    private Double farmiesweight = 0.05;
-    private Double earmiesweight = -0.03;
+    private static final Double friendliesweight = 1.2;      //parameters used in calculation of territory value
+    private static final Double enemiesweight = -0.3;
+    private static final Double farmiesweight = 0.05;
+    private static final Double earmiesweight = -0.03;
     public static final Integer goalLength = 4;
     
     public static final Double WIN_PERCENTAGE = 0.7375;
