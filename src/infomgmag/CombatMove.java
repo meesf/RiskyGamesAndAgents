@@ -1,7 +1,5 @@
 package infomgmag;
 
-import infomgmag.mars.CountryAgent;
-
 public class CombatMove {
     private Territory attackingTerritory, defendingTerritory;
     private Integer attackingUnits, defendingUnits;

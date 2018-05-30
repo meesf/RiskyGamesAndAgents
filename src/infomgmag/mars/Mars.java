@@ -73,11 +73,9 @@ public class Mars extends Player {
     @Override
     public CombatMove getCombatMove() {
         CombatMove combatMove = new CombatMove();
-        Map<CountryAgent,Double> odds = new HashMap<CountryAgent,Double>();
 
         for (CountryAgent ca : countryAgents) {
             if (ca.getTerritory().getOwner() == this && ca.bordersEnemy() && (ca.getFinalGoal() != null) && ca.getTerritory().getNUnits() > 1){
-                
                 System.out.println(ca.getFinalGoal() + " is the final goal");
                 for (CountryAgent target : ca.getFinalGoal()) {
                     combatMove.setAttackingTerritory(ca.getTerritory());

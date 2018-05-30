@@ -2,7 +2,6 @@ package infomgmag;
 
 import infomgmag.mars.CountryAgent;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
