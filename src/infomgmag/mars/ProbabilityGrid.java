@@ -55,39 +55,39 @@ public class ProbabilityGrid {
                 throw new RuntimeException("KYS");
             }
             else if(a == 1 && d == 1){
-                val = getValue(a + 1, d + 1) * diceP(a + 1, d + 1, ONE_EACH)
-                        + getValue(a + 1, d) * diceP(a + 1, d, DEFENDER_WINS)
-                        + getValue(a, d + 1) * diceP(a, d + 1, ATTACKER_WINS);
+                val = getValue(a + 1, d + 1) * diceOdds(a + 1, d + 1, ONE_EACH)
+                        + getValue(a + 1, d) * diceOdds(a + 1, d, DEFENDER_WINS)
+                        + getValue(a, d + 1) * diceOdds(a, d + 1, ATTACKER_WINS);
 
             }
             else if(a == 1 && d == 0){
-                val = getValue(a, d + 1) * diceP(a, d + 1, ATTACKER_WINS);
+                val = getValue(a, d + 1) * diceOdds(a, d + 1, ATTACKER_WINS);
             }
             else if(a == 0 && d == 1){
-                val = getValue(a + 1, d) * diceP(a + 1, d, DEFENDER_WINS);
+                val = getValue(a + 1, d) * diceOdds(a + 1, d, DEFENDER_WINS);
             }
             else if(d == 1){
-                val = getValue(a + 1, d + 1) * diceP(a + 1, d + 1, ONE_EACH)
-                        + getValue(a, d + 2) * diceP(a, d + 2, ATTACKER_WINS)
-                        + getValue(a + 1, d) * diceP(a + 1, d, DEFENDER_WINS);
+                val = getValue(a + 1, d + 1) * diceOdds(a + 1, d + 1, ONE_EACH)
+                        + getValue(a, d + 2) * diceOdds(a, d + 2, ATTACKER_WINS)
+                        + getValue(a + 1, d) * diceOdds(a + 1, d, DEFENDER_WINS);
             }
             else if (a == 1){
-                val = getValue(a+2, d) * diceP(a + 2, d, DEFENDER_WINS)
-                        + getValue(a + 1, d + 1) * diceP(a + 1, d + 1, ONE_EACH)
-                        + getValue(a, d + 1) * diceP(a, d + 1, ATTACKER_WINS);
+                val = getValue(a+2, d) * diceOdds(a + 2, d, DEFENDER_WINS)
+                        + getValue(a + 1, d + 1) * diceOdds(a + 1, d + 1, ONE_EACH)
+                        + getValue(a, d + 1) * diceOdds(a, d + 1, ATTACKER_WINS);
             }
             else if (a == 0) {
-                val = getValue(a + 2, d) * diceP(a + 2, d, DEFENDER_WINS)
-                        + getValue(a + 1, d) * diceP(a + 1, d, DEFENDER_WINS);
+                val = getValue(a + 2, d) * diceOdds(a + 2, d, DEFENDER_WINS)
+                        + getValue(a + 1, d) * diceOdds(a + 1, d, DEFENDER_WINS);
 
             } else if(d == 0){
-                val = getValue(a, d + 2) * diceP(a, d + 2, ATTACKER_WINS)
-                        + getValue(a, d + 1) * diceP(a, d + 1, ATTACKER_WINS);
+                val = getValue(a, d + 2) * diceOdds(a, d + 2, ATTACKER_WINS)
+                        + getValue(a, d + 1) * diceOdds(a, d + 1, ATTACKER_WINS);
             }
             else {
-                val = getValue(a + 2, d) * diceP(a + 2, d, DEFENDER_WINS)
-                        + getValue(a + 1, d + 1) * diceP(a + 1, d + 1, ONE_EACH)
-                        + getValue(a, d + 2) * diceP(a, d + 2, ATTACKER_WINS);
+                val = getValue(a + 2, d) * diceOdds(a + 2, d, DEFENDER_WINS)
+                        + getValue(a + 1, d + 1) * diceOdds(a + 1, d + 1, ONE_EACH)
+                        + getValue(a, d + 2) * diceOdds(a, d + 2, ATTACKER_WINS);
 
             }
             grid[a][d] = val;
@@ -102,7 +102,7 @@ public class ProbabilityGrid {
         getValue(0,1);
     }
 
-    private double diceP(int a, int d, int outcome){
+    private double diceOdds(int a, int d, int outcome){
         if(a > 3)
             a = 3;
         if(d > 2)

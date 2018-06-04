@@ -42,13 +42,14 @@ public class Mars extends Player {
             t.setTerritoryCountryAgent(ca);
         }
 
-        for (CountryAgent ca : countryAgents){
-            for (Territory t : risk.getBoard().getTerritories()){
-                if (ca.getTerritory().getAdjacentTerritories().contains(t) && ca.adjacentAgents.contains(t) != true){
-                    ca.adjacentAgents.add(countryAgentsByTerritory.get(t));
-                }
-            }
-        }
+        countryAgents
+            .stream()
+            .forEach(ca -> ca.getTerritory()
+                                .getAdjacentTerritories()
+                                .stream()
+                                .forEach(at -> countryAgentsByTerritory
+                                                .get(at)
+                                                .addAdjacentAgent(ca)));
     }
 
     @Override
@@ -92,7 +93,7 @@ public class Mars extends Player {
     		for(CountryAgent a : cluster) {
     			int bestI = 0;
     			for(int i = a.getTerritory().getNUnits()-1; i > 0; i--) {
-    				double d = a.getD(i);
+    				double d = a.getDefenseOdds(i);
     				if(d > WIN_PERCENTAGE) {
     					bestI = i;
     				}
