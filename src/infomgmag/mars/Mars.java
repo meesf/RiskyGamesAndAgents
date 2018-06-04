@@ -19,8 +19,6 @@ public class Mars extends Player {
     private CardAgent cardAgent;
     private List<CountryAgent> countryAgents;
     private HashMap<Territory,CountryAgent> countryAgentsByTerritory;
-    // Is this ever cleared?
-    private HashMap<CountryAgent, Double> agentValues;
 
     private Double friendliesweight = 1.2;      //parameters used in calculation of territory value
     private Double enemiesweight = -0.3;
@@ -33,7 +31,6 @@ public class Mars extends Player {
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
 
-        agentValues = new HashMap<CountryAgent, Double>();
         cardAgent = new CardAgent(hand);
         countryAgents = new ArrayList<>();
         countryAgentsByTerritory = new HashMap<Territory, CountryAgent>();
@@ -106,7 +103,7 @@ public class Mars extends Player {
     		}
     		for(CountryAgent a : cluster) {
     			for(CountryAgent seller : sellers.keySet()) {
-    				DefensiveBid bid = a.getDefensiveBid(seller, a.getTerritory().getNUnits() + sellers.get(seller), agentValues);
+    				DefensiveBid bid = a.getDefensiveBid(seller, a.getTerritory().getNUnits() + sellers.get(seller));
     				if(bestBid == null || bestBid.getUtility() < bid.getUtility())
     					bestBid = bid;
     			}
@@ -129,12 +126,7 @@ public class Mars extends Player {
     public void placeReinforcements(Board board) {
         for (CountryAgent ca: countryAgents){
             ca.clearlists();
-        }
-        agentValues = new HashMap<>();
-        
-        for (CountryAgent ca: countryAgents) {
-            //I removed the if statement here, so that all territories get a value instead of only the enemy territories
-            agentValues.put(ca, ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight));
+            ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight);
         }
 
         for (CountryAgent sender: countryAgents) {
@@ -156,7 +148,7 @@ public class Mars extends Player {
     	ReinforcementBid bestBid = null;
         for(CountryAgent ca : countryAgents){
             if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){
-            	ReinforcementBid bid = ca.getBid(units, agentValues);
+            	ReinforcementBid bid = ca.getBid(units);
         		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
                     bestBid = bid;
                 }
@@ -190,6 +182,7 @@ public class Mars extends Player {
         while(true) {
         	for (CountryAgent ca : countryAgents) {
         		ca.clearlists();
+        		ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight);
         	}
         	for (CountryAgent sender: countryAgents) {
             	if(sender.getTerritory().getOwner() != this) {
@@ -197,7 +190,7 @@ public class Mars extends Player {
             	}
             }
         	for (CountryAgent ca : countryAgents) {
-        		ca.getBid(0, agentValues);
+        		ca.getBid(0);
         	}
             if (ci.getActivePlayerAmount() == 1) {
                 return;
