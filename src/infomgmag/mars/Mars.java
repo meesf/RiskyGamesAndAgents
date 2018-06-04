@@ -95,7 +95,7 @@ public class Mars extends Player {
     		for(CountryAgent a : cluster) {
     			int bestI = 0;
     			for(int i = a.getTerritory().getNUnits()-1; i > 0; i--) {
-    				double d = a.getD(i);
+    				double d = a.getDefenseOdds(i);
     				if(d > WIN_PERCENTAGE) {
     					bestI = i;
     				}
