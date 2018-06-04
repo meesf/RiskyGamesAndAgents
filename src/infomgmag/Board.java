@@ -28,18 +28,18 @@ public class Board {
         this.infantry = 14;
         this.wildcard = 2;
 
-        Continent northAmerica = new Continent(new Color(1.0f, 1.0f, 0.0f), "northAmerica");
+        Continent northAmerica = new Continent(new Color(1.0f, 1.0f, 0.0f), "northAmerica", 5);
         continents.add(northAmerica);
-        Continent southAmerica = new Continent(new Color(0.6f, 0f, 0f), "southAmerica");
+        Continent southAmerica = new Continent(new Color(0.6f, 0f, 0f), "southAmerica", 2);
         continents.add(southAmerica);
-        Continent europe = new Continent(new Color(0.33f, 0f, 1f),"europe");
+        Continent europe = new Continent(new Color(0.33f, 0f, 1f),"europe", 5);
         continents.add(europe);
 
-        Continent asia = new Continent(new Color(0.1f, 0.5f, 0.1f), "asia");
+        Continent asia = new Continent(new Color(0.1f, 0.5f, 0.1f), "asia", 7);
         continents.add(asia);
-        Continent africa = new Continent(new Color(1f, 0.5f, 0f),"africa");
+        Continent africa = new Continent(new Color(1f, 0.5f, 0f),"africa", 3);
         continents.add(africa);
-        Continent australia = new Continent(new Color(1f, 0.4f, 0.55f),"australia");
+        Continent australia = new Continent(new Color(1f, 0.4f, 0.55f),"australia", 2);
         continents.add(australia);
 
 

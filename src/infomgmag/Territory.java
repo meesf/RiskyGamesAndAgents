@@ -65,7 +65,7 @@ public class Territory {
         this.belongsTo = co;
     }
 
-    public Continent getBelongsTo() {
+    public Continent getContinent() {
         return belongsTo;
     }
 

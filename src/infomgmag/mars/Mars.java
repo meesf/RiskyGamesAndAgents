@@ -24,6 +24,11 @@ public class Mars extends Player {
     private Double enemiesweight = -0.3;
     private Double farmiesweight = 0.05;
     private Double earmiesweight = -0.03;
+    private Double continentBorderWeight = 0.5;
+    private Double ownWholeContinentWeight = 20.0;
+    private Double enemyOwnsWholeContinentWeight = 4.0;
+    private Double percentageOfContinentWeight = 5.0;
+
     public static final Integer goalLength = 4;
     
     public static final Double WIN_PERCENTAGE = 0.6;
@@ -84,7 +89,6 @@ public class Mars extends Player {
 
     @Override
     public void fortifyTerritory(Board board) { //only uses the 'best' country right now
-
     	ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
     	DefensiveBid bestBid = null;
     	for(ArrayList<CountryAgent> cluster : clusters) {
@@ -127,7 +131,7 @@ public class Mars extends Player {
     public void placeReinforcements(Board board) {
         for (CountryAgent ca: countryAgents){
             ca.clearlists();
-            ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight);
+            ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight, continentBorderWeight, ownWholeContinentWeight, enemyOwnsWholeContinentWeight, percentageOfContinentWeight);
         }
 
         for (CountryAgent sender: countryAgents) {
@@ -185,7 +189,7 @@ public class Mars extends Player {
         while(true) {
         	for (CountryAgent ca : countryAgents) {
         		ca.clearlists();
-        		ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight);
+        		ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight, continentBorderWeight, ownWholeContinentWeight, enemyOwnsWholeContinentWeight, percentageOfContinentWeight);
         	}
         	for (CountryAgent sender: countryAgents) {
             	if(sender.getTerritory().getOwner() != this) {
