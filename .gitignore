@@ -3,3 +3,6 @@ RiskyGamesAndAgents.iml
 
 out/
 bin/
+
+report/report.*
+!report/report.tex
