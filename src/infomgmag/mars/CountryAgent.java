@@ -104,7 +104,7 @@ public class CountryAgent {
         return adjacentAgents;
     }
 
-    private double getP(Integer i, ArrayList<CountryAgent> goal) {
+    private double getGoalSuccessOdds(Integer i, ArrayList<CountryAgent> goal) {
         Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size() - 1;
         if(attackingUnits < 1) {
             return 0.0;
@@ -118,19 +118,19 @@ public class CountryAgent {
         return grid.chanceOfWin();
     }
 
-    private Double getW(ArrayList<CountryAgent> goal) {
+    private Double getGoalValue(ArrayList<CountryAgent> goal) {
         double value = 0.0;
         for(CountryAgent ca : goal){
             value += ca.getValue();
         }
     	return value;
     }
-    
+
     private double getValue() {
         return value;
     }
 
-    public Double getD(int units) {
+    public Double getDefenseOdds(int units) {
         int totalEnemyUnits = 0;
         for(Territory t : getTerritory().getAdjacentTerritories()){
             if(t.getOwner() != this.getTerritory().getOwner()){
@@ -140,20 +140,24 @@ public class CountryAgent {
         ProbabilityGrid grid = new ProbabilityGrid(units, totalEnemyUnits);
     	return grid.chanceOfWin();
     }
-    
-    private double getPWD(ArrayList<CountryAgent> goal, Integer i)  {
-    	double p = getP(i, goal);
-    	double w = getW(goal);
-    	double d = getD(i);
+
+    private double getGoalUtility(ArrayList<CountryAgent> goal, Integer i)  {
+    	double p = getGoalSuccessOdds(i, goal);
+    	double w = getGoalValue(goal);
+    	double d = getDefenseOdds(i);
     	if(i == 0) {
     		return p*w*d;
     	}
     	return (p*w*d)/i;
     }
+
+    private Double getTerritoryValue(HashMap<CountryAgent, Double> agentValues) {
+    	return agentValues.get(this);
+    }
     
-    private double getVD(Integer i)  {
+    private double getDefendseUtility(Integer i) {
     	double v = getValue();
-    	double d = getD(this.getTerritory().getNUnits() + i);
+    	double d = getDefenseOdds(this.getTerritory().getNUnits() + i);
     	if(i == 0) {
     		return v*d;
     	}
@@ -183,7 +187,7 @@ public class CountryAgent {
     public DefensiveBid getDefensiveBid(CountryAgent fortifyingAgent, Integer unitsLeft) {
     	DefensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
-    		double bidUtil = getVD(i);
+    		double bidUtil = getDefendseUtility(i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new DefensiveBid(this, fortifyingAgent, i, bidUtil);
     		}
@@ -194,7 +198,7 @@ public class CountryAgent {
     private OffensiveBid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal) {
     	OffensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
-    		double bidUtil = getPWD(goal, i);
+    		double bidUtil = getGoalUtility(goal, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new OffensiveBid(this, goal, i, bidUtil);
     		}
