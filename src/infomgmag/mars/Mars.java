@@ -155,15 +155,13 @@ public class Mars extends Player {
     private ReinforcementBid getBestBid(int units){
     	ReinforcementBid bestBid = null;
         for(CountryAgent ca : countryAgents){
-            if(ca.getTerritory().getOwner() == this && ca.getGoalList().size() > 0){
+            if(ca.getTerritory().getOwner() == this){
             	ReinforcementBid bid = ca.getBid(units, agentValues);
         		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
                     bestBid = bid;
                 }
             }
         }
-        if(bestBid instanceof OffensiveBid)
-        	bestBid.getReinforcedAgent().setFinalGoal(((OffensiveBid) bestBid).getGoal());
         return bestBid;
     }
 
@@ -178,7 +176,6 @@ public class Mars extends Player {
                 .stream()
                 .filter(ca -> ca.getTerritory().getOwner() == this)
                 .filter(ca -> ca.bordersEnemy())
-                .filter(ca -> ca.getFinalGoal() != null && !ca.getFinalGoal().isEmpty())
                 .filter(ca -> ca.getTerritory().getNUnits() > 1)
                 .map(ca -> ca.getAttackBid())
                 .sorted((x,y) -> x.getOdds() > y.getOdds() ? -1 : (x.getOdds() == y.getOdds() ? 0 : 1))

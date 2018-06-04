@@ -102,9 +102,6 @@ public class CountryAgent {
     public void addAdjacentAgent(CountryAgent ca) {
         this.adjacentAgents.add(ca);
     }
-    public ArrayList<CountryAgent> getAdjacentAgents() {
-        return adjacentAgents;
-    }
 
     private double getP(Integer i, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
         Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size() - 1;
@@ -203,21 +200,9 @@ public class CountryAgent {
     	}
     	return bestBid;
     }
-
-    public ArrayList<ArrayList<CountryAgent>> getGoalList() {
-        return goalList;
-    }
     
     public String toString() {
     	return territory.toString();
-    }
-
-    public void setFinalGoal(ArrayList<CountryAgent> finalGoal){
-        this.finalGoal = finalGoal;
-    }
-
-    public ArrayList<CountryAgent> getFinalGoal() {
-        return finalGoal;
     }
 
     public AttackBid getAttackBid() {
@@ -247,11 +232,6 @@ public class CountryAgent {
                 }
             }
         }
-    }
-
-    public void updateFinalGoal() {
-        if(finalGoal.isEmpty())
-            createGoals();
     }
 }
 
