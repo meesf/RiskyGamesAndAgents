@@ -182,6 +182,7 @@ public class Mars extends Player {
         while(true) {
         	for (CountryAgent ca : countryAgents) {
         		ca.clearlists();
+        		ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight);
         	}
         	for (CountryAgent sender: countryAgents) {
             	if(sender.getTerritory().getOwner() != this) {
