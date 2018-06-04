@@ -9,9 +9,10 @@ import java.util.HashMap;
 public class CountryAgent {
     private Territory territory;
     public ArrayList<CountryAgent> adjacentAgents;
-    private ArrayList<ArrayList<CountryAgent>> goalList;
-    private ArrayList<CountryAgent> finalGoal;
+    private ArrayList<Goal> goalList;
+    private Goal finalGoal;
     private Mars mars;
+    private double value;
 
     CountryAgent(Territory territory, Mars mars) {
         this.territory = territory;
@@ -24,7 +25,7 @@ public class CountryAgent {
         return territory;
     }
 
-    public Double calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight
+    public void calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight
         ,Double continentBorderWeight, Double ownWholeContinentWeight, Double enemyOwnsWholeContinentWeight, Double percentageOfContinentWeight) { //calculates value of owning a territory
 
         Double territoryvalue = 0.0;
@@ -36,12 +37,8 @@ public class CountryAgent {
         if (ownWholeContinent() == true){
             territoryvalue += 1;
         }
-        return territoryvalue;
+        this.value = territoryvalue;
         //TODO: Somehow, this value has to be linked to the amount of enemy troops on this territory, I tried Pairs but that didn't work great, maybe a list?
-    }
-
-    public void receivemessagefriendly(ArrayList<CountryAgent> countries){    //adds the route to the goallist when a friendly country is reached
-        goalList.add(countries);
     }
 
     public Integer friendlyNeighbours() //calculates how many friendly neighbouring territory border this territory
@@ -162,11 +159,8 @@ public class CountryAgent {
     public void addAdjacentAgent(CountryAgent ca) {
         this.adjacentAgents.add(ca);
     }
-    public ArrayList<CountryAgent> getAdjacentAgents() {
-        return adjacentAgents;
-    }
 
-    private double getP(Integer i, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    private double getGoalSuccessOdds(Integer i, Goal goal) {
         Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size() - 1;
         if(attackingUnits < 1) {
             return 0.0;
@@ -180,15 +174,19 @@ public class CountryAgent {
         return grid.chanceOfWin();
     }
 
-    private Double getW(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+    private Double getGoalValue(Goal goal) {
         double value = 0.0;
         for(CountryAgent ca : goal){
-            value += agentValues.get(ca);
+            value += ca.getValue();
         }
     	return value;
     }
-    
-    public Double getD(int units) {
+
+    private double getValue() {
+        return value;
+    }
+
+    public Double getDefenseOdds(int units) {
         int totalEnemyUnits = 0;
         for(Territory t : getTerritory().getAdjacentTerritories()){
             if(t.getOwner() != this.getTerritory().getOwner()){
@@ -198,65 +196,65 @@ public class CountryAgent {
         ProbabilityGrid grid = new ProbabilityGrid(units, totalEnemyUnits);
     	return grid.chanceOfWin();
     }
-    
-    private double getPWD(ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues, Integer i)  {
-    	double p = getP(i, goal, agentValues);
-    	double w = getW(goal, agentValues);
-    	double d = getD(i);
+
+    private double getGoalUtility(Goal goal, Integer i)  {
+    	double p = getGoalSuccessOdds(i, goal);
+    	double w = getGoalValue(goal);
+    	double d = getDefenseOdds(i);
     	if(i == 0) {
     		return p*w*d;
     	}
     	return (p*w*d)/i;
     }
-    
-    private Double getV(HashMap<CountryAgent, Double> agentValues) {
+
+    private Double getTerritoryValue(HashMap<CountryAgent, Double> agentValues) {
     	return agentValues.get(this);
     }
     
-    private double getVD(HashMap<CountryAgent, Double> agentValues, Integer i)  {
-    	double v = getV(agentValues);
-    	double d = getD(this.getTerritory().getNUnits() + i);
+    private double getDefendseUtility(Integer i) {
+    	double v = getValue();
+    	double d = getDefenseOdds(this.getTerritory().getNUnits() + i);
     	if(i == 0) {
     		return v*d;
     	}
     	return (v*d)/i;
     }
     
-    public ReinforcementBid getBid(Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
+    public ReinforcementBid getBid(Integer unitsLeft) {
     	ReinforcementBid bestBid = null;
-    	for(ArrayList<CountryAgent> goal : goalList) {
-    		OffensiveBid offBid = getOffensiveBid(unitsLeft, goal, agentValues);
+    	for(Goal goal : goalList) {
+    		OffensiveBid offBid = getOffensiveBid(unitsLeft, goal);
     		if(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {
     			bestBid = offBid;
     		}
     	}
     	if (bestBid == null) {
-    		this.finalGoal = new ArrayList<>();
+    		this.finalGoal = new Goal();
     	} else {
     		this.finalGoal = ((OffensiveBid)bestBid).getGoal();
     	}
-    	DefensiveBid defBid = getDefensiveBid(null, unitsLeft, agentValues);
+    	DefensiveBid defBid = getDefensiveBid(null, unitsLeft);
         if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
             bestBid = defBid;
         }
     	return bestBid;
     }
     
-    public DefensiveBid getDefensiveBid(CountryAgent fortifyingAgent, Integer unitsLeft, HashMap<CountryAgent, Double> agentValues) {
+    public DefensiveBid getDefensiveBid(CountryAgent fortifyingAgent, Integer unitsLeft) {
     	DefensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
-    		double bidUtil = getVD(agentValues, i);
+    		double bidUtil = getDefendseUtility(i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new DefensiveBid(this, fortifyingAgent, i, bidUtil);
     		}
     	}
     	return bestBid;
     }
-    
-    private OffensiveBid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal, HashMap<CountryAgent, Double> agentValues) {
+
+    private OffensiveBid getOffensiveBid(Integer unitsLeft, Goal goal) {
     	OffensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
-    		double bidUtil = getPWD(goal, agentValues, i);
+    		double bidUtil = getGoalUtility(goal, i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new OffensiveBid(this, goal, i, bidUtil);
     		}
@@ -264,20 +262,8 @@ public class CountryAgent {
     	return bestBid;
     }
 
-    public ArrayList<ArrayList<CountryAgent>> getGoalList() {
-        return goalList;
-    }
-    
     public String toString() {
     	return territory.toString();
-    }
-
-    public void setFinalGoal(ArrayList<CountryAgent> finalGoal){
-        this.finalGoal = finalGoal;
-    }
-
-    public ArrayList<CountryAgent> getFinalGoal() {
-        return finalGoal;
     }
 
     public AttackBid getAttackBid() {
@@ -286,13 +272,13 @@ public class CountryAgent {
     
     public void createGoals() {
         for (CountryAgent ca : adjacentAgents) {
-            ArrayList<CountryAgent> goal = new ArrayList<CountryAgent>();
-            goal.add(this);
+            Goal goal = new Goal();
+            goal.addEarlierGoal(this);
             ca.createGoals(goal);
         }
     }
     
-    public void createGoals(ArrayList<CountryAgent> goal) {
+    public void createGoals(Goal goal) {
         if(goal.size() >= Mars.goalLength)
             return;
 
@@ -301,17 +287,12 @@ public class CountryAgent {
         } else {
             for(CountryAgent ca : adjacentAgents) {
                 if (!goal.contains(ca)) {
-                    ArrayList<CountryAgent> newGoal = (ArrayList<CountryAgent>) goal.clone();
-                    newGoal.add(this);
+                    Goal newGoal = (Goal) goal.clone();
+                    newGoal.addEarlierGoal(this);
                     createGoals(newGoal);
                 }
             }
         }
-    }
-
-    public void updateFinalGoal() {
-        if(finalGoal.isEmpty())
-            createGoals();
     }
 }
 

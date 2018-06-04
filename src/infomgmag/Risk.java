@@ -37,6 +37,8 @@ public class Risk implements CombatInterface{
     private int turn = 0;
     private Integer nrOfStartingUnits;
     private boolean StopGame;
+    
+    private ArrayList<CombatEvent> combatLog;
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
@@ -78,6 +80,7 @@ public class Risk implements CombatInterface{
     public Risk() {
         visuals = new RiskVisual(this,visible);
         board = new Board();
+        combatLog = new ArrayList<>();
         defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
         initializePlayers(randomPlayers,marsPlayers);
@@ -165,7 +168,8 @@ public class Risk implements CombatInterface{
         combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getNUnits() - defenseLoss);
 
         // Update number of units on both territories and new owner
-        if (combatMove.getDefendingTerritory().getNUnits() == 0) {
+        boolean captured = combatMove.getDefendingTerritory().getNUnits() == 0;
+        if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);
             currentPlayer.movingInAfterInvasion(combatMove);
@@ -184,6 +188,18 @@ public class Risk implements CombatInterface{
                 defeatedPlayers.add(defender);
             }
         }
+
+        combatLog.add(new CombatEvent(
+                combatMove.getAttackingTerritory().getOwner(), 
+                combatMove.getDefendingTerritory().getOwner(), 
+                combatMove.getAttackingTerritory(), 
+                combatMove.getDefendingTerritory(), 
+                combatMove.getAttackingUnits(), 
+                combatMove.getDefendingUnits(), 
+                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
+                    (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
+                        CombatEvent.ONE_EACH), 
+                captured));
     }
 
     private Integer calculateReinforcements() {

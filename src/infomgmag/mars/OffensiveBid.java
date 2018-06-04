@@ -1,16 +1,14 @@
 package infomgmag.mars;
 
-import java.util.ArrayList;
-
 public class OffensiveBid extends ReinforcementBid {
-	private ArrayList<CountryAgent> goal;
+	private Goal goal;
 	
-	public OffensiveBid(CountryAgent reinforcedAgent, ArrayList<CountryAgent> goal, Integer units, double utility) {
+	public OffensiveBid(CountryAgent reinforcedAgent, Goal goal, Integer units, double utility) {
 		super(reinforcedAgent, null, units, utility);
 		this.goal = goal;
 	}
 	
-	public ArrayList<CountryAgent> getGoal() {
+	public Goal getGoal() {
 		return goal;
 	}
 }
