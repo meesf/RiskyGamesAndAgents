@@ -42,13 +42,14 @@ public class Mars extends Player {
             t.setTerritoryCountryAgent(ca);
         }
 
-        for (CountryAgent ca : countryAgents){
-            for (Territory t : risk.getBoard().getTerritories()){
-                if (ca.getTerritory().getAdjacentTerritories().contains(t) && ca.adjacentAgents.contains(t) != true){
-                    ca.adjacentAgents.add(countryAgentsByTerritory.get(t));
-                }
-            }
-        }
+        countryAgents
+            .stream()
+            .forEach(ca -> ca.getTerritory()
+                                .getAdjacentTerritories()
+                                .stream()
+                                .forEach(at -> countryAgentsByTerritory
+                                                .get(at)
+                                                .addAdjacentAgent(ca)));
     }
 
     @Override
