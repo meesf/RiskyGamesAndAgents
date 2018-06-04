@@ -3,6 +3,7 @@ package infomgmag.mars;
 import infomgmag.Territory;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 
 public class CountryAgent {
@@ -157,24 +158,15 @@ public class CountryAgent {
     	return (v*d)/i;
     }
     
-    public ReinforcementBid getBid(Integer unitsLeft) {
-    	ReinforcementBid bestBid = null;
+    public ArrayList<ReinforcementBid> getBids(Integer unitsLeft) {
+        ArrayList<ReinforcementBid> result = new ArrayList<>();
     	for(Goal goal : goalList) {
-    		OffensiveBid offBid = getOffensiveBid(unitsLeft, goal);
-    		if(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {
-    			bestBid = offBid;
-    		}
+    		result.addAll(getOffensiveBids(unitsLeft, goal));
     	}
-    	if (bestBid == null) {
-    		this.finalGoal = new Goal();
-    	} else {
-    		this.finalGoal = ((OffensiveBid)bestBid).getGoal();
-    	}
+    	
     	DefensiveBid defBid = getDefensiveBid(null, unitsLeft);
-        if(bestBid == null || defBid.getUtility() > bestBid.getUtility()) {
-            bestBid = defBid;
-        }
-    	return bestBid;
+    	result.add(defBid);
+    	return result;
     }
     
     public DefensiveBid getDefensiveBid(CountryAgent fortifyingAgent, Integer unitsLeft) {
@@ -188,15 +180,19 @@ public class CountryAgent {
     	return bestBid;
     }
 
-    private OffensiveBid getOffensiveBid(Integer unitsLeft, Goal goal) {
+    private ArrayList<OffensiveBid> getOffensiveBids(Integer unitsLeft, Goal goal) {
+        ArrayList<OffensiveBid> result = new ArrayList<>();
     	OffensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getGoalUtility(goal, i);
+    		OffensiveBid bid = new OffensiveBid(this, goal, i, bidUtil);
+    		result.add(bid);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
-    			bestBid = new OffensiveBid(this, goal, i, bidUtil);
+    			bestBid = bid;
     		}
     	}
-    	return bestBid;
+    	this.finalGoal = bestBid.getGoal();
+    	return result;
     }
 
     public String toString() {

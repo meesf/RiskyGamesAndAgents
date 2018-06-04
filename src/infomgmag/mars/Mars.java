@@ -137,24 +137,29 @@ public class Mars extends Player {
         }
 
         while(reinforcements > 0){
-            ReinforcementBid bid = getBestBid(getReinforcements());
+            ArrayList<ReinforcementBid> bids = new ArrayList<>();
+            for(CountryAgent ca : countryAgents){
+                if(ca.getTerritory().getOwner() == this){
+                    bids.addAll(ca.getBids(reinforcements));
+                }
+            }
+            
+            ReinforcementBid bid = bids.stream()
+                  .max((x,y) -> x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)).get(); 
+            if(bid.getUnits() == 0)
+                bid = bids.stream()
+                    .filter(x -> x.getUnits() > 0)
+                    .max((x,y) -> x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)).get(); 
+            
             board.addUnits(this, bid.getReinforcedAgent().getTerritory(), bid.getUnits());
             reinforcements -= bid.getUnits();
-            if(bid.getUnits() == 0)
-                break;
+            
         }
     }
 
     private ReinforcementBid getBestBid(int units){
     	ReinforcementBid bestBid = null;
-        for(CountryAgent ca : countryAgents){
-            if(ca.getTerritory().getOwner() == this){
-            	ReinforcementBid bid = ca.getBid(units);
-        		if(bestBid == null || bid.getUtility() > bestBid.getUtility()){
-                    bestBid = bid;
-                }
-            }
-        }
+        
         return bestBid;
     }
 
@@ -188,7 +193,7 @@ public class Mars extends Player {
             	}
             }
         	for (CountryAgent ca : countryAgents) {
-        		ca.getBid(0);
+        		ca.getBids(0);
         	}
             if (ci.getActivePlayerAmount() == 1) {
                 return;
