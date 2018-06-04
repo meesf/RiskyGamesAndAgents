@@ -8,8 +8,8 @@ import java.util.HashMap;
 public class CountryAgent {
     private Territory territory;
     public ArrayList<CountryAgent> adjacentAgents;
-    private ArrayList<ArrayList<CountryAgent>> goalList;
-    private ArrayList<CountryAgent> finalGoal;
+    private ArrayList<Goal> goalList;
+    private Goal finalGoal;
     private Mars mars;
     private double value;
 
@@ -26,10 +26,6 @@ public class CountryAgent {
 
     public void calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight) { //calculates value of owning a territory, TODO: the actual final calculation has more factors includings continents and such
         this.value = (((friendlyNeighbours() * friendliesweight) + (enemyNeighbours() * enemyweight) + (friendlyArmies() * farmiesweight) + (enemyArmies() * earmiesweight)));
-    }
-
-    public void receivemessagefriendly(ArrayList<CountryAgent> countries){    //adds the route to the goallist when a friendly country is reached
-        goalList.add(countries);
     }
 
     public Integer friendlyNeighbours() //calculates how many friendly neighbouring territory border this territory
@@ -101,7 +97,7 @@ public class CountryAgent {
         this.adjacentAgents.add(ca);
     }
 
-    private double getGoalSuccessOdds(Integer i, ArrayList<CountryAgent> goal) {
+    private double getGoalSuccessOdds(Integer i, Goal goal) {
         Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size() - 1;
         if(attackingUnits < 1) {
             return 0.0;
@@ -115,7 +111,7 @@ public class CountryAgent {
         return grid.chanceOfWin();
     }
 
-    private Double getGoalValue(ArrayList<CountryAgent> goal) {
+    private Double getGoalValue(Goal goal) {
         double value = 0.0;
         for(CountryAgent ca : goal){
             value += ca.getValue();
@@ -138,7 +134,7 @@ public class CountryAgent {
     	return grid.chanceOfWin();
     }
 
-    private double getGoalUtility(ArrayList<CountryAgent> goal, Integer i)  {
+    private double getGoalUtility(Goal goal, Integer i)  {
     	double p = getGoalSuccessOdds(i, goal);
     	double w = getGoalValue(goal);
     	double d = getDefenseOdds(i);
@@ -163,14 +159,14 @@ public class CountryAgent {
     
     public ReinforcementBid getBid(Integer unitsLeft) {
     	ReinforcementBid bestBid = null;
-    	for(ArrayList<CountryAgent> goal : goalList) {
+    	for(Goal goal : goalList) {
     		OffensiveBid offBid = getOffensiveBid(unitsLeft, goal);
     		if(bestBid == null || offBid.getUtility() > bestBid.getUtility()) {
     			bestBid = offBid;
     		}
     	}
     	if (bestBid == null) {
-    		this.finalGoal = new ArrayList<>();
+    		this.finalGoal = new Goal();
     	} else {
     		this.finalGoal = ((OffensiveBid)bestBid).getGoal();
     	}
@@ -191,8 +187,8 @@ public class CountryAgent {
     	}
     	return bestBid;
     }
-    
-    private OffensiveBid getOffensiveBid(Integer unitsLeft, ArrayList<CountryAgent> goal) {
+
+    private OffensiveBid getOffensiveBid(Integer unitsLeft, Goal goal) {
     	OffensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
     		double bidUtil = getGoalUtility(goal, i);
@@ -202,7 +198,7 @@ public class CountryAgent {
     	}
     	return bestBid;
     }
-    
+
     public String toString() {
     	return territory.toString();
     }
@@ -213,13 +209,13 @@ public class CountryAgent {
     
     public void createGoals() {
         for (CountryAgent ca : adjacentAgents) {
-            ArrayList<CountryAgent> goal = new ArrayList<CountryAgent>();
-            goal.add(this);
+            Goal goal = new Goal();
+            goal.addEarlierGoal(this);
             ca.createGoals(goal);
         }
     }
     
-    public void createGoals(ArrayList<CountryAgent> goal) {
+    public void createGoals(Goal goal) {
         if(goal.size() >= Mars.goalLength)
             return;
 
@@ -228,8 +224,8 @@ public class CountryAgent {
         } else {
             for(CountryAgent ca : adjacentAgents) {
                 if (!goal.contains(ca)) {
-                    ArrayList<CountryAgent> newGoal = (ArrayList<CountryAgent>) goal.clone();
-                    newGoal.add(this);
+                    Goal newGoal = (Goal) goal.clone();
+                    newGoal.addEarlierGoal(this);
                     createGoals(newGoal);
                 }
             }
