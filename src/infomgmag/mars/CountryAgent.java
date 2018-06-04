@@ -28,14 +28,8 @@ public class CountryAgent {
         ,Double continentBorderWeight, Double ownWholeContinentWeight, Double enemyOwnsWholeContinentWeight, Double percentageOfContinentWeight) { //calculates value of owning a territory
 
         Double territoryvalue = 0.0;
-        int x = 0;
-        int y = 0;
-        if (ownWholeContinent() == true) {
-            x = 1;
-        }
-        if (enemyOwnsAnEntireContinent() == true){
-            y = 1;
-        }
+        int x = ownWholeContinent() ? 1 : 0;
+        int y = enemyOwnsAnEntireContinent() ? 1 : 0;
 
         territoryvalue = (((friendlyNeighbours() * friendliesweight) + (enemyNeighbours() * enemyweight) + (friendlyArmies() * farmiesweight) + (enemyArmies() * earmiesweight)
                 + (numberOfContinentsBordered() * continentBorderWeight) + (x * ownWholeContinentWeight) + (y * enemyOwnsWholeContinentWeight) + (percentageOfContinentOwned() * percentageOfContinentWeight)));
