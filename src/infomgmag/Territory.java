@@ -18,6 +18,7 @@ public class Territory {
     private String name;
     private Continent belongsTo;
     private CountryAgent territoryCountryAgent;
+    private int nrOfContinentsBordered;
 
     public double x, y;
 
@@ -29,12 +30,17 @@ public class Territory {
         this.adjacentTerritories = new ArrayList<>();
     }
 
+
     public void setOwner(Player newOwner) {
 
         if (this.owner != null)
             this.owner.removeTerritory(this);
         newOwner.addTerritory(this);
         this.owner = newOwner;
+    }
+
+    public void setNrOfContinentsBordered(int nr){
+        this.nrOfContinentsBordered = nr;
     }
 
     public void setUnits(int units) {

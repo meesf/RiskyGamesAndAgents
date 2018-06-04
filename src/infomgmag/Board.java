@@ -212,6 +212,19 @@ public class Board {
         for (Continent continent : continents)
             for (Territory territory : continent.getTerritories())
                 territories.add(territory);
+
+        setNrOfContinentsBorderedToTerritory();
+
+
+    }
+
+    private void setNrOfContinentsBorderedToTerritory(){
+        for (Continent continent : continents)
+            for (Territory territory : continent.getTerritories()){
+                int nr = territory.getAdjacentTerritories().stream().map(x -> x.getBelongsTo()).distinct().toArray().length;
+                System.out.println(territory.getName() + " has " + nr + " bordered continents");
+                territory.setNrOfContinentsBordered(nr);
+            }
     }
 
     private void makeEdge(Territory t, Territory s) {
