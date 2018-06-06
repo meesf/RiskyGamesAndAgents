@@ -39,8 +39,8 @@ public class Territory {
         this.owner = newOwner;
     }
 
-    public void setNrOfContinentsBordered(int nr){
-        this.nrOfContinentsBordered = nr;
+    public void setNrOfContinentsBordered(long nr){
+        this.nrOfContinentsBordered = (int)nr;
     }
 
     public void setUnits(int units) {
