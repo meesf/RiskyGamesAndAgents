@@ -21,8 +21,6 @@ public class Mars extends Player {
     private HashMap<Territory,CountryAgent> countryAgentsByTerritory;
     private Personality personality;
 
-
-
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color, Personality personality) {
         super(objective, reinforcements, name, color);
 
@@ -60,7 +58,7 @@ public class Mars extends Player {
     	}
     	return agents;
     }
-    
+
     private ArrayList<ArrayList<CountryAgent>> getClusters() {
     	ArrayList<ArrayList<CountryAgent>> clusters = new ArrayList<ArrayList<CountryAgent>>();
     	for(Territory t : territories) {
@@ -113,6 +111,7 @@ public class Mars extends Player {
 
     @Override
     public void movingInAfterInvasion(CombatMove combatMove) {
+        setHasConqueredTerritoryInTurn(true);
         int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
         combatMove.getDefendingTerritory().setUnits(transferredunits);
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
