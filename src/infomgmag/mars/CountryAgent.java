@@ -1,5 +1,6 @@
 package infomgmag.mars;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import infomgmag.Continent;
 import infomgmag.Territory;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class CountryAgent {
     }
 
     public void calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight
-        ,Double continentBorderWeight, Double ownWholeContinentWeight, Double enemyOwnsWholeContinentWeight, Double percentageOfContinentWeight) { //calculates value of owning a territory
+        , Double continentBorderWeight, Double ownWholeContinentWeight, Double enemyOwnsWholeContinentWeight, Double percentageOfContinentWeight, Double firstTerritoryWeight) { //calculates value of owning a territory
 
         this.value =
                 friendlyNeighbours() * friendliesweight +
@@ -38,7 +39,8 @@ public class CountryAgent {
                 (ownWholeContinent() ? 1 : 0) * ownWholeContinentWeight +
                 (enemyOwnsAnEntireContinent() ? 1 : 0) * enemyOwnsWholeContinentWeight +
                 percentageOfContinentOwned() * percentageOfContinentWeight +
-                (ownWholeContinent() ? 1 : 0);
+                (ownWholeContinent() ? 1 : 0) +
+                (this.mars.hasConqueredTerritoryInTurn() ? 1 : 0) * firstTerritoryWeight;
 
         //TODO: Somehow, this value has to be linked to the amount of enemy troops on this territory, I tried Pairs but that didn't work great, maybe a list?
     }

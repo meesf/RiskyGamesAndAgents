@@ -92,6 +92,7 @@ public class Risk implements CombatInterface{
     public void run() {
         while (!finished()) {
             visuals.update();
+            currentPlayer.setHasConqueredTerritoryInTurn(false);
             Integer nrOfReinforcements = calculateReinforcements();
             currentPlayer.setReinforcements(nrOfReinforcements);
             currentPlayer.turnInCards(board);

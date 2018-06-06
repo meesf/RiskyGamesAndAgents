@@ -28,10 +28,12 @@ public class Mars extends Player {
     private Double ownWholeContinentWeight = 20.0;
     private Double enemyOwnsWholeContinentWeight = 4.0;
     private Double percentageOfContinentWeight = 5.0;
+    private Double firstTerritoryWeight = 15.0;
 
     public static final Integer goalLength = 4;
     
     public static final Double WIN_PERCENTAGE = 0.6;
+
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
         super(objective, reinforcements, name, color);
@@ -69,7 +71,7 @@ public class Mars extends Player {
     	}
     	return agents;
     }
-    
+
     private ArrayList<ArrayList<CountryAgent>> getClusters() {
     	ArrayList<ArrayList<CountryAgent>> clusters = new ArrayList<ArrayList<CountryAgent>>();
     	for(Territory t : territories) {
@@ -122,6 +124,7 @@ public class Mars extends Player {
 
     @Override
     public void movingInAfterInvasion(CombatMove combatMove) {
+        setHasConqueredTerritoryInTurn(true);
         int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
         combatMove.getDefendingTerritory().setUnits(transferredunits);
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
@@ -131,7 +134,16 @@ public class Mars extends Player {
     public void placeReinforcements(Board board) {
         for (CountryAgent ca: countryAgents){
             ca.clearlists();
-            ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight, continentBorderWeight, ownWholeContinentWeight, enemyOwnsWholeContinentWeight, percentageOfContinentWeight);
+            ca.calculateOwnershipValue(
+                    friendliesweight,
+                    enemiesweight,
+                    farmiesweight,
+                    earmiesweight,
+                    continentBorderWeight,
+                    ownWholeContinentWeight,
+                    enemyOwnsWholeContinentWeight,
+                    percentageOfContinentWeight,
+                    firstTerritoryWeight);
         }
 
         for (CountryAgent sender: countryAgents) {
@@ -189,8 +201,7 @@ public class Mars extends Player {
         while(true) {
         	for (CountryAgent ca : countryAgents) {
         		ca.clearlists();
-        		ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight, continentBorderWeight, ownWholeContinentWeight, enemyOwnsWholeContinentWeight, percentageOfContinentWeight);
-        	}
+        		ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight, continentBorderWeight, ownWholeContinentWeight, enemyOwnsWholeContinentWeight, percentageOfContinentWeight, firstTerritoryWeight);        	}
         	for (CountryAgent sender: countryAgents) {
             	if(sender.getTerritory().getOwner() != this) {
     	            sender.createGoals();
