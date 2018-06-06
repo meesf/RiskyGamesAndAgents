@@ -13,7 +13,6 @@ public class CountryAgent {
     private Territory territory;
     public ArrayList<CountryAgent> adjacentAgents;
     private ArrayList<Goal> goalList;
-    private Goal finalGoal;
     private Mars mars;
     private double value;
 
@@ -238,16 +237,11 @@ public class CountryAgent {
                 bestBid = bid;
             }
         }
-        this.finalGoal = bestBid.getGoal();
         return result;
     }
 
     public String toString() {
         return territory.toString();
-    }
-
-    public AttackBid getAttackBid() {
-        return new AttackBid(territory, finalGoal.get(finalGoal.size() - 1).getTerritory());
     }
 
     public void createGoals() {
