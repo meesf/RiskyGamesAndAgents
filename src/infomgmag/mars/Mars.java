@@ -173,24 +173,23 @@ public class Mars extends Player {
                     sender.createGoals();
                 }
             }
+            countryAgents.stream().forEach(x -> x.getBids(0));
 
-            Optional<AttackBid> ab = countryAgents.stream()
+            Optional<OffensiveBid> ob = countryAgents.stream()
                     // Need to own territory, border an enemy, and have units to attack with
                     .filter(ca -> ca.getTerritory().getOwner() == this).filter(ca -> ca.bordersEnemy())
                     .filter(ca -> ca.getTerritory().getNUnits() > 1)
                     // Collect all offensive bids
                     .map(ca -> ca.getBestBid(0)).filter(x -> x instanceof OffensiveBid).map(x -> (OffensiveBid) x)
-                    // Create attackbids and filter out the ones that are too bad
-                    .map(ob -> new AttackBid(ob.getReinforcedAgent().getTerritory(),
-                            ob.getGoal().getFirstGoal().getTerritory()))
-                    .max((x, y) -> x.getOdds() > y.getOdds() ? -1 : (x.getOdds() == y.getOdds() ? 0 : 1));
-
-            if (!ab.isPresent())
+                    // Create attackbids from the best
+                    .max((x, y) -> x.getUtility() > y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1));
+            
+            if (!ob.isPresent())
                 return;
-            if (ab.isPresent() && ab.get().getOdds() >= personality.getWIN_PERCENTAGE()) {
-                ci.performCombatMove(ab.get().toCombatMove());
-            } else
-                return;
+            
+            AttackBid ab = new AttackBid(ob.get().getReinforcedAgent().getTerritory(),
+                            ob.get().getGoal().getFirstGoal().getTerritory());
+            ci.performCombatMove(ab.toCombatMove());
         }
     }
 
