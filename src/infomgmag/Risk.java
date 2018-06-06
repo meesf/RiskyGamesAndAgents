@@ -42,7 +42,7 @@ public class Risk implements CombatInterface{
     private ArrayList<CombatEvent> combatLog;
 
     public static void main(String[] args) {
-        random = new Random(0);
+        random = new Random(System.currentTimeMillis());
         createDiceOdds();
         Risk risk = new Risk();
         risk.run(); //this makes the game run
@@ -271,7 +271,7 @@ public class Risk implements CombatInterface{
 	        }
 	        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Personality personality = new Personality(
-                    0.0,
+                    3.5,
                     170.0,
                     1.2,
                     -0.3,

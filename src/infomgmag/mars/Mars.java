@@ -185,23 +185,9 @@ public class Mars extends Player {
                     // Create attackbids from the best
                     .max((x, y) -> x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1));
             
-            System.out.println("----");
-            
-            countryAgents.stream()
-            // Need to own territory, border an enemy, and have units to attack with
-            .filter(ca -> ca.getTerritory().getOwner() == this).filter(ca -> ca.bordersEnemy())
-            .filter(ca -> ca.getTerritory().getNUnits() > 1)
-            // Collect all offensive bids
-            .map(ca -> ca.getBestBid(0)).filter(x -> x instanceof OffensiveBid).map(x -> (OffensiveBid) x)
-            .forEach(x -> System.out.println("Bid with utility " + x .getUtility() + " to do " + x.getReinforcedAgent().getTerritory() + " --> " + x.getGoal().getFirstGoal()));
-            
-            
             if (!ob.isPresent())
                 return;
-            
-            System.out.println("Chose " + ob.get().getReinforcedAgent().getTerritory() + " --> " + ob.get().getGoal().getFirstGoal());
-            
-            
+  
             AttackBid ab = new AttackBid(ob.get().getReinforcedAgent().getTerritory(),
                             ob.get().getGoal().getFirstGoal().getTerritory());
             ci.performCombatMove(ab.toCombatMove());

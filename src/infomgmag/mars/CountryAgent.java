@@ -34,7 +34,7 @@ public class CountryAgent {
                 (friendlyNeighbours() * personality.getFriendliesweight() +
                  enemyNeighbours() * personality.getEnemiesweight() +
                  friendlyArmies() * personality.getFriendliesweight() +
-                 enemyArmies() * personality.getEnemiesweight() +
+                 enemyArmies() * personality.getEarmiesweight() +
                  territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
                  (ownWholeContinent() ? 1 : 0) * personality.getOwnWholeContinentWeight() +
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
