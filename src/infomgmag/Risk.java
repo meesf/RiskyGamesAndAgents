@@ -1,6 +1,7 @@
 package infomgmag;
 
 import infomgmag.mars.Mars;
+import infomgmag.mars.Personality;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -268,7 +269,18 @@ public class Risk implements CombatInterface{
 	                    Risk.random.nextFloat() * 0.8f + 0.2f);
 	        }
 	        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-	        Mars player = new Mars(this, objective, 0, "Player " + i + " (MARS)",color);
+            Personality personality = new Personality(
+                    1.2,
+                    -0.3,
+                    0.05,
+                    -0.03,
+                    0.5,
+                    20.0,
+                    4.0,
+                    5.0,
+                    4,
+                    0.6);
+	        Mars player = new Mars(this, objective, 0, "Player " + i + " (MARS)",color, personality);
 	        activePlayers.add(player);
         }
     }

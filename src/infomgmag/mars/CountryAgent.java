@@ -26,18 +26,17 @@ public class CountryAgent {
         return territory;
     }
 
-    public void calculateOwnershipValue(Double friendliesweight, Double enemyweight, Double farmiesweight, Double earmiesweight
-        ,Double continentBorderWeight, Double ownWholeContinentWeight, Double enemyOwnsWholeContinentWeight, Double percentageOfContinentWeight) { //calculates value of owning a territory
+    public void calculateOwnershipValue(Personality personality) { //calculates value of owning a territory
 
         this.value =
-                friendlyNeighbours() * friendliesweight +
-                enemyNeighbours() * enemyweight +
-                friendlyArmies() * farmiesweight +
-                enemyArmies() * earmiesweight +
-                territory.getContinentsBorderedAmount() * continentBorderWeight +
-                (ownWholeContinent() ? 1 : 0) * ownWholeContinentWeight +
-                (enemyOwnsAnEntireContinent() ? 1 : 0) * enemyOwnsWholeContinentWeight +
-                percentageOfContinentOwned() * percentageOfContinentWeight +
+                friendlyNeighbours() * personality.getFriendliesweight() +
+                enemyNeighbours() * personality.getEnemiesweight() +
+                friendlyArmies() * personality.getFriendliesweight() +
+                enemyArmies() * personality.getEnemiesweight() +
+                territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
+                (ownWholeContinent() ? 1 : 0) * personality.getOwnWholeContinentWeight() +
+                (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
+                percentageOfContinentOwned() * personality.getPercentageOfContinentWeight() +
                 (ownWholeContinent() ? 1 : 0);
 
         //TODO: Somehow, this value has to be linked to the amount of enemy troops on this territory, I tried Pairs but that didn't work great, maybe a list?
@@ -240,7 +239,7 @@ public class CountryAgent {
     }
     
     public void createGoals(Goal goal) {
-        if(goal.size() >= Mars.goalLength)
+        if(goal.size() >= this.mars.getPersonality().getGoalLength())
             return;
 
         if(territory.getOwner() == mars) {
