@@ -271,6 +271,8 @@ public class Risk implements CombatInterface{
 	        }
 	        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Personality personality = new Personality(
+                    3.5,
+                    170.0,
                     1.2,
                     -0.3,
                     0.05,

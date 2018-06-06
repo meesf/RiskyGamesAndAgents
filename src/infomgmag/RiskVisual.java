@@ -162,7 +162,7 @@ public class RiskVisual extends JFrame {
 
     long targetFrameDuration = 25;
     long frameDuration = 1000;
-    long lastFrameTime;
+    long lastFrameTime = targetFrameDuration;
 
     public void drawBuffer() {
         frameDuration = System.currentTimeMillis() - lastFrameTime;
