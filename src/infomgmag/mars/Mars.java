@@ -153,12 +153,6 @@ public class Mars extends Player {
         return Math.min(2, combatMove.getDefendingTerritory().getNUnits());
     }
 
-    private Optional<AttackBid> bestAttackBid() {
-        return countryAgents.stream().filter(ca -> ca.getTerritory().getOwner() == this).filter(ca -> ca.bordersEnemy())
-                .filter(ca -> ca.getTerritory().getNUnits() > 1).map(ca -> ca.getAttackBid())
-                .sorted((x, y) -> x.getOdds() > y.getOdds() ? -1 : (x.getOdds() == y.getOdds() ? 0 : 1)).findFirst();
-    }
-
     @Override
     public void attackPhase(CombatInterface ci) {
         while (true) {
@@ -174,7 +168,6 @@ public class Mars extends Player {
                     sender.createGoals();
                 }
             }
-            countryAgents.stream().forEach(x -> x.getBids(0));
 
             Optional<OffensiveBid> ob = countryAgents.stream()
                     // Need to own territory, border an enemy, and have units to attack with
