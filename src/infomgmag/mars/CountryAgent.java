@@ -246,10 +246,6 @@ public class CountryAgent {
         return territory.toString();
     }
 
-    public AttackBid getAttackBid() {
-        return new AttackBid(territory, finalGoal.get(finalGoal.size() - 1).getTerritory());
-    }
-
     public void createGoals() {
         for (CountryAgent ca : adjacentAgents) {
             Goal goal = new Goal();

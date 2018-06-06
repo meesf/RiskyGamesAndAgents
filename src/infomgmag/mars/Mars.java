@@ -153,12 +153,6 @@ public class Mars extends Player {
         return Math.min(2, combatMove.getDefendingTerritory().getNUnits());
     }
 
-    private Optional<AttackBid> bestAttackBid() {
-        return countryAgents.stream().filter(ca -> ca.getTerritory().getOwner() == this).filter(ca -> ca.bordersEnemy())
-                .filter(ca -> ca.getTerritory().getNUnits() > 1).map(ca -> ca.getAttackBid())
-                .sorted((x, y) -> x.getOdds() > y.getOdds() ? -1 : (x.getOdds() == y.getOdds() ? 0 : 1)).findFirst();
-    }
-
     @Override
     public void attackPhase(CombatInterface ci) {
         while (true) {
@@ -187,10 +181,12 @@ public class Mars extends Player {
             
             if (!ob.isPresent())
                 return;
-  
-            AttackBid ab = new AttackBid(ob.get().getReinforcedAgent().getTerritory(),
-                            ob.get().getGoal().getFirstGoal().getTerritory());
-            ci.performCombatMove(ab.toCombatMove());
+
+            CombatMove cm = new CombatMove();
+            cm.setAttackingTerritory(ob.get().reinforcedAgent.getTerritory());
+            cm.setDefendingTerritory(ob.get().getGoal().getFirstGoal().getTerritory());
+            cm.setAttackingUnits(ob.get().reinforcedAgent.getTerritory().getNUnits());
+            ci.performCombatMove(cm);
         }
     }
 
