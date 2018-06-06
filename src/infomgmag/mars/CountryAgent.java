@@ -99,22 +99,22 @@ public class CountryAgent {
     }
 
     public boolean ownWholeContinent(){     //checks if the agents owns the whole continent except this territory
-        return territory.getBelongsTo().getTerritories().stream().allMatch(x -> x.getOwner() == this.mars);
+        return territory.getContinent().getTerritories().stream().allMatch(x -> x.getOwner() == this.mars);
     }
 
     public boolean enemyOwnsAnEntireContinent(){
-        return  territory.getBelongsTo().getTerritories().stream().allMatch(x -> x.getOwner() == territory.getOwner()) && territory.getOwner() != this.mars;
+        return  territory.getContinent().getTerritories().stream().allMatch(x -> x.getOwner() == territory.getOwner()) && territory.getOwner() != this.mars;
     }
 
     public double percentageOfContinentOwned() {        //checks the percentage of continent owned
         double percentageofcontinent = 0;
         double territoriesOwned = 0;
-        for (Territory ter: territory.getBelongsTo().getTerritories()){
+        for (Territory ter: territory.getContinent().getTerritories()){
             if (ter.getOwner() == territory.getOwner()){
                 territoriesOwned += 1;
             }
         }
-        percentageofcontinent = territoriesOwned / territory.getBelongsTo().getTerritories().size();
+        percentageofcontinent = territoriesOwned / territory.getContinent().getTerritories().size();
         return percentageofcontinent;
     }
 
@@ -177,7 +177,7 @@ public class CountryAgent {
     	return agentValues.get(this);
     }
     
-    private double getDefendseUtility(Integer i) {
+    private double getDefenseUtility(Integer i) {
     	double v = getValue();
     	double d = getDefenseOdds(this.getTerritory().getNUnits() + i);
     	if(i == 0) {
@@ -200,7 +200,7 @@ public class CountryAgent {
     public DefensiveBid getDefensiveBid(CountryAgent fortifyingAgent, Integer unitsLeft) {
     	DefensiveBid bestBid = null;
     	for(int i=0; i<=unitsLeft; i++) {
-    		double bidUtil = getDefendseUtility(i);
+    		double bidUtil = getDefenseUtility(i);
     		if(bestBid == null || bidUtil > bestBid.getUtility()) {
     			bestBid = new DefensiveBid(this, fortifyingAgent, i, bidUtil);
     		}

@@ -16,7 +16,7 @@ public class Territory {
     private Integer nUnits;
     private ArrayList<Territory> adjacentTerritories;
     private String name;
-    private Continent belongsTo;
+    private Continent continent;
     private CountryAgent territoryCountryAgent;
     private int continentsBorderedAmount;
 
@@ -67,12 +67,12 @@ public class Territory {
         return adjacentTerritories;
     }
 
-    public void setBelongsTo(Continent co) {
-        this.belongsTo = co;
+    public void setContinent(Continent co) {
+        this.continent = co;
     }
 
-    public Continent getBelongsTo() {
-        return belongsTo;
+    public Continent getContinent() {
+        return continent;
     }
 
     public void setTerritoryCountryAgent(CountryAgent countryAgent){
