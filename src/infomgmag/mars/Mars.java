@@ -19,26 +19,17 @@ public class Mars extends Player {
     private CardAgent cardAgent;
     private List<CountryAgent> countryAgents;
     private HashMap<Territory,CountryAgent> countryAgentsByTerritory;
+    private Personality personality;
 
-    private Double friendliesweight = 1.2;      //parameters used in calculation of territory value
-    private Double enemiesweight = -0.3;
-    private Double farmiesweight = 0.05;
-    private Double earmiesweight = -0.03;
-    private Double continentBorderWeight = 0.5;
-    private Double ownWholeContinentWeight = 20.0;
-    private Double enemyOwnsWholeContinentWeight = 4.0;
-    private Double percentageOfContinentWeight = 5.0;
 
-    public static final Integer goalLength = 4;
-    
-    public static final Double WIN_PERCENTAGE = 0.6;
 
-    public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color) {
+    public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color, Personality personality) {
         super(objective, reinforcements, name, color);
 
         cardAgent = new CardAgent(hand);
         countryAgents = new ArrayList<>();
         countryAgentsByTerritory = new HashMap<Territory, CountryAgent>();
+        this.personality = personality;
 
         for (Territory t : risk.getBoard().getTerritories()) {
             CountryAgent ca = new CountryAgent(t,this);
@@ -98,7 +89,7 @@ public class Mars extends Player {
     			int bestI = 0;
     			for(int i = a.getTerritory().getNUnits()-1; i > 0; i--) {
     				double d = a.getDefenseOdds(i);
-    				if(d > WIN_PERCENTAGE) {
+    				if(d > personality.getWIN_PERCENTAGE()) {
     					bestI = i;
     				}
     			}
@@ -131,7 +122,7 @@ public class Mars extends Player {
     public void placeReinforcements(Board board) {
         for (CountryAgent ca: countryAgents){
             ca.clearlists();
-            ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight, continentBorderWeight, ownWholeContinentWeight, enemyOwnsWholeContinentWeight, percentageOfContinentWeight);
+            ca.calculateOwnershipValue(personality);
         }
 
         for (CountryAgent sender: countryAgents) {
@@ -189,7 +180,7 @@ public class Mars extends Player {
         while(true) {
         	for (CountryAgent ca : countryAgents) {
         		ca.clearlists();
-        		ca.calculateOwnershipValue(friendliesweight, enemiesweight, farmiesweight, earmiesweight, continentBorderWeight, ownWholeContinentWeight, enemyOwnsWholeContinentWeight, percentageOfContinentWeight);
+        		ca.calculateOwnershipValue(personality);
         	}
         	for (CountryAgent sender: countryAgents) {
             	if(sender.getTerritory().getOwner() != this) {
@@ -203,10 +194,14 @@ public class Mars extends Player {
                 return;
             }
             Optional<AttackBid> ab = bestAttackBid();
-            if (ab.isPresent() && ab.get().getOdds() >= WIN_PERCENTAGE) {
+            if (ab.isPresent() && ab.get().getOdds() >= personality.getWIN_PERCENTAGE()) {
                 ci.performCombatMove(ab.get().toCombatMove());
             } else
                 return;
         }
+    }
+
+    public Personality getPersonality() {
+        return personality;
     }
 }
