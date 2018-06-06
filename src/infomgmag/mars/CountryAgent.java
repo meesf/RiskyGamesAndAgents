@@ -226,6 +226,13 @@ public class CountryAgent {
         }
         return bestBid;
     }
+    
+    public ReinforcementBid getBestMaxBid(Integer unitsLeft) {
+        return this.getBids(unitsLeft).stream()
+                .filter(x -> x.getUnits() == unitsLeft)
+                .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
+                .get();
+    }
 
     private ArrayList<OffensiveBid> getOffensiveBids(Integer unitsLeft, Goal goal) {
         ArrayList<OffensiveBid> result = new ArrayList<>();

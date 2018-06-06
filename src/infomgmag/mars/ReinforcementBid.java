@@ -27,4 +27,8 @@ public abstract class ReinforcementBid {
     public CountryAgent getFortifyingAgent() {
         return fortifyingAgent;
     }
+    
+    public void setFortifyingAgent(CountryAgent ca)  {
+        this.fortifyingAgent = ca;
+    }
 }

@@ -73,7 +73,7 @@ public class Mars extends Player {
     @Override
     public void fortifyTerritory(Board board) { // only uses the 'best' country right now
         ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
-        DefensiveBid bestBid = null;
+        ReinforcementBid bestBid = null;
         for (ArrayList<CountryAgent> cluster : clusters) {
             HashMap<CountryAgent, Integer> sellers = new HashMap<CountryAgent, Integer>();
 
@@ -90,14 +90,18 @@ public class Mars extends Player {
                 }
             }
             for (CountryAgent a : cluster) {
-                for (CountryAgent seller : sellers.keySet()) {
-                    DefensiveBid bid = a.getDefensiveBid(seller, a.getTerritory().getNUnits() + sellers.get(seller));
-                    if (bestBid == null || bestBid.getUtility() < bid.getUtility())
-                        bestBid = bid;
+                if (a.bordersEnemy() && a.getTerritory().getOwner() == this)
+                    for (CountryAgent seller : sellers.keySet()) {
+                        ReinforcementBid bid = a.getBestMaxBid(sellers.get(seller));
+                        if (bestBid == null || bestBid.getUtility() < bid.getUtility()) {
+                            bestBid = bid;
+                            bestBid.setFortifyingAgent(seller);
+                        }
                 }
             }
         }
-
+        
+        
         if (bestBid != null) {
             board.moveUnits(bestBid.getFortifyingAgent().getTerritory(), bestBid.getReinforcedAgent().getTerritory(),
                     bestBid.getUnits());
