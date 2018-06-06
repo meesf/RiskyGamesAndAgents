@@ -46,6 +46,6 @@ public class Continent {
 
     public void addTerritory(Territory ter) {
         territories.add(ter);
-        ter.setBelongsTo(this);
+        ter.setContinent(this);
     }
 }
