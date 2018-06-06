@@ -208,6 +208,10 @@ public class CountryAgent {
     }
 
     public ReinforcementBid getBestBid(Integer unitsLeft) {
+            ReinforcementBid bestBid = getBids(unitsLeft).stream()
+            .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
+            .get();
+            
         return getBids(unitsLeft).stream()
                 .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
                 .get();

@@ -160,9 +160,9 @@ public class RiskVisual extends JFrame {
             g.drawImage(map, 0, 0, gameWidth, gameHeight, null);
     }
 
-    long targetFrameDuration = 25;
+    long targetFrameDuration = 100;
     long frameDuration = 1000;
-    long lastFrameTime;
+    long lastFrameTime = targetFrameDuration;
 
     public void drawBuffer() {
         frameDuration = System.currentTimeMillis() - lastFrameTime;
