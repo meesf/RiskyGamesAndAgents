@@ -221,7 +221,7 @@ public class Board {
     private void setNrOfContinentsBorderedToTerritory(){
         for (Continent continent : continents)
             for (Territory territory : continent.getTerritories()){
-                long nr = territory.getAdjacentTerritories().stream().map(x -> x.getBelongsTo()).distinct().count();
+                long nr = territory.getAdjacentTerritories().stream().map(x -> x.getContinent()).distinct().count();
                 System.out.println(territory.getName() + " has " + nr + " bordered continents");
                 territory.setNrOfContinentsBordered(nr);
             }
