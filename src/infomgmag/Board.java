@@ -222,7 +222,7 @@ public class Board {
         for (Continent continent : continents)
             for (Territory territory : continent.getTerritories()){
                 long nr = territory.getAdjacentTerritories().stream().map(x -> x.getContinent()).distinct().count();
-                territory.setNrOfContinentsBordered(nr);
+                territory.setContinentsBorderedAmount(nr);
             }
     }
 

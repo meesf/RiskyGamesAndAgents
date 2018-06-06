@@ -34,7 +34,7 @@ public class CountryAgent {
                 enemyNeighbours() * enemyweight +
                 friendlyArmies() * farmiesweight +
                 enemyArmies() * earmiesweight +
-                numberOfContinentsBordered() * continentBorderWeight +
+                territory.getContinentsBorderedAmount() * continentBorderWeight +
                 (ownWholeContinent() ? 1 : 0) * ownWholeContinentWeight +
                 (enemyOwnsAnEntireContinent() ? 1 : 0) * enemyOwnsWholeContinentWeight +
                 percentageOfContinentOwned() * percentageOfContinentWeight +
@@ -104,20 +104,6 @@ public class CountryAgent {
 
     public boolean enemyOwnsAnEntireContinent(){
         return  territory.getContinent().getTerritories().stream().allMatch(x -> x.getOwner() == territory.getOwner()) && territory.getOwner() != this.mars;
-    }
-
-    public int numberOfContinentsBordered(){       //checks the amount of continents bordered that are not the territories 'home' continent
-        int continentsBordered = 0;
-        ArrayList<Continent> adjacentContinents = new ArrayList<>();
-        adjacentContinents.add(territory.getContinent());
-        for (Territory ter: territory.getAdjacentTerritories()){
-            if (adjacentContinents.contains(ter.getContinent())){ }
-            else {
-                adjacentContinents.add(ter.getContinent());
-                continentsBordered += 1;
-            }
-        }
-        return continentsBordered;
     }
 
     public double percentageOfContinentOwned() {        //checks the percentage of continent owned
