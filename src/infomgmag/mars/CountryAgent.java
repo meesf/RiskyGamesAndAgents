@@ -36,10 +36,8 @@ public class CountryAgent {
                  friendlyArmies() * personality.getFriendliesweight() +
                  enemyArmies() * personality.getEarmiesweight() +
                  territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
-                 (ownWholeContinent() ? 1 : 0) * personality.getOwnWholeContinentWeight() +
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
-                 percentageOfContinentOwned() * personality.getPercentageOfContinentWeight() +
-                 (ownWholeContinent() ? 1 : 0));
+                 percentageOfContinentOwned() * personality.getPercentageOfContinentWeight());
     }
 
     public Integer friendlyNeighbours() // calculates how many friendly neighbouring territory border this territory
@@ -144,6 +142,7 @@ public class CountryAgent {
         for (CountryAgent ca : goal) {
             value += ca.getValue();
         }
+        value += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
         return value;
     }
 
