@@ -17,6 +17,8 @@ public abstract class Player {
     protected ArrayList<Territory> territories;
     protected Hand hand;
     protected Integer reinforcements;
+    protected boolean hasConqueredTerritoryInTurn;
+
 
     public Player(Objective objective, Integer reinforcements, String name, Color color) {
         this.objective = objective;
@@ -81,5 +83,13 @@ public abstract class Player {
     }
 
     abstract public void attackPhase(CombatInterface combatInterface);
+
+    public boolean hasConqueredTerritoryInTurn(){
+        return this.hasConqueredTerritoryInTurn;
+    }
+
+    public void setHasConqueredTerritoryInTurn(boolean hasConquered){
+        this.hasConqueredTerritoryInTurn = hasConquered;
+    }
 
 }

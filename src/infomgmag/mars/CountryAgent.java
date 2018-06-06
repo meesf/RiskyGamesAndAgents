@@ -1,5 +1,6 @@
 package infomgmag.mars;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import infomgmag.Continent;
 import infomgmag.Territory;
 import java.util.ArrayList;
@@ -39,9 +40,6 @@ public class CountryAgent {
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
                  percentageOfContinentOwned() * personality.getPercentageOfContinentWeight() +
                  (ownWholeContinent() ? 1 : 0));
-
-        // TODO: Somehow, this value has to be linked to the amount of enemy troops on
-        // this territory, I tried Pairs but that didn't work great, maybe a list?
     }
 
     public Integer friendlyNeighbours() // calculates how many friendly neighbouring territory border this territory

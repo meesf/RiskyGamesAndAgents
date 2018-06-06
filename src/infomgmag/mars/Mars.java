@@ -106,6 +106,7 @@ public class Mars extends Player {
 
     @Override
     public void movingInAfterInvasion(CombatMove combatMove) {
+        setHasConqueredTerritoryInTurn(true);
         int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
         combatMove.getDefendingTerritory().setUnits(transferredunits);
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
