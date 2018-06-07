@@ -4,7 +4,7 @@ public class OffensiveBid extends ReinforcementBid {
     private Goal goal;
 
     public OffensiveBid(CountryAgent reinforcedAgent, Goal goal, Integer units, double utility) {
-        super(reinforcedAgent, null, units, utility);
+        super(reinforcedAgent, units, utility);
         this.goal = goal;
     }
 

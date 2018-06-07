@@ -71,40 +71,45 @@ public class Mars extends Player {
     }
 
     @Override
-    public void fortifyTerritory(Board board) { // only uses the 'best' country right now
+    public void fortifyTerritory(Board board) {
+        // First create clusters
         ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
-        ReinforcementBid bestBid = null;
-        for (ArrayList<CountryAgent> cluster : clusters) {
-            HashMap<CountryAgent, Integer> sellers = new HashMap<CountryAgent, Integer>();
 
-            for (CountryAgent a : cluster) {
-                int bestI = 0;
-                for (int i = a.getTerritory().getNUnits() - 1; i > 0; i--) {
-                    double d = a.getDefenseOdds(i);
-    				if(d > personality.getWIN_PERCENTAGE()) {
-                        bestI = i;
+        for (ArrayList<CountryAgent> cluster : clusters) {
+            // Get all fortifierBids
+            int maxUnits =
+                    cluster.stream()
+                    .map(CountryAgent :: getTerritory)
+                    .mapToInt(Territory :: getNUnits)
+                    .max()
+                    .orElse(0);
+            ArrayList<FortifierBid> fortifierBids = new ArrayList<>();
+            ArrayList<ReinforcementBid> reinforcementBids = new ArrayList<>();
+            for (CountryAgent ca : cluster) {
+                fortifierBids.addAll(ca.getFortifierBids());
+                reinforcementBids.addAll(ca.getBids(maxUnits));
+            }
+            // Get biggest possible utility gain
+            FortifierBid bestfb = null;
+            ReinforcementBid bestrb = null;
+            double bestUtilGain = 0;
+            for (FortifierBid fb : fortifierBids) {
+                for (ReinforcementBid rb : reinforcementBids) {
+                    if (fb.getFortifier() != rb.getReinforcedAgent() &&
+                            fb.getUnits() == rb.getUnits()) {
+                        double utilGain = rb.getUtility() + fb.getUtility();
+                        if (utilGain > bestUtilGain) {
+                            bestfb = fb;
+                            bestrb = rb;
+                            bestUtilGain = utilGain;
+                        }
                     }
                 }
-                if (bestI != 0) {
-                    sellers.put(a, bestI);
-                }
             }
-            for (CountryAgent a : cluster) {
-                if (a.bordersEnemy() && a.getTerritory().getOwner() == this)
-                    for (CountryAgent seller : sellers.keySet()) {
-                        ReinforcementBid bid = a.getBestMaxBid(sellers.get(seller));
-                        if (bestBid == null || bestBid.getUtility() < bid.getUtility()) {
-                            bestBid = bid;
-                            bestBid.setFortifyingAgent(seller);
-                        }
-                }
+            // If there was something better than 0 then move the units
+            if (bestUtilGain > 0) {
+                board.moveUnits(bestfb.getFortifier().getTerritory(), bestrb.getReinforcedAgent().getTerritory(), bestfb.getUnits());
             }
-        }
-        
-        
-        if (bestBid != null) {
-            board.moveUnits(bestBid.getFortifyingAgent().getTerritory(), bestBid.getReinforcedAgent().getTerritory(),
-                    bestBid.getUnits());
         }
     }
 
