@@ -14,8 +14,7 @@ public class PersonalityFactory {
                 20.0,
                 4.0,
                 5.0,
-                4,
-                0.6);
+                4);
     }
 
     public static Personality normalPersonality() {
@@ -31,8 +30,7 @@ public class PersonalityFactory {
                 20.0,
                 4.0,
                 5.0,
-                4,
-                0.6);
+                4);
     }
 
     public static Personality defensivePersonality() {
@@ -48,7 +46,6 @@ public class PersonalityFactory {
                 20.0,
                 4.0,
                 5.0,
-                4,
-                0.6);
+                4);
      }
 }

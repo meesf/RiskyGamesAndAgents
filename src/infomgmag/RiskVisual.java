@@ -139,8 +139,39 @@ public class RiskVisual extends JFrame {
             return;
         createBuffer();
         drawMap(g);
-        drawCombatArrow(cm);
+        g.setColor(Color.RED);
+        drawArrow(cm.getAttackingTerritory(), cm.getDefendingTerritory());
         drawBuffer();
+    }
+
+    public void updateWithReinforcement(Territory t, int units) {
+        if (!visible)
+            return;
+        createBuffer();
+        drawMap(g);
+        drawReinforcements(t,units);
+        drawBuffer();
+    }
+
+    public void updateWithFortification(Territory from, Territory to, int units) {
+        if (!visible)
+            return;
+        createBuffer();
+        drawMap(g);
+        g.setColor(Color.BLUE);
+        drawArrow(from, to);
+        drawReinforcements(to, units);
+        drawBuffer();
+    }
+
+    private void drawReinforcements(Territory t, int units) {
+        int centerX = rasterX(t.x);
+        int centerY = rasterY(t.y);
+        g.setColor(Color.WHITE);
+        g.fillOval(centerX + continentRadius/2, centerY - continentRadius/2, continentRadius, continentRadius);
+        String nr = "+" + units;
+        g.setColor(Color.BLACK);
+        g.drawString(nr, centerX + continentRadius / 2, centerY + 10);
     }
 
     public void createBuffer() {
@@ -160,7 +191,7 @@ public class RiskVisual extends JFrame {
             g.drawImage(map, 0, 0, gameWidth, gameHeight, null);
     }
 
-    long targetFrameDuration = 100;
+    long targetFrameDuration = 250;
     long frameDuration = 1000;
     long lastFrameTime = targetFrameDuration;
 
@@ -208,21 +239,18 @@ public class RiskVisual extends JFrame {
         this.infoArea.setText(info);
     }
 
-    public void drawCombatArrow(CombatMove cm) {
-        g.setColor(Color.RED);
-        int attackingX = rasterX(cm.getAttackingTerritory().x);
-        int attackingY = rasterY(cm.getAttackingTerritory().y);
-        int defendingX = rasterX(cm.getDefendingTerritory().x);
-        int defendingY = rasterY(cm.getDefendingTerritory().y);
-        Territory t1 = cm.getAttackingTerritory();
-        Territory t2 = cm.getDefendingTerritory();
+    public void drawArrow(Territory from, Territory to) {
+        int attackingX = rasterX(from.x);
+        int attackingY = rasterY(from.y);
+        int defendingX = rasterX(to.x);
+        int defendingY = rasterY(to.y);
 
-        if ((t1.getName() == "Alaska" && t2.getName() == "Kamchatka")
-                || (t1.getName() == "Kamchatka" && t2.getName() == "Alaska")) {
+        if ((from.getName() == "Alaska" && to.getName() == "Kamchatka")
+                || (from.getName() == "Kamchatka" && to.getName() == "Alaska")) {
 
             int alaskaX, alaskaY, kamchatkaX, kamchatkaY;
 
-            if (t1.getName() == "Alaska") {
+            if (from.getName() == "Alaska") {
                 alaskaX = attackingX;
                 alaskaY = attackingY;
                 kamchatkaX = defendingX;
