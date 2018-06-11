@@ -314,7 +314,7 @@ public class RiskVisual extends JFrame {
                 }
                 // Draw unit counts
                 g.setColor(Color.WHITE);
-                String nr = Integer.toString(t.getNUnits());
+                String nr = Integer.toString(t.getUnits());
                 int width = g.getFontMetrics().stringWidth(nr);
                 g.drawString(nr, centerX - (int)(width / 2), centerY + 10);
             }

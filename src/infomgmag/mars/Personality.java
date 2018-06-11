@@ -1,31 +1,33 @@
 package infomgmag.mars;
 
 public class Personality {
-    private Double friendlyNeighbourWeight;
-    private Double enemyNeighbourWeight;
-    private Double friendlyArmyWeight;
-    private Double enemyArmyWeight;
-    private Double continentBorderWeight;
-    private Double ownWholeContinentWeight;
-    private Double enemyOwnsWholeContinentWeight;
-    private Double percentageOfContinentWeight;
-    private Integer goalLength;
-    private Double offensiveMultiplier;
-    private Double defensiveMultiplier;
+    private double friendlyNeighbourWeight;
+    private double enemyNeighbourWeight;
+    private double friendlyArmyWeight;
+    private double enemyArmyWeight;
+    private double continentBorderWeight;
+    private double ownWholeContinentWeight;
+    private double enemyOwnsWholeContinentWeight;
+    private double percentageOfContinentWeight;
+    private int goalLength;
+    private double offensiveMultiplier;
+    private double defensiveMultiplier;
+    private double killEnemyWeight;
     private String name;
 
     public Personality(String name,
-                       Double defensiveMultiplier,
-                       Double offensiveMultiplier,
-                       Double friendlyNeighbourWeight,
-                       Double enemyNeighbourWeight,
-                       Double friendlyArmyWeight,
-                       Double enemyArmyWeight,
-                       Double continentBorderWeight,
-                       Double ownWholeContinentWeight,
-                       Double enemyOwnsWholeContinentWeight,
-                       Double percentageOfContinentWeight,
-                       Integer goalLength){
+                       double defensiveMultiplier,
+                       double offensiveMultiplier,
+                       double friendlyNeighbourWeight,
+                       double enemyNeighbourWeight,
+                       double friendlyArmyWeight,
+                       double enemyArmyWeight,
+                       double continentBorderWeight,
+                       double ownWholeContinentWeight,
+                       double enemyOwnsWholeContinentWeight,
+                       double percentageOfContinentWeight,
+                       double killEnemyWeight,
+                       int goalLength){
         this.name = name;
         this.defensiveMultiplier = defensiveMultiplier;
         this.offensiveMultiplier = offensiveMultiplier;
@@ -37,6 +39,7 @@ public class Personality {
         this.ownWholeContinentWeight = ownWholeContinentWeight;
         this.enemyOwnsWholeContinentWeight = enemyOwnsWholeContinentWeight;
         this.percentageOfContinentWeight = percentageOfContinentWeight;
+        this.killEnemyWeight = killEnemyWeight;
         this.goalLength = goalLength;
     }
 
@@ -48,47 +51,51 @@ public class Personality {
         return getName();
     }
 
-    public Double getFriendlyNeighbourWeight() {
+    public double getFriendlyNeighbourWeight() {
         return friendlyNeighbourWeight;
     }
 
-    public Double getEnemyNeighbourWeight() {
+    public double getEnemyNeighbourWeight() {
         return enemyNeighbourWeight;
     }
 
-    public Double getFriendlyArmyWeight() {
+    public double getFriendlyArmyWeight() {
         return friendlyArmyWeight;
     }
 
-    public Double getEnemyArmyWeight() {
+    public double getEnemyArmyWeight() {
         return enemyArmyWeight;
     }
 
-    public Double getContinentBorderWeight() {
+    public double getContinentBorderWeight() {
         return continentBorderWeight;
     }
 
-    public Double getOwnWholeContinentWeight() {
+    public double getOwnWholeContinentWeight() {
         return ownWholeContinentWeight;
     }
 
-    public Double getEnemyOwnsWholeContinentWeight() {
+    public double getEnemyOwnsWholeContinentWeight() {
         return enemyOwnsWholeContinentWeight;
     }
 
-    public Double getPercentageOfContinentWeight() {
+    public double getPercentageOfContinentWeight() {
         return percentageOfContinentWeight;
     }
 
-    public Integer getGoalLength() {
+    public int getGoalLength() {
         return goalLength;
     }
 
-    public Double getDefensiveBonus() {
+    public double getDefensiveBonus() {
         return defensiveMultiplier;
     }
 
-    public Double getOffensiveBonus() {
+    public double getOffensiveBonus() {
         return offensiveMultiplier;
+    }
+
+    public double getKillEnemyWeight() {
+        return killEnemyWeight;
     }
 }

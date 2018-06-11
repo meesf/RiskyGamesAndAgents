@@ -51,4 +51,17 @@ public class Goal extends ArrayList<CountryAgent> {
         }
         return false;
     }
+
+    // The mars argument is the player you kill AS, not the player you kill
+    public long killsPlayers(Mars mars) {
+        return this.stream()
+        .map(x -> x.getTerritory().getOwner())
+        .distinct()
+        .filter(x ->
+            x.getTerritories()
+            .stream()
+            .map(y -> mars.countryAgentsByTerritory.get(y))
+            .allMatch(y -> this.contains(y)))
+        .count();
+    }
 }
