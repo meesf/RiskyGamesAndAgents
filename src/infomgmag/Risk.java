@@ -278,7 +278,7 @@ public class Risk implements CombatInterface{
                     0.05,
                     -0.03,
                     0.5,
-                    100.0,
+                    20.0,
                     4.0,
                     5.0,
                     4,
