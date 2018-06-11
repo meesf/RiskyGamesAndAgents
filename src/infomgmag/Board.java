@@ -355,6 +355,7 @@ public class Board {
     	} else if(!Risk.getConnectedTerritories(a).contains(b)) {
     		Risk.printError("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
     	} else {
+    	    visuals.updateWithFortification(a, b, units);
     		a.setUnits(a.getNUnits() - units);
             b.setUnits(b.getNUnits() + units);
     	}
