@@ -82,7 +82,7 @@ public class Risk implements CombatInterface{
     
     public Risk() {
         visuals = new RiskVisual(this,visible);
-        board = new Board();
+        board = new Board(visuals);
         combatLog = new ArrayList<>();
         defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;

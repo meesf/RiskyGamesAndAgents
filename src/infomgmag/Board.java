@@ -18,8 +18,11 @@ public class Board {
     private Integer artillery, cavalry, infantry, wildcard;
 
     private int goldenCavalry;
+    private RiskVisual visuals;
 
-    public Board() {
+    public Board(RiskVisual visuals) {
+        this.visuals = visuals;
+
         continents = new ArrayList<>();
 
         this.goldenCavalry = 4;
@@ -243,6 +246,7 @@ public class Board {
     	} else if(player.getReinforcements() < number) {
     		Risk.printError(player.getName()+" does not have "+number+" reinforcements");
     	} else {
+    	    visuals.updateWithReinforcement(territory, number);
     		territory.setUnits(territory.getNUnits() + number);
     	}
     }
@@ -351,6 +355,7 @@ public class Board {
     	} else if(!Risk.getConnectedTerritories(a).contains(b)) {
     		Risk.printError("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
     	} else {
+    	    visuals.updateWithFortification(a, b, units);
     		a.setUnits(a.getNUnits() - units);
             b.setUnits(b.getNUnits() + units);
     	}
