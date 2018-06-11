@@ -13,8 +13,10 @@ public class Personality {
     private Double offensiveMultiplier;
     private Double defensiveMultiplier;
     private Double killEnemyWeight;
+    private String name;
 
-    public Personality(Double defensiveMultiplier,
+    public Personality(String name,
+                       Double defensiveMultiplier,
                        Double offensiveMultiplier,
                        Double friendlyNeighbourWeight,
                        Double enemyNeighbourWeight,
@@ -25,8 +27,8 @@ public class Personality {
                        Double enemyOwnsWholeContinentWeight,
                        Double percentageOfContinentWeight,
                        Double killEnemyWeight,
-                       Integer goalLength,
-                       Double win_percentage){
+                       Integer goalLength){
+        this.name = name;
         this.defensiveMultiplier = defensiveMultiplier;
         this.offensiveMultiplier = offensiveMultiplier;
         this.friendlyNeighbourWeight = friendlyNeighbourWeight;
@@ -39,6 +41,14 @@ public class Personality {
         this.percentageOfContinentWeight = percentageOfContinentWeight;
         this.killEnemyWeight = killEnemyWeight;
         this.goalLength = goalLength;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String toString() {
+        return getName();
     }
 
     public Double getFriendlyNeighbourWeight() {

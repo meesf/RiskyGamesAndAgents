@@ -2,6 +2,7 @@ package infomgmag;
 
 import infomgmag.mars.Mars;
 import infomgmag.mars.Personality;
+import infomgmag.mars.PersonalityFactory;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -21,8 +22,10 @@ public class Risk implements CombatInterface{
 
     // Variables to be customized by debugger
     private boolean visible = true;
-    private int randomPlayers = 4;
-    private int marsPlayers = 2;
+    private int randomPlayers = 0;
+    private int agressivePlayers = 2;
+    private int normalPlayers = 2;
+    private int defensivePlayers = 2;
 
     public static Random random;
 
@@ -86,7 +89,7 @@ public class Risk implements CombatInterface{
         combatLog = new ArrayList<>();
         defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
-        initializePlayers(randomPlayers,marsPlayers);
+        initializePlayers();
         Integer currentPlayerIndex = divideTerritories();
         initialPlaceReinforcements(currentPlayerIndex);
         currentPlayer = activePlayers.get(0);
@@ -245,12 +248,12 @@ public class Risk implements CombatInterface{
             Color.MAGENTA
     };
 
-    private void initializePlayers(int randoms, int marses) {
+    private void initializePlayers() {
         activePlayers = new ArrayList<>();
         // TODO deciding number of startingUnits using number of players and evt. number
         // territorries
         int i;
-        for (i = 0; i < randoms; i++) {
+        for (i = 0; i < randomPlayers; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Color color;
             if (i < playerColors.length) {
@@ -263,7 +266,15 @@ public class Risk implements CombatInterface{
             activePlayers.add(player);
         }
 
-        for (; i < randoms + marses; i++) {
+        ArrayList<Personality> personalities = new ArrayList<>();
+        for (int j = 0; j < defensivePlayers; j++)
+            personalities.add(PersonalityFactory.defensivePersonality());
+        for (int j = 0; j < agressivePlayers; j++)
+            personalities.add(PersonalityFactory.agressivePersonality());
+        for (int j = 0; j < normalPlayers; j++)
+            personalities.add(PersonalityFactory.normalPersonality());
+
+        for (; i < randomPlayers + agressivePlayers + defensivePlayers + normalPlayers; i++) {
 	        Color color;
 	        if (i < playerColors.length) {
 	            color = playerColors[i];
@@ -272,21 +283,8 @@ public class Risk implements CombatInterface{
 	                    Risk.random.nextFloat() * 0.8f + 0.2f);
 	        }
 	        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-            Personality personality = new Personality(
-                    3.5,
-                    170.0,
-                    1.2,
-                    -0.3,
-                    0.05,
-                    -0.03,
-                    0.5,
-                    20.0,
-                    4.0,
-                    5.0,
-                    40.0,
-                    4,
-                    0.6);
-	        Mars player = new Mars(this, objective, 0, "Player " + i + " (MARS)",color, personality);
+	        Personality personality = personalities.get(i - randomPlayers);
+	        Mars player = new Mars(this, objective, 0, "Player " + i + " (" + personality + " MARS)",color, personality);
 	        activePlayers.add(player);
         }
     }
