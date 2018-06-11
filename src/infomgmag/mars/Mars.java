@@ -193,7 +193,7 @@ public class Mars extends Player {
             CombatMove cm = new CombatMove();
             cm.setAttackingTerritory(ob.get().reinforcedAgent.getTerritory());
             cm.setDefendingTerritory(ob.get().getGoal().getFirstGoal().getTerritory());
-            cm.setAttackingUnits(ob.get().reinforcedAgent.getTerritory().getNUnits());
+            cm.setAttackingUnits(ob.get().reinforcedAgent.getTerritory().getNUnits() - 1);
             ci.performCombatMove(cm);
         }
     }
