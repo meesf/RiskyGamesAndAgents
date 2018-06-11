@@ -36,8 +36,8 @@ public class PersonalityFactory {
     public static Personality defensivePersonality() {
         return new Personality(
                 "Defensive",
-                250.0,
-                170.0,
+                30.5,
+                40.0,
                 1.2,
                 -0.3,
                 0.05,
@@ -45,7 +45,7 @@ public class PersonalityFactory {
                 0.5,
                 20.0,
                 4.0,
-                5.0,
+                150.0,
                 4);
      }
 }
