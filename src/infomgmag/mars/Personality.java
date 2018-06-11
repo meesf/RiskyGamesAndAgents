@@ -12,6 +12,7 @@ public class Personality {
     private Integer goalLength;
     private Double offensiveMultiplier;
     private Double defensiveMultiplier;
+    private Double killEnemyWeight;
     private String name;
 
     public Personality(String name,
@@ -25,6 +26,7 @@ public class Personality {
                        Double ownWholeContinentWeight,
                        Double enemyOwnsWholeContinentWeight,
                        Double percentageOfContinentWeight,
+                       Double killEnemyWeight,
                        Integer goalLength){
         this.name = name;
         this.defensiveMultiplier = defensiveMultiplier;
@@ -37,6 +39,7 @@ public class Personality {
         this.ownWholeContinentWeight = ownWholeContinentWeight;
         this.enemyOwnsWholeContinentWeight = enemyOwnsWholeContinentWeight;
         this.percentageOfContinentWeight = percentageOfContinentWeight;
+        this.killEnemyWeight = killEnemyWeight;
         this.goalLength = goalLength;
     }
 
@@ -90,5 +93,9 @@ public class Personality {
 
     public Double getOffensiveBonus() {
         return offensiveMultiplier;
+    }
+
+    public Double getKillEnemyWeight() {
+        return killEnemyWeight;
     }
 }

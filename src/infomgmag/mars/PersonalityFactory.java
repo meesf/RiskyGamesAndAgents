@@ -14,6 +14,7 @@ public class PersonalityFactory {
                 20.0,
                 4.0,
                 5.0,
+                80.0,
                 4);
     }
 
@@ -30,6 +31,7 @@ public class PersonalityFactory {
                 20.0,
                 4.0,
                 5.0,
+                40.0,
                 4);
     }
 
@@ -46,6 +48,7 @@ public class PersonalityFactory {
                 20.0,
                 4.0,
                 150.0,
+                20.0,
                 4);
      }
 }

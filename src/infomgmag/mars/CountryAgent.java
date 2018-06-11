@@ -137,6 +137,7 @@ public class CountryAgent {
             value += ca.getValue();
         }
         value += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
+        value += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
         return value;
     }
 

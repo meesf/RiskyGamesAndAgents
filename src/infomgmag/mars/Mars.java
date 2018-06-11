@@ -18,7 +18,7 @@ public class Mars extends Player {
 
     private CardAgent cardAgent;
     private List<CountryAgent> countryAgents;
-    private HashMap<Territory, CountryAgent> countryAgentsByTerritory;
+    public HashMap<Territory, CountryAgent> countryAgentsByTerritory;
     private Personality personality;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color, Personality personality) {
