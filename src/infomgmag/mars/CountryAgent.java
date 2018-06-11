@@ -35,62 +35,39 @@ public class CountryAgent {
     }
 
     // calculates how many friendly neighbouring territories border this territory
-    public Integer friendlyNeighbours() 
-    {
-        Integer friends = 0;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() == mars) {
-                friends += 1;
-            }
-        }
-        return friends;
+    public long friendlyNeighbours() {
+        return territory.getAdjacentTerritories().stream()
+                .filter(t -> t.getOwner() == mars)
+                .count();
     }
 
     // calculates how many enemy neighbouring territories border this territory
-    public Integer enemyNeighbours() 
-    {
-        Integer enemies = 0;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() != mars) {
-                enemies += 1;
-            }
-        }
-        return enemies;
+    public long enemyNeighbours() {
+        return territory.getAdjacentTerritories().stream()
+                .filter(t -> t.getOwner() != mars)
+                .count();
     }
 
     // calculates how many friendly armies border this territory
-    public Integer friendlyArmies() 
-    {
-        Integer farmies = 0;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() == mars) {
-                farmies += territory.getAdjacentTerritories().get(i).getUnits();
-            }
-        }
-        return farmies;
+    public long friendlyArmies() {
+        return territory.getAdjacentTerritories().stream()
+                .filter(t -> t.getOwner() == mars)
+                .mapToInt(t -> t.getUnits())
+                .sum();
     }
 
     // calculates how many enemy armies border this territory
-    public Integer enemyArmies()
-    {
-        Integer earmies = 0;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() != mars) {
-                earmies += territory.getAdjacentTerritories().get(i).getUnits();
-            }
-        }
-        return earmies;
+    public long enemyArmies() {
+        return territory.getAdjacentTerritories().stream()
+                .filter(t -> t.getOwner() != mars)
+                .mapToInt(t -> t.getUnits())
+                .sum();
     }
 
     // checks if this territory borders an enemy
     public boolean bordersEnemy() { 
-        boolean bordersenemies = false;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() != territory.getOwner()) {
-                bordersenemies = true;
-            }
-        }
-        return bordersenemies;
+        return territory.getAdjacentTerritories().stream()
+                .anyMatch(t -> t.getOwner() != mars);
     }
 
     // checks if the agent owns the whole continent except this territory
@@ -105,15 +82,10 @@ public class CountryAgent {
 
     // calculates the percentage of continent owned
     public double percentageOfContinentOwned() {
-        double percentageofcontinent = 0;
-        double territoriesOwned = 0;
-        for (Territory ter: territory.getContinent().getTerritories()){
-            if (ter.getOwner() == mars) {
-                territoriesOwned += 1;
-            }
-        }
-        percentageofcontinent = territoriesOwned / territory.getContinent().getTerritories().size();
-        return percentageofcontinent;
+        double owned = territory.getContinent().getTerritories().stream()
+                .filter(t -> t.getOwner() == mars)
+                .count();
+        return owned / territory.getContinent().getTerritories().size();
     }
 
     // clears the goals
@@ -214,17 +186,18 @@ public class CountryAgent {
             .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
             .get();
     }
+
     public DefensiveBid getDefensiveBid(Integer unitsLeft) {
         DefensiveBid bestBid = null;
         for (int i = 0; i <= unitsLeft; i++) {
-    		double bidUtil = getDefenseUtilityPerUnit(i);
+            double bidUtil = getDefenseUtilityPerUnit(i);
             if (bestBid == null || bidUtil > bestBid.getUtility()) {
                 bestBid = new DefensiveBid(this, i, bidUtil);
             }
         }
         return bestBid;
     }
-    
+
     public ArrayList<FortifierBid> getFortifierBids () {
         ArrayList<FortifierBid> result = new ArrayList<>();
         

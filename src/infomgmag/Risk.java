@@ -54,33 +54,33 @@ public class Risk implements CombatInterface{
     }
     
     public static void createDiceOdds() {
-    	DICE_ODDS_ONE = new ArrayList<ArrayList<Double>>();
-    	ArrayList<Double> oneA = new ArrayList<Double>();
-    	oneA.add(15.0/36);
-    	oneA.add(125.0/216);
-    	oneA.add(855.0/1296);
-    	DICE_ODDS_ONE.add(oneA);
-    	ArrayList<Double> oneD = new ArrayList<Double>();
-    	oneD.add(21.0/36);
-    	oneD.add(91.0/216);
-    	oneD.add(441.0/1296);
-    	DICE_ODDS_ONE.add(oneD);
+        DICE_ODDS_ONE = new ArrayList<ArrayList<Double>>();
+        ArrayList<Double> oneA = new ArrayList<Double>();
+        oneA.add(15.0/36);
+        oneA.add(125.0/216);
+        oneA.add(855.0/1296);
+        DICE_ODDS_ONE.add(oneA);
+        ArrayList<Double> oneD = new ArrayList<Double>();
+        oneD.add(21.0/36);
+        oneD.add(91.0/216);
+        oneD.add(441.0/1296);
+        DICE_ODDS_ONE.add(oneD);
         DICE_ODDS_TWO = new ArrayList<ArrayList<Double>>();
         ArrayList<Double> twoA = new ArrayList<Double>();
         twoA.add(55.0/216);
         twoA.add(295.0/1296);
         twoA.add(2890.0/7776);
-    	DICE_ODDS_TWO.add(twoA);
-    	ArrayList<Double> twoD = new ArrayList<Double>();
+        DICE_ODDS_TWO.add(twoA);
+        ArrayList<Double> twoD = new ArrayList<Double>();
         twoD.add(161.0/216);
         twoD.add(581.0/1296);
         twoD.add(2275.0/7776);
-    	DICE_ODDS_TWO.add(twoD);
-    	ArrayList<Double> twoL = new ArrayList<Double>();
+        DICE_ODDS_TWO.add(twoD);
+        ArrayList<Double> twoL = new ArrayList<Double>();
         twoL.add(null);
         twoL.add(420.0/1296);
         twoL.add(2611.0/7776);
-    	DICE_ODDS_TWO.add(twoL);
+        DICE_ODDS_TWO.add(twoL);
     }
     
     public Risk() {
@@ -191,7 +191,7 @@ public class Risk implements CombatInterface{
                     currentPlayer.turnInCards(board);
                 activePlayers.remove(defender);
                 if (activePlayers.size() > 1)
-                	currentPlayer.placeReinforcements(board);
+                    currentPlayer.placeReinforcements(board);
                 defeatedPlayers.add(defender);
             }
         }
@@ -275,17 +275,17 @@ public class Risk implements CombatInterface{
             personalities.add(PersonalityFactory.normalPersonality());
 
         for (; i < randomPlayers + agressivePlayers + defensivePlayers + normalPlayers; i++) {
-	        Color color;
-	        if (i < playerColors.length) {
-	            color = playerColors[i];
-	        } else {
-	            color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
-	                    Risk.random.nextFloat() * 0.8f + 0.2f);
-	        }
-	        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-	        Personality personality = personalities.get(i - randomPlayers);
-	        Mars player = new Mars(this, objective, 0, "Player " + i + " (" + personality + " MARS)",color, personality);
-	        activePlayers.add(player);
+            Color color;
+            if (i < playerColors.length) {
+                color = playerColors[i];
+            } else {
+                color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
+                        Risk.random.nextFloat() * 0.8f + 0.2f);
+            }
+            Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
+            Personality personality = personalities.get(i - randomPlayers);
+            Mars player = new Mars(this, objective, 0, "Player " + i + " (" + personality + " MARS)",color, personality);
+            activePlayers.add(player);
         }
     }
 
@@ -349,8 +349,8 @@ public class Risk implements CombatInterface{
     }
 
     public static void printError(String str) {
-    	System.err.println("Error:"+str);
-    	System.exit(1);
+        System.err.println("Error:"+str);
+        System.exit(1);
     }
 
     public ArrayList<Player> getDefeatedPlayers(){

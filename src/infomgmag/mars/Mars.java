@@ -170,7 +170,7 @@ public class Mars extends Player {
             }
             for (CountryAgent ca : countryAgents) {
                 ca.clearGoals();
-        		ca.calculateOwnershipValue(personality);
+                ca.calculateOwnershipValue(personality);
             }
             for (CountryAgent sender : countryAgents) {
                 if (sender.getTerritory().getOwner() != this) {
