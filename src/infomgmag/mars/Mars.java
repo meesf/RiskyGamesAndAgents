@@ -177,7 +177,6 @@ public class Mars extends Player {
                     sender.createGoals();
                 }
             }
-            countryAgents.stream().forEach(x -> x.getBids(0));
 
             Optional<OffensiveBid> ob = countryAgents.stream()
                     // Need to own territory, border an enemy, and have units to attack with
