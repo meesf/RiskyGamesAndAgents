@@ -33,7 +33,7 @@ public class CountryAgent {
                 (this.territory.getOwner().equals(mars) ? personality.getDefensiveBonus() : personality.getOffensiveBonus()) *
                 (friendlyNeighbours() * personality.getFriendliesweight() +
                  enemyNeighbours() * personality.getEnemiesweight() +
-                 friendlyArmies() * personality.getFriendliesweight() +
+                 friendlyArmies() * personality.getFarmiesweight() +
                  enemyArmies() * personality.getEarmiesweight() +
                  territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
