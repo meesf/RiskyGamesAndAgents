@@ -2,6 +2,7 @@ package infomgmag.mars;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import infomgmag.Continent;
+import infomgmag.Player;
 import infomgmag.Territory;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,7 +44,7 @@ public class CountryAgent {
     {
         Integer friends = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() == territory.getOwner()) {
+            if (territory.getAdjacentTerritories().get(i).getOwner() == mars) {
                 friends += 1;
             }
         }
@@ -54,7 +55,7 @@ public class CountryAgent {
     {
         Integer enemies = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() != territory.getOwner()) {
+            if (territory.getAdjacentTerritories().get(i).getOwner() != mars) {
                 enemies += 1;
             }
         }
@@ -65,7 +66,7 @@ public class CountryAgent {
     {
         Integer farmies = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() == territory.getOwner()) {
+            if (territory.getAdjacentTerritories().get(i).getOwner() == mars) {
                 farmies += territory.getAdjacentTerritories().get(i).getNUnits();
             }
         }
@@ -76,7 +77,7 @@ public class CountryAgent {
     {
         Integer earmies = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() != territory.getOwner()) {
+            if (territory.getAdjacentTerritories().get(i).getOwner() != mars) {
                 earmies += territory.getAdjacentTerritories().get(i).getNUnits();
             }
         }
@@ -106,7 +107,7 @@ public class CountryAgent {
         double percentageofcontinent = 0;
         double territoriesOwned = 0;
         for (Territory ter: territory.getContinent().getTerritories()){
-            if (ter.getOwner() == territory.getOwner()) {
+            if (ter.getOwner() == mars) {
                 territoriesOwned += 1;
             }
         }
