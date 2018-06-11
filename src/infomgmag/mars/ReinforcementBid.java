@@ -7,7 +7,6 @@ public abstract class ReinforcementBid {
 
     public ReinforcementBid(CountryAgent reinforcedAgent, Integer units, double utility) {
         this.reinforcedAgent = reinforcedAgent;
-        this.fortifyingAgent = fortifyingAgent;
         this.units = units;
         this.utility = utility;
     }

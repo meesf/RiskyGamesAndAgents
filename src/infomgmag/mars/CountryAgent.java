@@ -2,7 +2,6 @@ package infomgmag.mars;
 
 import infomgmag.Territory;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CountryAgent {
     private Territory territory;
@@ -180,10 +179,6 @@ public class CountryAgent {
         return total / i;
     }
 
-    private Double getTerritoryValue(HashMap<CountryAgent, Double> agentValues) {
-        return agentValues.get(this);
-    }
-
     private double getDefenseUtility(Integer i) {
         double v = getValue();
         double d = getDefenseOdds(this.getTerritory().getNUnits() + i);
@@ -210,14 +205,9 @@ public class CountryAgent {
     }
 
     public ReinforcementBid getBestBid(Integer unitsLeft) {
-            ReinforcementBid bestBid = getBids(unitsLeft).stream()
+        return getBids(unitsLeft).stream()
             .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
             .get();
-            
-        return getBids(unitsLeft).stream()
-                .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
-                .get();
-
     }
     public DefensiveBid getDefensiveBid(Integer unitsLeft) {
         DefensiveBid bestBid = null;
