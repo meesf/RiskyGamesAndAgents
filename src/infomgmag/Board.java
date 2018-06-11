@@ -270,7 +270,7 @@ public class Board {
     public void moveGoldenCavalry() {
         if (goldenCavalry < 10)
             goldenCavalry += 2;
-        else if (goldenCavalry < 20)
+        else if (goldenCavalry < 65)
             goldenCavalry += 5;
     }
 
