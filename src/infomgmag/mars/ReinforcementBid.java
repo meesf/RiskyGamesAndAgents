@@ -5,7 +5,7 @@ public abstract class ReinforcementBid {
     protected Integer units;
     protected Double utility;
 
-    public ReinforcementBid(CountryAgent reinforcedAgent, CountryAgent fortifyingAgent, Integer units, double utility) {
+    public ReinforcementBid(CountryAgent reinforcedAgent, Integer units, double utility) {
         this.reinforcedAgent = reinforcedAgent;
         this.fortifyingAgent = fortifyingAgent;
         this.units = units;
@@ -23,8 +23,8 @@ public abstract class ReinforcementBid {
     public CountryAgent getReinforcedAgent() {
         return reinforcedAgent;
     }
-
-    public CountryAgent getFortifyingAgent() {
-        return fortifyingAgent;
+    
+    public void setFortifyingAgent(CountryAgent ca)  {
+        this.fortifyingAgent = ca;
     }
 }
