@@ -172,7 +172,7 @@ public class CountryAgent {
     }
     
     private double getGoalUtilityPerUnit(Goal goal, Integer i) {
-        return (getGoalUtility(goal,i) - getGoalUtility(goal,0)) / i;
+        return (getGoalUtility(goal,i) - getGoalUtility(goal,0)) / (i > 0 ? i : 1);
     }
 
 
@@ -183,7 +183,7 @@ public class CountryAgent {
     }
     
     private double getDefenseUtilityPerUnit(Integer i) {
-        return (getDefenseUtility(i) - getDefenseUtility(0)) / i;
+        return (getDefenseUtility(i) - getDefenseUtility(0)) / (i > 0 ? i : 1);
     }
 
     public ArrayList<ReinforcementBid> getBids(Integer unitsLeft) {
