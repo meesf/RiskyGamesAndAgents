@@ -143,6 +143,24 @@ public class RiskVisual extends JFrame {
         drawBuffer();
     }
 
+    public void updateWithReinforcement(Territory t, int units) {
+        if (!visible)
+            return;
+        createBuffer();
+        drawMap(g);
+        drawReinforcements(t,units);
+        drawBuffer();
+    }
+
+    private void drawReinforcements(Territory t, int units) {
+        int centerX = rasterX(t.x);
+        int centerY = rasterY(t.y);
+        g.fillOval(centerX + continentRadius/2, centerY - continentRadius/2, continentRadius, continentRadius);
+        String nr = "+" + units;
+        g.setColor(Color.BLACK);
+        g.drawString(nr, centerX + continentRadius / 2, centerY + 10);
+    }
+
     public void createBuffer() {
         // One draws to buffer, then buffer to screen, to prevent flickering
         g = buffer.createGraphics();
@@ -160,7 +178,7 @@ public class RiskVisual extends JFrame {
             g.drawImage(map, 0, 0, gameWidth, gameHeight, null);
     }
 
-    long targetFrameDuration = 100;
+    long targetFrameDuration = 250;
     long frameDuration = 1000;
     long lastFrameTime = targetFrameDuration;
 
