@@ -283,6 +283,7 @@ public class Risk implements CombatInterface{
                     20.0,
                     4.0,
                     5.0,
+                    40.0,
                     4,
                     0.6);
 	        Mars player = new Mars(this, objective, 0, "Player " + i + " (MARS)",color, personality);
