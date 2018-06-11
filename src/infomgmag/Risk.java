@@ -42,7 +42,9 @@ public class Risk implements CombatInterface{
     private ArrayList<CombatEvent> combatLog;
 
     public static void main(String[] args) {
-        random = new Random(System.currentTimeMillis());
+        long seed = System.currentTimeMillis();
+        random = new Random(seed);
+        System.out.println(seed);
         createDiceOdds();
         Risk risk = new Risk();
         risk.run(); //this makes the game run
