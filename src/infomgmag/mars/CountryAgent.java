@@ -140,17 +140,13 @@ public class CountryAgent {
     }
 
     private Double getGoalValue(Goal goal) {
-        double value = 0.0;
+        double goalValue = 0.0;
         for (CountryAgent ca : goal) {
-            value += ca.getValue();
+            goalValue += ca.value;
         }
-        value += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
-        value += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
-        return value;
-    }
-
-    private double getValue() {
-        return value;
+        goalValue += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
+        goalValue += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
+        return goalValue;
     }
 
     public Double getDefenseOdds(int units) {
@@ -189,7 +185,7 @@ public class CountryAgent {
     }
 
     private double getDefenseUtility(Integer i) {
-        double v = getValue();
+        double v = value;
         double d = getDefenseOdds(this.getTerritory().getUnits() + i);
         return v * d;
     }
