@@ -2,20 +2,20 @@ package infomgmag.mars;
 
 public abstract class ReinforcementBid {
     protected CountryAgent reinforcedAgent, fortifyingAgent;
-    protected Integer units;
-    protected Double utility;
+    protected int units;
+    protected double utility;
 
-    public ReinforcementBid(CountryAgent reinforcedAgent, Integer units, double utility) {
+    public ReinforcementBid(CountryAgent reinforcedAgent, int units, double utility) {
         this.reinforcedAgent = reinforcedAgent;
         this.units = units;
         this.utility = utility;
     }
 
-    public Integer getUnits() {
+    public int getUnits() {
         return units;
     }
 
-    public Double getUtility() {
+    public double getUtility() {
         return utility;
     }
 

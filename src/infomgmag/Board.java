@@ -15,7 +15,7 @@ public class Board {
     private ArrayList<Continent> continents;
     private ArrayList<Territory> territories;
 
-    private Integer artillery, cavalry, infantry, wildcard;
+    private int artillery, cavalry, infantry, wildcard;
 
     private int goldenCavalry;
     private RiskVisual visuals;

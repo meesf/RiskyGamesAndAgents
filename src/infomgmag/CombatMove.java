@@ -2,7 +2,7 @@ package infomgmag;
 
 public class CombatMove {
     private Territory attackingTerritory, defendingTerritory;
-    private Integer attackingUnits, defendingUnits;
+    private int attackingUnits, defendingUnits;
 
     public CombatMove() {
     }
@@ -15,11 +15,11 @@ public class CombatMove {
         return defendingTerritory;
     }
 
-    public Integer getAttackingUnits() {
+    public int getAttackingUnits() {
         return attackingUnits;
     }
 
-    public Integer getDefendingUnits() {
+    public int getDefendingUnits() {
         return defendingUnits;
     }
 

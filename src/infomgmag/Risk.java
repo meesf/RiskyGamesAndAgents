@@ -39,7 +39,7 @@ public class Risk implements CombatInterface{
     private RiskVisual visuals;
 
     private int turn = 0;
-    private Integer nrOfStartingUnits;
+    private int nrOfStartingUnits;
     private boolean StopGame;
     
     private ArrayList<CombatEvent> combatLog;
@@ -90,7 +90,7 @@ public class Risk implements CombatInterface{
         defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
         initializePlayers();
-        Integer currentPlayerIndex = divideTerritories();
+        int currentPlayerIndex = divideTerritories();
         initialPlaceReinforcements(currentPlayerIndex);
         currentPlayer = activePlayers.get(0);
     }
@@ -99,7 +99,7 @@ public class Risk implements CombatInterface{
         while (!finished()) {
             visuals.update();
             currentPlayer.setHasConqueredTerritoryInTurn(false);
-            Integer nrOfReinforcements = calculateReinforcements();
+            int nrOfReinforcements = calculateReinforcements();
             currentPlayer.setReinforcements(nrOfReinforcements);
             currentPlayer.turnInCards(board);
             currentPlayer.placeReinforcements(board);
@@ -209,14 +209,14 @@ public class Risk implements CombatInterface{
                 captured));
     }
 
-    private Integer calculateReinforcements() {
-        Integer reinforcements = 0;
+    private int calculateReinforcements() {
+        int reinforcements = 0;
         reinforcements += Integer.max(3, currentPlayer.territories.size() / 3);
         reinforcements += calculateContinentBonus();
         return reinforcements;
     }
 
-    private Integer calculateContinentBonus() {
+    private int calculateContinentBonus() {
         int bonus = 0;
         for (Continent continent : board.getContinents()) {
             boolean controlsContinent = true;
@@ -226,7 +226,7 @@ public class Risk implements CombatInterface{
                     break;
                 }
             if (controlsContinent)
-                bonus += continent.getNReinforcements();
+                bonus += continent.getReinforcements();
         }
         return bonus;
     }
@@ -290,7 +290,7 @@ public class Risk implements CombatInterface{
     }
 
     // Divide players randomly over territories
-    private Integer divideTerritories() {
+    private int divideTerritories() {
         Collections.shuffle(board.getTerritories(), Risk.random);
         int player = 0;
         for (Territory territory : board.getTerritories()) {
@@ -301,7 +301,7 @@ public class Risk implements CombatInterface{
         return player % activePlayers.size();
     }
 
-    private void initialPlaceReinforcements(Integer currentPlayerIndex) {
+    private void initialPlaceReinforcements(int currentPlayerIndex) {
         int player = currentPlayerIndex;
         for (int i = 0; i < (activePlayers.size() * nrOfStartingUnits) - board.getTerritories().size(); i++) {
             activePlayers.get(player % activePlayers.size()).setReinforcements(1);

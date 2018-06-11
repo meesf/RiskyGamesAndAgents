@@ -6,7 +6,7 @@ import java.util.Collections;
 
 public class RandomBot extends Player {
 
-    public RandomBot(Objective o, Integer reinforcements, String name, Color color) {
+    public RandomBot(Objective o, int reinforcements, String name, Color color) {
         super(o, reinforcements, name, color);
     }
 

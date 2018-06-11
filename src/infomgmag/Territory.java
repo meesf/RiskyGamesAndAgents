@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Territory {
     private Player owner;
-    private Integer units;
+    private int units;
     private ArrayList<Territory> adjacentTerritories;
     private String name;
     private Continent continent;
@@ -89,7 +89,7 @@ public class Territory {
     }
 
 
-    public Double getContinentsBorderedAmount() {
+    public double getContinentsBorderedAmount() {
         return (double) continentsBorderedAmount;
     }
 }

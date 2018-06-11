@@ -2,7 +2,7 @@ package infomgmag.mars;
 
 public class DefensiveBid extends ReinforcementBid {
 
-    public DefensiveBid(CountryAgent reinforcedAgent, Integer units, double utility) {
+    public DefensiveBid(CountryAgent reinforcedAgent, int units, double utility) {
         super(reinforcedAgent, units, utility);
     }
 
