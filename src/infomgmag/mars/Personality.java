@@ -1,60 +1,57 @@
 package infomgmag.mars;
 
 public class Personality {
-    private Double friendliesweight;
-    private Double enemiesweight;
-    private Double farmiesweight;
-    private Double earmiesweight;
+    private Double friendlyNeighbourWeight;
+    private Double enemyNeighbourWeight;
+    private Double friendlyArmyWeight;
+    private Double enemyArmyWeight;
     private Double continentBorderWeight;
     private Double ownWholeContinentWeight;
     private Double enemyOwnsWholeContinentWeight;
     private Double percentageOfContinentWeight;
     private Integer goalLength;
-    private Double WIN_PERCENTAGE;
-    private Double offensiveBonus;
-    private Double defensiveBonus;
+    private Double offensiveMultiplier;
+    private Double defensiveMultiplier;
 
-    public Personality(Double defensiveBonus,
-                       Double offensiveBonus,
-                       Double friendliesweight,
-                       Double enemiesweight,
-                       Double farmiesweight,
-                       Double earmiesweight,
+    public Personality(Double defensiveMultiplier,
+                       Double offensiveMultiplier,
+                       Double friendlyNeighbourWeight,
+                       Double enemyNeighbourWeight,
+                       Double friendlyArmyWeight,
+                       Double enemyArmyWeight,
                        Double continentBorderWeight,
                        Double ownWholeContinentWeight,
                        Double enemyOwnsWholeContinentWeight,
                        Double percentageOfContinentWeight,
                        Integer goalLength,
                        Double win_percentage){
-        this.defensiveBonus = defensiveBonus;
-        this.offensiveBonus = offensiveBonus;
-        this.friendliesweight = friendliesweight;
-        this.enemiesweight = enemiesweight;
-        this.farmiesweight = farmiesweight;
-        this.earmiesweight = earmiesweight;
+        this.defensiveMultiplier = defensiveMultiplier;
+        this.offensiveMultiplier = offensiveMultiplier;
+        this.friendlyNeighbourWeight = friendlyNeighbourWeight;
+        this.enemyNeighbourWeight = enemyNeighbourWeight;
+        this.friendlyArmyWeight = friendlyArmyWeight;
+        this.enemyArmyWeight = enemyArmyWeight;
         this.continentBorderWeight = continentBorderWeight;
         this.ownWholeContinentWeight = ownWholeContinentWeight;
         this.enemyOwnsWholeContinentWeight = enemyOwnsWholeContinentWeight;
         this.percentageOfContinentWeight = percentageOfContinentWeight;
         this.goalLength = goalLength;
-        this.WIN_PERCENTAGE = win_percentage;
-
     }
 
-    public Double getFriendliesweight() {
-        return friendliesweight;
+    public Double getFriendlyNeighbourWeight() {
+        return friendlyNeighbourWeight;
     }
 
-    public Double getEnemiesweight() {
-        return enemiesweight;
+    public Double getEnemyNeighbourWeight() {
+        return enemyNeighbourWeight;
     }
 
-    public Double getFarmiesweight() {
-        return farmiesweight;
+    public Double getFriendlyArmyWeight() {
+        return friendlyArmyWeight;
     }
 
-    public Double getEarmiesweight() {
-        return earmiesweight;
+    public Double getEnemyArmyWeight() {
+        return enemyArmyWeight;
     }
 
     public Double getContinentBorderWeight() {
@@ -77,18 +74,11 @@ public class Personality {
         return goalLength;
     }
 
-    public Double getWIN_PERCENTAGE() {
-        return WIN_PERCENTAGE;
-    }
-
     public Double getDefensiveBonus() {
-        return defensiveBonus;
+        return defensiveMultiplier;
     }
 
     public Double getOffensiveBonus() {
-        return offensiveBonus;
+        return offensiveMultiplier;
     }
-
-
-
 }
