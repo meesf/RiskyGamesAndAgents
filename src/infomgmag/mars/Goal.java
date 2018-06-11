@@ -1,6 +1,10 @@
 package infomgmag.mars;
 
+import infomgmag.Territory;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Goal extends ArrayList<CountryAgent> {
     private static final long serialVersionUID = -4131586938852901842L;
@@ -33,5 +37,18 @@ public class Goal extends ArrayList<CountryAgent> {
             return null;
         }
         return get(size() - 1);
+    }
+
+    public boolean completesContinentFor(Mars mars){
+        List<Territory> territories = this.stream().map(ca -> ca.getTerritory()).collect(Collectors.toList());
+        for(Territory ter : territories){
+            boolean completesContinent = true;
+            for(Territory t : ter.getContinent().getTerritories()){
+                if(t.getOwner() != mars && !territories.contains(t))
+                    completesContinent = false;
+            }
+            if(completesContinent) return true;
+        }
+        return false;
     }
 }
