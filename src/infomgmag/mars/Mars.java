@@ -124,7 +124,7 @@ public class Mars extends Player {
     @Override
     public void placeReinforcements(Board board) {
         for (CountryAgent ca : countryAgents) {
-            ca.clearlists();
+            ca.clearGoals();
             ca.calculateOwnershipValue(personality);
         }
 
@@ -169,7 +169,7 @@ public class Mars extends Player {
                 return;
             }
             for (CountryAgent ca : countryAgents) {
-                ca.clearlists();
+                ca.clearGoals();
         		ca.calculateOwnershipValue(personality);
             }
             for (CountryAgent sender : countryAgents) {

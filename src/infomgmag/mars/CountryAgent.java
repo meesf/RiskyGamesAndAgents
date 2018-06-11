@@ -21,7 +21,8 @@ public class CountryAgent {
         return territory;
     }
 
-    public void calculateOwnershipValue(Personality personality) { //calculates value of owning a territory
+    //calculates value of owning a territory
+    public void calculateOwnershipValue(Personality personality) {
         this.value =
                 (this.territory.getOwner().equals(mars) ? personality.getDefensiveBonus() : personality.getOffensiveBonus()) *
                 (friendlyNeighbours() * personality.getFriendlyNeighbourWeight() +
@@ -33,7 +34,8 @@ public class CountryAgent {
                  percentageOfContinentOwned() * personality.getPercentageOfContinentWeight());
     }
 
-    public Integer friendlyNeighbours() // calculates how many friendly neighbouring territory border this territory
+    // calculates how many friendly neighbouring territories border this territory
+    public Integer friendlyNeighbours() 
     {
         Integer friends = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
@@ -44,7 +46,8 @@ public class CountryAgent {
         return friends;
     }
 
-    public Integer enemyNeighbours() // calculates how many enemy neighbouring territory border this territory
+    // calculates how many enemy neighbouring territories border this territory
+    public Integer enemyNeighbours() 
     {
         Integer enemies = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
@@ -55,7 +58,8 @@ public class CountryAgent {
         return enemies;
     }
 
-    public Integer friendlyArmies() // calculates how many friendly armies border this territory
+    // calculates how many friendly armies border this territory
+    public Integer friendlyArmies() 
     {
         Integer farmies = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
@@ -66,7 +70,8 @@ public class CountryAgent {
         return farmies;
     }
 
-    public Integer enemyArmies() // calculates how many enemy armies border this territory
+    // calculates how many enemy armies border this territory
+    public Integer enemyArmies()
     {
         Integer earmies = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
@@ -77,7 +82,8 @@ public class CountryAgent {
         return earmies;
     }
 
-    public boolean bordersEnemy() { // checks if a territory borders an enemy
+    // checks if this territory borders an enemy
+    public boolean bordersEnemy() { 
         boolean bordersenemies = false;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
             if (territory.getAdjacentTerritories().get(i).getOwner() != territory.getOwner()) {
@@ -87,7 +93,8 @@ public class CountryAgent {
         return bordersenemies;
     }
 
-    public boolean ownWholeContinent() { // checks if the agents owns the whole continent except this territory
+    // checks if the agent owns the whole continent except this territory
+    public boolean ownWholeContinent() {
         return territory.getContinent().getTerritories().stream().allMatch(x -> x.getOwner() == this.mars);
     }
 
@@ -96,7 +103,8 @@ public class CountryAgent {
                 && territory.getOwner() != this.mars;
     }
 
-    public double percentageOfContinentOwned() { // checks the percentage of continent owned
+    // calculates the percentage of continent owned
+    public double percentageOfContinentOwned() {
         double percentageofcontinent = 0;
         double territoriesOwned = 0;
         for (Territory ter: territory.getContinent().getTerritories()){
@@ -108,7 +116,8 @@ public class CountryAgent {
         return percentageofcontinent;
     }
 
-    public void clearlists() { // clears the lists used in determining which country gets reinforcements
+    // clears the goals
+    public void clearGoals() { 
         goalList.clear();
     }
 
