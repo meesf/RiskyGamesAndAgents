@@ -247,7 +247,7 @@ public class Board {
     		Risk.printError(player.getName()+" does not have "+number+" reinforcements");
     	} else {
     	    visuals.updateWithReinforcement(territory, number);
-    		territory.setUnits(territory.getNUnits() + number);
+    		territory.setUnits(territory.getUnits() + number);
     	}
     }
 
@@ -350,14 +350,14 @@ public class Board {
     }
     
     public void moveUnits(Territory a, Territory b, int units) {
-    	if(a.getNUnits() < 2) {
+    	if(a.getUnits() < 2) {
     		Risk.printError("The fortifying territory, "+a.getName()+", doesn't have enough units to fortify "+b.getName());
     	} else if(!Risk.getConnectedTerritories(a).contains(b)) {
     		Risk.printError("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
     	} else {
     	    visuals.updateWithFortification(a, b, units);
-    		a.setUnits(a.getNUnits() - units);
-            b.setUnits(b.getNUnits() + units);
+    		a.setUnits(a.getUnits() - units);
+            b.setUnits(b.getUnits() + units);
     	}
     	
     }

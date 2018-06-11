@@ -136,7 +136,7 @@ public class Risk implements CombatInterface{
 
     public void performCombatMove(CombatMove combatMove) {
         int defendingAmount = combatMove.getDefendingTerritory().getOwner().getDefensiveDice(combatMove);
-        if (defendingAmount > combatMove.getDefendingTerritory().getNUnits() || defendingAmount > 2 || defendingAmount < 1)
+        if (defendingAmount > combatMove.getDefendingTerritory().getUnits() || defendingAmount > 2 || defendingAmount < 1)
             throw new RuntimeException("Rule breach: Defending amount not allowed: " + combatMove);
         combatMove.setDefendingUnits(defendingAmount);
 
@@ -171,11 +171,11 @@ public class Risk implements CombatInterface{
         else if (combatMove.getDefendingUnits() > 1 && combatMove.getAttackingUnits() > 1)
             attackLoss++;
 
-        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - attackLoss);
-        combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getNUnits() - defenseLoss);
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - attackLoss);
+        combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getUnits() - defenseLoss);
 
         // Update number of units on both territories and new owner
-        boolean captured = combatMove.getDefendingTerritory().getNUnits() == 0;
+        boolean captured = combatMove.getDefendingTerritory().getUnits() == 0;
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);

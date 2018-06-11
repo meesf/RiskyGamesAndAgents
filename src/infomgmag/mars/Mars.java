@@ -80,7 +80,7 @@ public class Mars extends Player {
             int maxUnits =
                     cluster.stream()
                     .map(CountryAgent :: getTerritory)
-                    .mapToInt(Territory :: getNUnits)
+                    .mapToInt(Territory :: getUnits)
                     .max()
                     .orElse(0);
             ArrayList<FortifierBid> fortifierBids = new ArrayList<>();
@@ -116,9 +116,9 @@ public class Mars extends Player {
     @Override
     public void movingInAfterInvasion(CombatMove combatMove) {
         setHasConqueredTerritoryInTurn(true);
-        int transferredunits = combatMove.getAttackingTerritory().getNUnits() - 1;
+        int transferredunits = combatMove.getAttackingTerritory().getUnits() - 1;
         combatMove.getDefendingTerritory().setUnits(transferredunits);
-        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredunits);
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - transferredunits);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class Mars extends Player {
     @Override
     public int getDefensiveDice(CombatMove combatMove) {
         // TODO Auto-generated method stub
-        return Math.min(2, combatMove.getDefendingTerritory().getNUnits());
+        return Math.min(2, combatMove.getDefendingTerritory().getUnits());
     }
 
     @Override
@@ -181,7 +181,7 @@ public class Mars extends Player {
             Optional<OffensiveBid> ob = countryAgents.stream()
                     // Need to own territory, border an enemy, and have units to attack with
                     .filter(ca -> ca.getTerritory().getOwner() == this).filter(ca -> ca.bordersEnemy())
-                    .filter(ca -> ca.getTerritory().getNUnits() > 1)
+                    .filter(ca -> ca.getTerritory().getUnits() > 1)
                     // Collect all offensive bids
                     .map(ca -> ca.getBestBid(0)).filter(x -> x instanceof OffensiveBid).map(x -> (OffensiveBid) x)
                     // Create attackbids from the best
@@ -193,7 +193,7 @@ public class Mars extends Player {
             CombatMove cm = new CombatMove();
             cm.setAttackingTerritory(ob.get().reinforcedAgent.getTerritory());
             cm.setDefendingTerritory(ob.get().getGoal().getFirstGoal().getTerritory());
-            cm.setAttackingUnits(ob.get().reinforcedAgent.getTerritory().getNUnits() - 1);
+            cm.setAttackingUnits(ob.get().reinforcedAgent.getTerritory().getUnits() - 1);
             ci.performCombatMove(cm);
         }
     }

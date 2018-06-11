@@ -64,7 +64,7 @@ public class CountryAgent {
         Integer farmies = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
             if (territory.getAdjacentTerritories().get(i).getOwner() == mars) {
-                farmies += territory.getAdjacentTerritories().get(i).getNUnits();
+                farmies += territory.getAdjacentTerritories().get(i).getUnits();
             }
         }
         return farmies;
@@ -76,7 +76,7 @@ public class CountryAgent {
         Integer earmies = 0;
         for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
             if (territory.getAdjacentTerritories().get(i).getOwner() != mars) {
-                earmies += territory.getAdjacentTerritories().get(i).getNUnits();
+                earmies += territory.getAdjacentTerritories().get(i).getUnits();
             }
         }
         return earmies;
@@ -126,13 +126,13 @@ public class CountryAgent {
     }
 
     private double getGoalSuccessOdds(Integer i, Goal goal) {
-        Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size() - 1;
+        Integer attackingUnits = this.getTerritory().getUnits() + i - goal.size() - 1;
         if (attackingUnits < 1) {
             return 0.0;
         }
         Integer defendingUnits = 0;
         for (CountryAgent ca : goal) {
-            defendingUnits += ca.getTerritory().getNUnits();
+            defendingUnits += ca.getTerritory().getUnits();
         }
 
         ProbabilityGrid grid = new ProbabilityGrid(attackingUnits, defendingUnits);
@@ -157,7 +157,7 @@ public class CountryAgent {
         int totalEnemyUnits = 0;
         for (Territory t : getTerritory().getAdjacentTerritories()) {
             if (t.getOwner() != this.getTerritory().getOwner()) {
-                totalEnemyUnits += t.getNUnits();
+                totalEnemyUnits += t.getUnits();
             }
         }
         ProbabilityGrid grid = new ProbabilityGrid(units, totalEnemyUnits);
@@ -168,8 +168,8 @@ public class CountryAgent {
         int totalEnemyUnits = goal.getFinalGoal().getTerritory().getAdjacentTerritories().stream()
                 .filter(t -> t.getOwner() != this.getTerritory().getOwner()
                         && !goal.stream().map(x -> x.getTerritory()).anyMatch(x -> x == t))
-                .mapToInt(t -> t.getNUnits()).sum();
-        ProbabilityGrid grid = new ProbabilityGrid(units + this.getTerritory().getNUnits(), totalEnemyUnits);
+                .mapToInt(t -> t.getUnits()).sum();
+        ProbabilityGrid grid = new ProbabilityGrid(units + this.getTerritory().getUnits(), totalEnemyUnits);
         return grid.chanceOfWin();
     }
 
@@ -190,7 +190,7 @@ public class CountryAgent {
 
     private double getDefenseUtility(Integer i) {
         double v = getValue();
-        double d = getDefenseOdds(this.getTerritory().getNUnits() + i);
+        double d = getDefenseOdds(this.getTerritory().getUnits() + i);
         return v * d;
     }
     
@@ -234,13 +234,13 @@ public class CountryAgent {
         
         if (!goalList.isEmpty()) {
             for (Goal goal : goalList) {
-                for (int i = 1; i < territory.getNUnits(); i++) {
+                for (int i = 1; i < territory.getUnits(); i++) {
                     double util = getGoalUtility(goal, -i) * i - getGoalUtilityPerUnit(goal,0);
                     result.add(new FortifierBid(this, i, util));
                 }
             }
         }
-        for (int i = 1; i < territory.getNUnits(); i++) {
+        for (int i = 1; i < territory.getUnits(); i++) {
             double util = getDefenseUtility(-i) * i - getDefenseUtilityPerUnit(0);
             result.add(new FortifierBid(this,i,util));
         }

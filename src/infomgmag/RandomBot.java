@@ -71,14 +71,14 @@ public class RandomBot extends Player {
 
             Collections.shuffle(territories, Risk.random);
             for (Territory at : territories)
-                if (at.getNUnits() > 1) {
+                if (at.getUnits() > 1) {
                     Collections.shuffle(at.getAdjacentTerritories(), Risk.random);
                     for (Territory dt : at.getAdjacentTerritories())
                         if (!territories.contains(dt)) {
                             combatMove.setDefendingTerritory(dt);
                             combatMove.setAttackingTerritory(at);
-                            combatMove.setAttackingUnits(Integer.min(3, at.getNUnits() - 1));
-                            combatMove.setDefendingUnits(Integer.min(2, dt.getNUnits()));
+                            combatMove.setAttackingUnits(Integer.min(3, at.getUnits() - 1));
+                            combatMove.setDefendingUnits(Integer.min(2, dt.getUnits()));
                             return combatMove;
                         }
                 }
@@ -90,8 +90,8 @@ public class RandomBot extends Player {
     public void fortifyTerritory(Board board) {
         Collections.shuffle(territories, Risk.random);
         for (Territory t : territories)
-            if (t.getNUnits() > 1) {
-                int units = Risk.random.nextInt(t.getNUnits() - 1) + 1;
+            if (t.getUnits() > 1) {
+                int units = Risk.random.nextInt(t.getUnits() - 1) + 1;
                 ArrayList<Territory> connections = Risk.getConnectedTerritories(t);
                 Territory fortifiedTerritory = connections.get(Risk.random.nextInt(connections.size()));
                 board.moveUnits(t, fortifiedTerritory, units);
@@ -103,7 +103,7 @@ public class RandomBot extends Player {
     public void movingInAfterInvasion(CombatMove combatMove) {
         int transferredUnits = nrOfUnitsmovingInAfterInvasion(combatMove);
         combatMove.getDefendingTerritory().setUnits(transferredUnits);
-        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - transferredUnits);
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - transferredUnits);
     }
 
     @Override
@@ -118,11 +118,11 @@ public class RandomBot extends Player {
     // TODO: Here the agent is always leaving one unit behind and move the rest to
     // the invaded territory. This should eventually be changed.
     private int nrOfUnitsmovingInAfterInvasion(CombatMove combatMove) {
-        return combatMove.getAttackingTerritory().getNUnits() - 1;
+        return combatMove.getAttackingTerritory().getUnits() - 1;
     }
 
     public int getDefensiveDice(CombatMove combatMove) {
-        if (combatMove.getDefendingTerritory().getNUnits() >= 2) {
+        if (combatMove.getDefendingTerritory().getUnits() >= 2) {
             return Risk.random.nextInt(2) + 1;
         } else {
             return 1;
