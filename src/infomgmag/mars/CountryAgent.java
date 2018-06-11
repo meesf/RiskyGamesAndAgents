@@ -31,10 +31,10 @@ public class CountryAgent {
     public void calculateOwnershipValue(Personality personality) { //calculates value of owning a territory
         this.value =
                 (this.territory.getOwner().equals(mars) ? personality.getDefensiveBonus() : personality.getOffensiveBonus()) *
-                (friendlyNeighbours() * personality.getFriendliesweight() +
-                 enemyNeighbours() * personality.getEnemiesweight() +
-                 friendlyArmies() * personality.getFriendliesweight() +
-                 enemyArmies() * personality.getEarmiesweight() +
+                (friendlyNeighbours() * personality.getFriendlyNeighbourWeight() +
+                 enemyNeighbours() * personality.getEnemyNeighbourWeight() +
+                 friendlyArmies() * personality.getFriendlyNeighbourWeight() +
+                 enemyArmies() * personality.getEnemyArmyWeight() +
                  territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
                  percentageOfContinentOwned() * personality.getPercentageOfContinentWeight());
