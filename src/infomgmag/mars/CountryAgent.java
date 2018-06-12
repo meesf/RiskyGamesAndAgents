@@ -189,18 +189,29 @@ public class CountryAgent {
 
     public ArrayList<FortifierBid> getFortifierBids () {
         ArrayList<FortifierBid> result = new ArrayList<>();
-        
+        double bestUtil = Double.NEGATIVE_INFINITY;
         if (!goalList.isEmpty()) {
+            Goal bestGoal = null;
             for (Goal goal : goalList) {
-                for (int i = 1; i < territory.getUnits(); i++) {
-                    double util = getGoalUtility(goal, -i) - getGoalUtility(goal,0);
-                    result.add(new FortifierBid(this, i, util));
+                double util = getGoalUtility(goal,0);
+                if (util > bestUtil) {
+                    bestUtil = util;
+                    bestGoal = goal;
                 }
             }
+            
+            for (int i = 1; i < territory.getUnits(); i++) {
+                double util = getGoalUtility(bestGoal, -i) - getGoalUtility(bestGoal,0);
+                result.add(new FortifierBid(this, i, util));
+            }
         }
-        for (int i = 1; i < territory.getUnits(); i++) {
-            double util = getDefenseUtility(-i) - getDefenseUtility(0);
-            result.add(new FortifierBid(this,i,util));
+        double defensiveUtil = getDefenseUtility(0);
+        if (defensiveUtil > bestUtil) {
+            result = new ArrayList<>();
+            for (int i = 1; i < territory.getUnits(); i++) {
+                double util = getDefenseUtility(-i) - getDefenseUtility(0);
+                result.add(new FortifierBid(this,i,util));
+            }
         }
         return result;
     }
