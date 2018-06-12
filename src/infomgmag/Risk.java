@@ -23,9 +23,10 @@ public class Risk implements CombatInterface{
     // Variables to be customized by debugger
     private boolean visible = true;
     private int randomPlayers = 0;
-    private int agressivePlayers = 2;
+    private int agressivePlayers = 1;
     private int normalPlayers = 2;
     private int defensivePlayers = 2;
+    private int continentPlayers = 1;
 
     public static Random random;
 
@@ -273,8 +274,10 @@ public class Risk implements CombatInterface{
             personalities.add(PersonalityFactory.agressivePersonality());
         for (int j = 0; j < normalPlayers; j++)
             personalities.add(PersonalityFactory.normalPersonality());
+        for (int j = 0; j < continentPlayers; j++)
+            personalities.add(PersonalityFactory.continentPersonality());
 
-        for (; i < randomPlayers + agressivePlayers + defensivePlayers + normalPlayers; i++) {
+        for (; i < randomPlayers + agressivePlayers + defensivePlayers + normalPlayers + continentPlayers; i++) {
             Color color;
             if (i < playerColors.length) {
                 color = playerColors[i];
