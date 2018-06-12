@@ -125,7 +125,6 @@ public class Mars extends Player {
     public void placeReinforcements(Board board) {
         for (CountryAgent ca : countryAgents) {
             ca.clearGoals();
-            ca.calculateOwnershipValue(personality);
         }
 
         for (CountryAgent sender : countryAgents) {
@@ -137,6 +136,7 @@ public class Mars extends Player {
         while (reinforcements > 0) {
             ArrayList<ReinforcementBid> bids = new ArrayList<>();
             for (CountryAgent ca : countryAgents) {
+                ca.calculateOwnershipValue(personality);
                 if (ca.getTerritory().getOwner() == this) {
                     bids.addAll(ca.getBids(reinforcements));
                 }
@@ -183,7 +183,7 @@ public class Mars extends Player {
                     .filter(ca -> ca.getTerritory().getOwner() == this).filter(ca -> ca.bordersEnemy())
                     .filter(ca -> ca.getTerritory().getUnits() > 1)
                     // Collect all offensive bids
-                    .map(ca -> ca.getBestBid(0)).filter(x -> x instanceof OffensiveBid).map(x -> (OffensiveBid) x)
+                    .map(ca -> ca.getAttackBid()).filter(x -> x instanceof OffensiveBid).map(x -> (OffensiveBid) x)
                     // Create attackbids from the best
                     .max((x, y) -> x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1));
             

@@ -118,6 +118,7 @@ public class CountryAgent {
         }
         goalValue += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
         goalValue += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
+        goalValue += territory.getUnits() * mars.getPersonality().getClusteringWeight();
         return goalValue;
     }
 
@@ -152,13 +153,6 @@ public class CountryAgent {
         return (getGoalUtility(goal,i) - getGoalUtility(goal,0)) / (i > 0 ? i : 1);
     }
 
-
-    private double getDefenseUtility(Integer i) {
-        double v = value;
-        double d = getDefenseOdds(this.getTerritory().getUnits() + i);
-        return v * d;
-    }
-    
     private double getDefenseUtilityPerUnit(int i) {
         return (getDefenseUtility(i) - getDefenseUtility(0)) / (i > 0 ? i : 1);
     }
@@ -259,5 +253,17 @@ public class CountryAgent {
                 }
             }
         }
+    }
+
+    public ReinforcementBid getAttackBid() {
+        ArrayList<ReinforcementBid> result = new ArrayList<>();
+        for (Goal goal : goalList) {
+            double bidUtil = getGoalUtility(goal, 0);
+            OffensiveBid bid = new OffensiveBid(this, goal, 0, bidUtil);
+            result.add(bid);
+        }
+        double bidUtil = getDefenseUtility(0);
+        result.add(new DefensiveBid(this, 0, bidUtil));
+        return result.stream().max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1))).get();
     }
 }
