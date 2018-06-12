@@ -193,13 +193,13 @@ public class CountryAgent {
         if (!goalList.isEmpty()) {
             for (Goal goal : goalList) {
                 for (int i = 1; i < territory.getUnits(); i++) {
-                    double util = getGoalUtility(goal, -i) * i - getGoalUtilityPerUnit(goal,0);
+                    double util = getGoalUtility(goal, -i) - getGoalUtility(goal,0);
                     result.add(new FortifierBid(this, i, util));
                 }
             }
         }
         for (int i = 1; i < territory.getUnits(); i++) {
-            double util = getDefenseUtility(-i) * i - getDefenseUtilityPerUnit(0);
+            double util = getDefenseUtility(-i) - getDefenseUtility(0);
             result.add(new FortifierBid(this,i,util));
         }
         return result;
