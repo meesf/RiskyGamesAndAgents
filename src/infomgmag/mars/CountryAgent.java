@@ -118,6 +118,7 @@ public class CountryAgent {
         }
         goalValue += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
         goalValue += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
+        goalValue += territory.getUnits() * mars.getPersonality().getClusteringWeight();
         return goalValue;
     }
 
@@ -147,13 +148,13 @@ public class CountryAgent {
         double d = getDefenseOddsOfCapture(goal, i);
         return p * w * d;
     }
-    
+
     private double getGoalUtilityPerUnit(Goal goal, int i) {
-        double total = getGoalUtility(goal, i);
-        if (i == 0) {
-            return total;
-        }
-        return total / i;
+        return (getGoalUtility(goal,i) - getGoalUtility(goal,0)) / (i > 0 ? i : 1);
+    }
+
+    private double getDefenseUtilityPerUnit(int i) {
+        return (getDefenseUtility(i) - getDefenseUtility(0)) / (i > 0 ? i : 1);
     }
 
     private double getDefenseUtility(int i) {
@@ -161,23 +162,13 @@ public class CountryAgent {
         double d = getDefenseOdds(this.getTerritory().getUnits() + i);
         return v * d;
     }
-    
-    private double getDefenseUtilityPerUnit(int i) {
-        double total = getDefenseUtility(i);
-        if (i == 0) {
-            return total;
-        }
-        return total / i;
-    }
 
     public ArrayList<ReinforcementBid> getBids(int unitsLeft) {
         ArrayList<ReinforcementBid> result = new ArrayList<>();
         for (Goal goal : goalList) {
             result.addAll(getOffensiveBids(unitsLeft, goal));
         }
-
-        DefensiveBid defBid = getDefensiveBid(unitsLeft);
-        result.add(defBid);
+        result.addAll(getDefensiveBids(unitsLeft));
         return result;
     }
 
@@ -187,15 +178,13 @@ public class CountryAgent {
             .get();
     }
 
-    public DefensiveBid getDefensiveBid(int unitsLeft) {
-        DefensiveBid bestBid = null;
+    public ArrayList<DefensiveBid> getDefensiveBids(int unitsLeft) {
+        ArrayList<DefensiveBid> result = new ArrayList<>();
         for (int i = 0; i <= unitsLeft; i++) {
-            double bidUtil = getDefenseUtilityPerUnit(i);
-            if (bestBid == null || bidUtil > bestBid.getUtility()) {
-                bestBid = new DefensiveBid(this, i, bidUtil);
-            }
+    		double bidUtil = getDefenseUtilityPerUnit(i);
+    		result.add(new DefensiveBid(this, i, bidUtil));
         }
-        return bestBid;
+        return result;
     }
 
     public ArrayList<FortifierBid> getFortifierBids () {
@@ -264,5 +253,17 @@ public class CountryAgent {
                 }
             }
         }
+    }
+
+    public ReinforcementBid getAttackBid() {
+        ArrayList<ReinforcementBid> result = new ArrayList<>();
+        for (Goal goal : goalList) {
+            double bidUtil = getGoalUtility(goal, 0);
+            OffensiveBid bid = new OffensiveBid(this, goal, 0, bidUtil);
+            result.add(bid);
+        }
+        double bidUtil = getDefenseUtility(0);
+        result.add(new DefensiveBid(this, 0, bidUtil));
+        return result.stream().max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1))).get();
     }
 }
