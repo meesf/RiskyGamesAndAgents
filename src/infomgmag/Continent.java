@@ -15,12 +15,12 @@ public class Continent {
     private ArrayList<Territory> territories;
     private Color color;
 
-    private int nReinforcements; // Number of reinforcements received when a player owns the continent.
+    private int reinforcements; // Number of reinforcements received when a player owns the continent.
 
     public Continent(Color color, String name, int bonusArmies) {
         this.color = color;
         this.name = name;
-        this.nReinforcements = bonusArmies;
+        this.reinforcements = bonusArmies;
         territories = new ArrayList<>();
     }
 
@@ -40,8 +40,8 @@ public class Continent {
         return this.name;
     }
 
-    public int getNReinforcements() {
-        return nReinforcements;
+    public int getReinforcements() {
+        return reinforcements;
     }
 
     public void addTerritory(Territory ter) {

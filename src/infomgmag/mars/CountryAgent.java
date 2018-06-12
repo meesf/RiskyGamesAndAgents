@@ -2,7 +2,6 @@ package infomgmag.mars;
 
 import infomgmag.Territory;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CountryAgent {
     private Territory territory;
@@ -22,7 +21,8 @@ public class CountryAgent {
         return territory;
     }
 
-    public void calculateOwnershipValue(Personality personality) { //calculates value of owning a territory
+    //calculates value of owning a territory
+    public void calculateOwnershipValue(Personality personality) {
         this.value =
                 (this.territory.getOwner().equals(mars) ? personality.getDefensiveBonus() : personality.getOffensiveBonus()) *
                 (friendlyNeighbours() * personality.getFriendlyNeighbourWeight() +
@@ -34,61 +34,44 @@ public class CountryAgent {
                  percentageOfContinentOwned() * personality.getPercentageOfContinentWeight());
     }
 
-    public Integer friendlyNeighbours() // calculates how many friendly neighbouring territory border this territory
-    {
-        Integer friends = 0;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() == mars) {
-                friends += 1;
-            }
-        }
-        return friends;
+    // calculates how many friendly neighbouring territories border this territory
+    public long friendlyNeighbours() {
+        return territory.getAdjacentTerritories().stream()
+                .filter(t -> t.getOwner() == mars)
+                .count();
     }
 
-    public Integer enemyNeighbours() // calculates how many enemy neighbouring territory border this territory
-    {
-        Integer enemies = 0;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() != mars) {
-                enemies += 1;
-            }
-        }
-        return enemies;
+    // calculates how many enemy neighbouring territories border this territory
+    public long enemyNeighbours() {
+        return territory.getAdjacentTerritories().stream()
+                .filter(t -> t.getOwner() != mars)
+                .count();
     }
 
-    public Integer friendlyArmies() // calculates how many friendly armies border this territory
-    {
-        Integer farmies = 0;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() == mars) {
-                farmies += territory.getAdjacentTerritories().get(i).getNUnits();
-            }
-        }
-        return farmies;
+    // calculates how many friendly armies border this territory
+    public long friendlyArmies() {
+        return territory.getAdjacentTerritories().stream()
+                .filter(t -> t.getOwner() == mars)
+                .mapToInt(t -> t.getUnits())
+                .sum();
     }
 
-    public Integer enemyArmies() // calculates how many enemy armies border this territory
-    {
-        Integer earmies = 0;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() != mars) {
-                earmies += territory.getAdjacentTerritories().get(i).getNUnits();
-            }
-        }
-        return earmies;
+    // calculates how many enemy armies border this territory
+    public long enemyArmies() {
+        return territory.getAdjacentTerritories().stream()
+                .filter(t -> t.getOwner() != mars)
+                .mapToInt(t -> t.getUnits())
+                .sum();
     }
 
-    public boolean bordersEnemy() { // checks if a territory borders an enemy
-        boolean bordersenemies = false;
-        for (int i = 0; i < territory.getAdjacentTerritories().size(); i++) {
-            if (territory.getAdjacentTerritories().get(i).getOwner() != territory.getOwner()) {
-                bordersenemies = true;
-            }
-        }
-        return bordersenemies;
+    // checks if this territory borders an enemy
+    public boolean bordersEnemy() { 
+        return territory.getAdjacentTerritories().stream()
+                .anyMatch(t -> t.getOwner() != mars);
     }
 
-    public boolean ownWholeContinent() { // checks if the agents owns the whole continent except this territory
+    // checks if the agent owns the whole continent except this territory
+    public boolean ownWholeContinent() {
         return territory.getContinent().getTerritories().stream().allMatch(x -> x.getOwner() == this.mars);
     }
 
@@ -97,19 +80,16 @@ public class CountryAgent {
                 && territory.getOwner() != this.mars;
     }
 
-    public double percentageOfContinentOwned() { // checks the percentage of continent owned
-        double percentageofcontinent = 0;
-        double territoriesOwned = 0;
-        for (Territory ter: territory.getContinent().getTerritories()){
-            if (ter.getOwner() == mars) {
-                territoriesOwned += 1;
-            }
-        }
-        percentageofcontinent = territoriesOwned / territory.getContinent().getTerritories().size();
-        return percentageofcontinent;
+    // calculates the percentage of continent owned
+    public double percentageOfContinentOwned() {
+        double owned = territory.getContinent().getTerritories().stream()
+                .filter(t -> t.getOwner() == mars)
+                .count();
+        return owned / territory.getContinent().getTerritories().size();
     }
 
-    public void clearlists() { // clears the lists used in determining which country gets reinforcements
+    // clears the goals
+    public void clearGoals() { 
         goalList.clear();
     }
 
@@ -117,76 +97,79 @@ public class CountryAgent {
         this.adjacentAgents.add(ca);
     }
 
-    private double getGoalSuccessOdds(Integer i, Goal goal) {
-        Integer attackingUnits = this.getTerritory().getNUnits() + i - goal.size() - 1;
+    private double getGoalSuccessOdds(int i, Goal goal) {
+        int attackingUnits = this.getTerritory().getUnits() + i - goal.size() - 1;
         if (attackingUnits < 1) {
             return 0.0;
         }
-        Integer defendingUnits = 0;
+        int defendingUnits = 0;
         for (CountryAgent ca : goal) {
-            defendingUnits += ca.getTerritory().getNUnits();
+            defendingUnits += ca.getTerritory().getUnits();
         }
 
         ProbabilityGrid grid = new ProbabilityGrid(attackingUnits, defendingUnits);
         return grid.chanceOfWin();
     }
 
-    private Double getGoalValue(Goal goal) {
-        double value = 0.0;
+    private double getGoalValue(Goal goal) {
+        double goalValue = 0.0;
         for (CountryAgent ca : goal) {
-            value += ca.getValue();
+            goalValue += ca.value;
         }
-        value += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
-        return value;
+        goalValue += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
+        goalValue += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
+        return goalValue;
     }
 
-    private double getValue() {
-        return value;
-    }
-
-    public Double getDefenseOdds(int units) {
+    public double getDefenseOdds(int units) {
         int totalEnemyUnits = 0;
         for (Territory t : getTerritory().getAdjacentTerritories()) {
             if (t.getOwner() != this.getTerritory().getOwner()) {
-                totalEnemyUnits += t.getNUnits();
+                totalEnemyUnits += t.getUnits();
             }
         }
         ProbabilityGrid grid = new ProbabilityGrid(units, totalEnemyUnits);
         return grid.chanceOfWin();
     }
 
-    public Double getDefenseOddsOfCapture(Goal goal, int units) {
+    public double getDefenseOddsOfCapture(Goal goal, int units) {
         int totalEnemyUnits = goal.getFinalGoal().getTerritory().getAdjacentTerritories().stream()
                 .filter(t -> t.getOwner() != this.getTerritory().getOwner()
                         && !goal.stream().map(x -> x.getTerritory()).anyMatch(x -> x == t))
-                .mapToInt(t -> t.getNUnits()).sum();
-        ProbabilityGrid grid = new ProbabilityGrid(units + this.getTerritory().getNUnits(), totalEnemyUnits);
+                .mapToInt(t -> t.getUnits()).sum();
+        ProbabilityGrid grid = new ProbabilityGrid(units + this.getTerritory().getUnits(), totalEnemyUnits);
         return grid.chanceOfWin();
     }
 
-    private double getGoalUtility(Goal goal, Integer i) {
+    private double getGoalUtility(Goal goal, int i) {
         double p = getGoalSuccessOdds(i, goal);
         double w = getGoalValue(goal);
         double d = getDefenseOddsOfCapture(goal, i);
         return p * w * d;
     }
-    
-    private double getGoalUtilityPerUnit(Goal goal, Integer i) {
+
+    private double getGoalUtilityPerUnit(Goal goal, int i) {
         return (getGoalUtility(goal,i) - getGoalUtility(goal,0)) / (i > 0 ? i : 1);
     }
 
 
     private double getDefenseUtility(Integer i) {
-        double v = getValue();
-        double d = getDefenseOdds(this.getTerritory().getNUnits() + i);
+        double v = value;
+        double d = getDefenseOdds(this.getTerritory().getUnits() + i);
         return v * d;
     }
     
-    private double getDefenseUtilityPerUnit(Integer i) {
+    private double getDefenseUtilityPerUnit(int i) {
         return (getDefenseUtility(i) - getDefenseUtility(0)) / (i > 0 ? i : 1);
     }
 
-    public ArrayList<ReinforcementBid> getBids(Integer unitsLeft) {
+    private double getDefenseUtility(int i) {
+        double v = value;
+        double d = getDefenseOdds(this.getTerritory().getUnits() + i);
+        return v * d;
+    }
+
+    public ArrayList<ReinforcementBid> getBids(int unitsLeft) {
         ArrayList<ReinforcementBid> result = new ArrayList<>();
         for (Goal goal : goalList) {
             result.addAll(getOffensiveBids(unitsLeft, goal));
@@ -195,17 +178,13 @@ public class CountryAgent {
         return result;
     }
 
-    public ReinforcementBid getBestBid(Integer unitsLeft) {
-            ReinforcementBid bestBid = getBids(unitsLeft).stream()
+    public ReinforcementBid getBestBid(int unitsLeft) {
+        return getBids(unitsLeft).stream()
             .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
             .get();
-            
-        return getBids(unitsLeft).stream()
-                .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
-                .get();
-
     }
-    public ArrayList<DefensiveBid> getDefensiveBids(Integer unitsLeft) {
+
+    public ArrayList<DefensiveBid> getDefensiveBids(int unitsLeft) {
         ArrayList<DefensiveBid> result = new ArrayList<>();
         for (int i = 0; i <= unitsLeft; i++) {
     		double bidUtil = getDefenseUtilityPerUnit(i);
@@ -213,33 +192,33 @@ public class CountryAgent {
         }
         return result;
     }
-    
+
     public ArrayList<FortifierBid> getFortifierBids () {
         ArrayList<FortifierBid> result = new ArrayList<>();
         
         if (!goalList.isEmpty()) {
             for (Goal goal : goalList) {
-                for (int i = 1; i < territory.getNUnits(); i++) {
+                for (int i = 1; i < territory.getUnits(); i++) {
                     double util = getGoalUtility(goal, -i) * i - getGoalUtilityPerUnit(goal,0);
                     result.add(new FortifierBid(this, i, util));
                 }
             }
         }
-        for (int i = 1; i < territory.getNUnits(); i++) {
+        for (int i = 1; i < territory.getUnits(); i++) {
             double util = getDefenseUtility(-i) * i - getDefenseUtilityPerUnit(0);
             result.add(new FortifierBid(this,i,util));
         }
         return result;
     }
     
-    public ReinforcementBid getBestMaxBid(Integer unitsLeft) {
+    public ReinforcementBid getBestMaxBid(int unitsLeft) {
         return this.getBids(unitsLeft).stream()
                 .filter(x -> x.getUnits() == unitsLeft)
                 .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
                 .get();
     }
 
-    private ArrayList<OffensiveBid> getOffensiveBids(Integer unitsLeft, Goal goal) {
+    private ArrayList<OffensiveBid> getOffensiveBids(int unitsLeft, Goal goal) {
         ArrayList<OffensiveBid> result = new ArrayList<>();
         OffensiveBid bestBid = null;
         for (int i = 0; i <= unitsLeft; i++) {

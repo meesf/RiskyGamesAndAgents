@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Territory {
     private Player owner;
-    private Integer nUnits;
+    private int units;
     private ArrayList<Territory> adjacentTerritories;
     private String name;
     private Continent continent;
@@ -26,7 +26,7 @@ public class Territory {
         this.x = x;
         this.y = y;
         this.name = name;
-        this.nUnits = 0;
+        this.units = 0;
         this.adjacentTerritories = new ArrayList<>();
     }
 
@@ -44,7 +44,7 @@ public class Territory {
     }
 
     public void setUnits(int units) {
-        this.nUnits = units;
+        this.units = units;
     }
 
     public String getName() {
@@ -55,8 +55,8 @@ public class Territory {
         return owner;
     }
 
-    public int getNUnits() {
-        return nUnits;
+    public int getUnits() {
+        return units;
     }
 
     public void addAdjacentTerritory(Territory t) {
@@ -85,11 +85,11 @@ public class Territory {
 
     @Override
     public String toString() {
-        return "name: " + name + " nrOfUnits: " + nUnits;
+        return "name: " + name + " nrOfUnits: " + units;
     }
 
 
-    public Double getContinentsBorderedAmount() {
+    public double getContinentsBorderedAmount() {
         return (double) continentsBorderedAmount;
     }
 }
