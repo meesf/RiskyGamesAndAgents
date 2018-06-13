@@ -7,11 +7,12 @@ public class CombatEvent {
     Territory defendingTerritory;
     int attackingUnits;
     int defendingUnits;
+    int attackingCasualties;
+    int defendingCasualties;
     int combatResult;
     boolean captured;
     
     public static final int ATTACKER_WINS = 0, DEFENDER_WINS = 1, ONE_EACH = 2;
-    public static final int NO_CAPTURE = 0, CAPTURE = 1;
     
     CombatEvent(
             Player attackingPlayer, 
@@ -21,7 +22,9 @@ public class CombatEvent {
             int attackingUnits,
             int defendingUnits,
             int combatResult,
-            boolean captured) {
+            boolean captured,
+            int attackingCasualties,
+            int defendingCasualties) {
         this.attackingPlayer = attackingPlayer;
         this.defendingPlayer = defendingPlayer;
         this.attackingTerritory = attackingTerritory;
@@ -30,6 +33,8 @@ public class CombatEvent {
         this.defendingUnits = defendingUnits;
         this.combatResult = combatResult;
         this.captured = captured;
+        this.attackingCasualties = attackingCasualties;
+        this.defendingCasualties = defendingCasualties;
     }
 
     public Player getAttackingPlayer() {
@@ -60,7 +65,17 @@ public class CombatEvent {
         return combatResult;
     }
 
+    public int getAttackingCasualties(){
+        return attackingCasualties;
+    }
+
+    public int getDefendingCasualties(){
+        return defendingCasualties;
+    }
+
     public boolean getCaptured() {
         return captured;
     }
 }
+
+

@@ -17,7 +17,7 @@ import java.util.Random;
  * @version FirstPrototype
  * @date 4/5/2018
  */
-public class Risk implements CombatInterface{
+public class Risk implements CombatInterface {
 
     // Variables to be customized by debugger
     private boolean visible = true;
@@ -38,8 +38,8 @@ public class Risk implements CombatInterface{
     private int turn = 0;
     private Integer nrOfStartingUnits;
     private boolean StopGame;
-    
-    private ArrayList<CombatEvent> combatLog;
+
+    public ArrayList<CombatEvent> combatLog;
 
     public static void main(String[] args) {
         random = new Random(System.currentTimeMillis());
@@ -47,49 +47,49 @@ public class Risk implements CombatInterface{
         Risk risk = new Risk();
         risk.run(); //this makes the game run
     }
-    
+
     public static void createDiceOdds() {
-    	DICE_ODDS_ONE = new ArrayList<ArrayList<Double>>();
-    	ArrayList<Double> oneA = new ArrayList<Double>();
-    	oneA.add(15.0/36);
-    	oneA.add(125.0/216);
-    	oneA.add(855.0/1296);
-    	DICE_ODDS_ONE.add(oneA);
-    	ArrayList<Double> oneD = new ArrayList<Double>();
-    	oneD.add(21.0/36);
-    	oneD.add(91.0/216);
-    	oneD.add(441.0/1296);
-    	DICE_ODDS_ONE.add(oneD);
+        DICE_ODDS_ONE = new ArrayList<ArrayList<Double>>();
+        ArrayList<Double> oneA = new ArrayList<Double>();
+        oneA.add(15.0 / 36);
+        oneA.add(125.0 / 216);
+        oneA.add(855.0 / 1296);
+        DICE_ODDS_ONE.add(oneA);
+        ArrayList<Double> oneD = new ArrayList<Double>();
+        oneD.add(21.0 / 36);
+        oneD.add(91.0 / 216);
+        oneD.add(441.0 / 1296);
+        DICE_ODDS_ONE.add(oneD);
         DICE_ODDS_TWO = new ArrayList<ArrayList<Double>>();
         ArrayList<Double> twoA = new ArrayList<Double>();
-        twoA.add(55.0/216);
-        twoA.add(295.0/1296);
-        twoA.add(2890.0/7776);
-    	DICE_ODDS_TWO.add(twoA);
-    	ArrayList<Double> twoD = new ArrayList<Double>();
-        twoD.add(161.0/216);
-        twoD.add(581.0/1296);
-        twoD.add(2275.0/7776);
-    	DICE_ODDS_TWO.add(twoD);
-    	ArrayList<Double> twoL = new ArrayList<Double>();
+        twoA.add(55.0 / 216);
+        twoA.add(295.0 / 1296);
+        twoA.add(2890.0 / 7776);
+        DICE_ODDS_TWO.add(twoA);
+        ArrayList<Double> twoD = new ArrayList<Double>();
+        twoD.add(161.0 / 216);
+        twoD.add(581.0 / 1296);
+        twoD.add(2275.0 / 7776);
+        DICE_ODDS_TWO.add(twoD);
+        ArrayList<Double> twoL = new ArrayList<Double>();
         twoL.add(null);
-        twoL.add(420.0/1296);
-        twoL.add(2611.0/7776);
-    	DICE_ODDS_TWO.add(twoL);
+        twoL.add(420.0 / 1296);
+        twoL.add(2611.0 / 7776);
+        DICE_ODDS_TWO.add(twoL);
     }
-    
+
     public Risk() {
-        visuals = new RiskVisual(this,visible);
+        visuals = new RiskVisual(this, visible);
         board = new Board();
         combatLog = new ArrayList<>();
         defeatedPlayers = new ArrayList<Player>();
         nrOfStartingUnits = 30;
-        initializePlayers(randomPlayers,marsPlayers);
+        initializePlayers(randomPlayers, marsPlayers);
         Integer currentPlayerIndex = divideTerritories();
         initialPlaceReinforcements(currentPlayerIndex);
         currentPlayer = activePlayers.get(0);
     }
-    
+
     public void run() {
         while (!finished()) {
             visuals.update();
@@ -100,7 +100,7 @@ public class Risk implements CombatInterface{
             currentPlayer.placeReinforcements(board);
 
             int startingNrOfTerritories = currentPlayer.getTerritories().size();
-            
+
             currentPlayer.attackPhase((CombatInterface) this);
             currentPlayer.fortifyTerritory(board);
             visuals.update();
@@ -116,7 +116,7 @@ public class Risk implements CombatInterface{
         visuals.log(activePlayers.get(0) + " has won!");
 
         if (visible)
-            while(true) {
+            while (true) {
                 visuals.update();
             }
     }
@@ -169,8 +169,22 @@ public class Risk implements CombatInterface{
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getNUnits() - attackLoss);
         combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getNUnits() - defenseLoss);
 
-        // Update number of units on both territories and new owner
         boolean captured = combatMove.getDefendingTerritory().getNUnits() == 0;
+
+        combatLog.add(new CombatEvent(
+                combatMove.getAttackingTerritory().getOwner(),
+                combatMove.getDefendingTerritory().getOwner(),
+                combatMove.getAttackingTerritory(),
+                combatMove.getDefendingTerritory(),
+                combatMove.getAttackingUnits(),
+                combatMove.getDefendingUnits(),
+                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
+                        (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
+                                CombatEvent.ONE_EACH),
+                captured,
+                attackLoss,
+                defenseLoss));
+        // Update number of units on both territories and new owner
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);
@@ -186,22 +200,10 @@ public class Risk implements CombatInterface{
                     currentPlayer.turnInCards(board);
                 activePlayers.remove(defender);
                 if (activePlayers.size() > 1)
-                	currentPlayer.placeReinforcements(board);
+                    currentPlayer.placeReinforcements(board);
                 defeatedPlayers.add(defender);
             }
         }
-
-        combatLog.add(new CombatEvent(
-                combatMove.getAttackingTerritory().getOwner(), 
-                combatMove.getDefendingTerritory().getOwner(), 
-                combatMove.getAttackingTerritory(), 
-                combatMove.getDefendingTerritory(), 
-                combatMove.getAttackingUnits(), 
-                combatMove.getDefendingUnits(), 
-                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
-                    (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
-                        CombatEvent.ONE_EACH), 
-                captured));
     }
 
     private Integer calculateReinforcements() {
@@ -257,19 +259,19 @@ public class Risk implements CombatInterface{
                 color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
                         Risk.random.nextFloat() * 0.8f + 0.2f);
             }
-            RandomBot player = new RandomBot(objective, 0, "Player " + i + " (Random Bot)",color);
+            RandomBot player = new RandomBot(objective, 0, "Player " + i + " (Random Bot)", color);
             activePlayers.add(player);
         }
 
         for (; i < randoms + marses; i++) {
-	        Color color;
-	        if (i < playerColors.length) {
-	            color = playerColors[i];
-	        } else {
-	            color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
-	                    Risk.random.nextFloat() * 0.8f + 0.2f);
-	        }
-	        Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
+            Color color;
+            if (i < playerColors.length) {
+                color = playerColors[i];
+            } else {
+                color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
+                        Risk.random.nextFloat() * 0.8f + 0.2f);
+            }
+            Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Personality personality = new Personality(
                     3.5,
                     170.0,
@@ -282,9 +284,10 @@ public class Risk implements CombatInterface{
                     4.0,
                     5.0,
                     4,
-                    0.6);
-	        Mars player = new Mars(this, objective, 0, "Player " + i + " (MARS)",color, personality);
-	        activePlayers.add(player);
+                    0.6,
+                    1000.0);
+            Mars player = new Mars(this, objective, 0, "Player " + i + " (MARS)", color, personality);
+            activePlayers.add(player);
         }
     }
 
@@ -323,7 +326,7 @@ public class Risk implements CombatInterface{
     private boolean finished() {
         return activePlayers.size() == 1 || StopGame;
     }
-    
+
     public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
         ArrayList<Territory> visited = new ArrayList<>();
         ArrayList<Territory> result = new ArrayList<>();
@@ -348,15 +351,21 @@ public class Risk implements CombatInterface{
     }
 
     public static void printError(String str) {
-    	System.err.println("Error:"+str);
-    	System.exit(1);
+        System.err.println("Error:" + str);
+        System.exit(1);
     }
 
-    public ArrayList<Player> getDefeatedPlayers(){
+    public ArrayList<Player> getDefeatedPlayers() {
         return this.defeatedPlayers;
     }
 
     public int getActivePlayerAmount() {
         return activePlayers.size();
     }
+
+    public ArrayList<CombatEvent> getCombatLog() {
+        return combatLog;
+    }
 }
+
+

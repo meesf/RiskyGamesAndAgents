@@ -1,7 +1,7 @@
 package infomgmag.mars;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import infomgmag.Continent;
+import infomgmag.Player;
 import infomgmag.Territory;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,6 +15,7 @@ public class CountryAgent {
     private ArrayList<Goal> goalList;
     private Mars mars;
     private double value;
+    private boolean ownedByHatedEnemy;
 
     CountryAgent(Territory territory, Mars mars) {
         this.territory = territory;
@@ -36,7 +37,8 @@ public class CountryAgent {
                  enemyArmies() * personality.getEarmiesweight() +
                  territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
-                 percentageOfContinentOwned() * personality.getPercentageOfContinentWeight());
+                 percentageOfContinentOwned() * personality.getPercentageOfContinentWeight() +
+                        (ownedByHatedEnemy ? 1 : 0) * personality.getHatedBonus());
     }
 
     public Integer friendlyNeighbours() // calculates how many friendly neighbouring territory border this territory
@@ -282,6 +284,12 @@ public class CountryAgent {
             Goal goal = new Goal();
             goal.addEarlierGoal(this);
             ca.createGoals(goal);
+        }
+    }
+
+    public void setHated(Player player){
+        if (territory.getOwner() == player) {
+            ownedByHatedEnemy = true;
         }
     }
 

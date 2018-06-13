@@ -13,6 +13,7 @@ public class Personality {
     private Double WIN_PERCENTAGE;
     private Double offensiveBonus;
     private Double defensiveBonus;
+    private Double hatedBonus;
 
     public Personality(Double defensiveBonus,
                        Double offensiveBonus,
@@ -25,7 +26,8 @@ public class Personality {
                        Double enemyOwnsWholeContinentWeight,
                        Double percentageOfContinentWeight,
                        Integer goalLength,
-                       Double win_percentage){
+                       Double win_percentage,
+                       Double hatedBonus){
         this.defensiveBonus = defensiveBonus;
         this.offensiveBonus = offensiveBonus;
         this.friendliesweight = friendliesweight;
@@ -38,6 +40,7 @@ public class Personality {
         this.percentageOfContinentWeight = percentageOfContinentWeight;
         this.goalLength = goalLength;
         this.WIN_PERCENTAGE = win_percentage;
+        this.hatedBonus = hatedBonus;
 
     }
 
@@ -89,6 +92,6 @@ public class Personality {
         return offensiveBonus;
     }
 
-
+    public Double getHatedBonus(){ return hatedBonus; }
 
 }

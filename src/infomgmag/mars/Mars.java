@@ -20,6 +20,8 @@ public class Mars extends Player {
     private List<CountryAgent> countryAgents;
     private HashMap<Territory, CountryAgent> countryAgentsByTerritory;
     private Personality personality;
+    private HashMap<Player, Double> playerDispositions;
+    private Risk risk;
 
     public Mars(Risk risk, Objective objective, Integer reinforcements, String name, Color color, Personality personality) {
         super(objective, reinforcements, name, color);
@@ -28,6 +30,8 @@ public class Mars extends Player {
         countryAgents = new ArrayList<>();
         countryAgentsByTerritory = new HashMap<Territory, CountryAgent>();
         this.personality = personality;
+        this.risk = risk;
+        playerDispositions = new HashMap<>();
 
         for (Territory t : risk.getBoard().getTerritories()) {
             CountryAgent ca = new CountryAgent(t, this);
@@ -123,6 +127,7 @@ public class Mars extends Player {
 
     @Override
     public void placeReinforcements(Board board) {
+        this.calculateHatedPlayer();
         for (CountryAgent ca : countryAgents) {
             ca.clearlists();
             ca.calculateOwnershipValue(personality);
@@ -195,6 +200,36 @@ public class Mars extends Player {
             cm.setDefendingTerritory(ob.get().getGoal().getFirstGoal().getTerritory());
             cm.setAttackingUnits(ob.get().reinforcedAgent.getTerritory().getNUnits());
             ci.performCombatMove(cm);
+        }
+    }
+
+    public void calculateHatedPlayer(){
+        Double playerHatred = 0.0;
+        for (Player enemyPlayer : risk.getActivePlayers()){
+            playerDispositions.put(enemyPlayer, playerHatred);
+        }
+        if (risk.combatLog.isEmpty()){ }
+        else {
+            for (int i = 1; i <= Math.min(75, risk.combatLog.size()); i++) {
+                if (risk.combatLog.get(risk.combatLog.size() - i ).getDefendingPlayer() == this) {
+                    System.out.println(risk.combatLog.get(risk.combatLog.size() - i ).getDefendingPlayer().getName() + " defending player");
+                    System.out.println(risk.combatLog.get(risk.combatLog.size() - i ).getAttackingPlayer().getName() + " attacking player");
+                    playerHatred += 0.5;
+                    if (risk.combatLog.get(risk.combatLog.size() - i).getCaptured()) {
+                        playerHatred += 2.0;
+                    }
+                    playerHatred += (risk.combatLog.get(risk.combatLog.size() - i).getDefendingCasualties()) * 0.25;
+                    playerDispositions.put(risk.combatLog.get(risk.combatLog.size() - i).getAttackingPlayer(), playerHatred);
+                }
+            }
+        }
+        for (CountryAgent ca : countryAgents){
+            if (playerHatred != 0) {
+                ca.setHated(playerDispositions.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey());
+                System.out.println(playerDispositions.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey() + " most hated player");
+                System.out.println(this.name + "current player");
+                System.out.println(playerDispositions.get(playerDispositions.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey()) + " value");
+            }
         }
     }
 
