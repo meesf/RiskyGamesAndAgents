@@ -15,11 +15,14 @@ public class Board {
     private ArrayList<Continent> continents;
     private ArrayList<Territory> territories;
 
-    private Integer artillery, cavalry, infantry, wildcard;
+    private int artillery, cavalry, infantry, wildcard;
 
     private int goldenCavalry;
+    private RiskVisual visuals;
 
-    public Board() {
+    public Board(RiskVisual visuals) {
+        this.visuals = visuals;
+
         continents = new ArrayList<>();
 
         this.goldenCavalry = 4;
@@ -238,13 +241,14 @@ public class Board {
      *         possible and has been executed.
      */
     public void addUnits(Player player, Territory territory, int number) {
-    	if(player!=territory.getOwner()) {
-    		Risk.printError(player.getName()+" tried reinforcing "+territory.getName()+", but does not own this territory");
-    	} else if(player.getReinforcements() < number) {
-    		Risk.printError(player.getName()+" does not have "+number+" reinforcements");
-    	} else {
-    		territory.setUnits(territory.getNUnits() + number);
-    	}
+        if(player!=territory.getOwner()) {
+            Risk.printError(player.getName()+" tried reinforcing "+territory.getName()+", but does not own this territory");
+        } else if(player.getReinforcements() < number) {
+            Risk.printError(player.getName()+" does not have "+number+" reinforcements");
+        } else {
+            visuals.updateWithReinforcement(territory, number);
+            territory.setUnits(territory.getUnits() + number);
+        }
     }
 
     /**
@@ -270,7 +274,7 @@ public class Board {
     public void moveGoldenCavalry() {
         if (goldenCavalry < 10)
             goldenCavalry += 2;
-        else if (goldenCavalry < 20)
+        else if (goldenCavalry < 65)
             goldenCavalry += 5;
     }
 
@@ -346,15 +350,16 @@ public class Board {
     }
     
     public void moveUnits(Territory a, Territory b, int units) {
-    	if(a.getNUnits() < 2) {
-    		Risk.printError("The fortifying territory, "+a.getName()+", doesn't have enough units to fortify "+b.getName());
-    	} else if(!Risk.getConnectedTerritories(a).contains(b)) {
-    		Risk.printError("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
-    	} else {
-    		a.setUnits(a.getNUnits() - units);
-            b.setUnits(b.getNUnits() + units);
-    	}
-    	
+        if(a.getUnits() < 2) {
+            Risk.printError("The fortifying territory, "+a.getName()+", doesn't have enough units to fortify "+b.getName());
+        } else if(!Risk.getConnectedTerritories(a).contains(b)) {
+            Risk.printError("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
+        } else {
+            visuals.updateWithFortification(a, b, units);
+            a.setUnits(a.getUnits() - units);
+            b.setUnits(b.getUnits() + units);
+        }
+        
     }
 
     @Override

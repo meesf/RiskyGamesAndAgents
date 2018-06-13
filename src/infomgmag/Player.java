@@ -16,7 +16,7 @@ public abstract class Player {
     protected Objective objective;
     protected ArrayList<Territory> territories;
     protected Hand hand;
-    protected Integer reinforcements;
+    protected int reinforcements;
     protected boolean hasConqueredTerritoryInTurn;
 
 
@@ -49,7 +49,7 @@ public abstract class Player {
         return objective;
     }
 
-    public Integer getReinforcements() {
+    public int getReinforcements() {
         return reinforcements;
     }
 

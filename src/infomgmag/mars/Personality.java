@@ -1,97 +1,114 @@
 package infomgmag.mars;
 
 public class Personality {
-    private Double friendliesweight;
-    private Double enemiesweight;
-    private Double farmiesweight;
-    private Double earmiesweight;
-    private Double continentBorderWeight;
-    private Double ownWholeContinentWeight;
-    private Double enemyOwnsWholeContinentWeight;
-    private Double percentageOfContinentWeight;
-    private Integer goalLength;
-    private Double WIN_PERCENTAGE;
-    private Double offensiveBonus;
-    private Double defensiveBonus;
-    private Double hatedBonus;
 
-    public Personality(Double defensiveBonus,
-                       Double offensiveBonus,
-                       Double friendliesweight,
-                       Double enemiesweight,
-                       Double farmiesweight,
-                       Double earmiesweight,
-                       Double continentBorderWeight,
-                       Double ownWholeContinentWeight,
-                       Double enemyOwnsWholeContinentWeight,
-                       Double percentageOfContinentWeight,
-                       Integer goalLength,
-                       Double win_percentage,
-                       Double hatedBonus){
-        this.defensiveBonus = defensiveBonus;
-        this.offensiveBonus = offensiveBonus;
-        this.friendliesweight = friendliesweight;
-        this.enemiesweight = enemiesweight;
-        this.farmiesweight = farmiesweight;
-        this.earmiesweight = earmiesweight;
+    private double friendlyNeighbourWeight;
+    private double enemyNeighbourWeight;
+    private double friendlyArmyWeight;
+    private double enemyArmyWeight;
+    private double continentBorderWeight;
+    private double ownWholeContinentWeight;
+    private double enemyOwnsWholeContinentWeight;
+    private double percentageOfContinentWeight;
+    private int goalLength;
+    private double offensiveMultiplier;
+    private double defensiveMultiplier;
+    private double killEnemyWeight;
+    private String name;
+    private double clusteringWeight;
+    private double hatedBonus;
+
+    public Personality(String name,
+                       double defensiveMultiplier,
+                       double offensiveMultiplier,
+                       double friendlyNeighbourWeight,
+                       double enemyNeighbourWeight,
+                       double friendlyArmyWeight,
+                       double enemyArmyWeight,
+                       double continentBorderWeight,
+                       double ownWholeContinentWeight,
+                       double enemyOwnsWholeContinentWeight,
+                       double percentageOfContinentWeight,
+                       double killEnemyWeight,
+                       double clusteringWeight,
+                       int goalLength,
+                       double hatedBonus){
+        this.name = name;
+        this.defensiveMultiplier = defensiveMultiplier;
+        this.offensiveMultiplier = offensiveMultiplier;
+        this.friendlyNeighbourWeight = friendlyNeighbourWeight;
+        this.enemyNeighbourWeight = enemyNeighbourWeight;
+        this.friendlyArmyWeight = friendlyArmyWeight;
+        this.enemyArmyWeight = enemyArmyWeight;
         this.continentBorderWeight = continentBorderWeight;
         this.ownWholeContinentWeight = ownWholeContinentWeight;
         this.enemyOwnsWholeContinentWeight = enemyOwnsWholeContinentWeight;
         this.percentageOfContinentWeight = percentageOfContinentWeight;
+        this.killEnemyWeight = killEnemyWeight;
         this.goalLength = goalLength;
-        this.WIN_PERCENTAGE = win_percentage;
         this.hatedBonus = hatedBonus;
-
+        this.clusteringWeight = clusteringWeight;
     }
 
-    public Double getFriendliesweight() {
-        return friendliesweight;
+    public String getName() {
+        return name;
     }
 
-    public Double getEnemiesweight() {
-        return enemiesweight;
+    public String toString() {
+        return getName();
     }
 
-    public Double getFarmiesweight() {
-        return farmiesweight;
+    public double getFriendlyNeighbourWeight() {
+        return friendlyNeighbourWeight;
     }
 
-    public Double getEarmiesweight() {
-        return earmiesweight;
+    public double getEnemyNeighbourWeight() {
+        return enemyNeighbourWeight;
     }
 
-    public Double getContinentBorderWeight() {
+    public double getFriendlyArmyWeight() {
+        return friendlyArmyWeight;
+    }
+
+    public double getEnemyArmyWeight() {
+        return enemyArmyWeight;
+    }
+
+    public double getContinentBorderWeight() {
         return continentBorderWeight;
     }
 
-    public Double getOwnWholeContinentWeight() {
+    public double getOwnWholeContinentWeight() {
         return ownWholeContinentWeight;
     }
 
-    public Double getEnemyOwnsWholeContinentWeight() {
+    public double getEnemyOwnsWholeContinentWeight() {
         return enemyOwnsWholeContinentWeight;
     }
 
-    public Double getPercentageOfContinentWeight() {
+    public double getPercentageOfContinentWeight() {
         return percentageOfContinentWeight;
     }
 
-    public Integer getGoalLength() {
+    public int getGoalLength() {
         return goalLength;
     }
 
-    public Double getWIN_PERCENTAGE() {
-        return WIN_PERCENTAGE;
+    public double getDefensiveBonus() {
+        return defensiveMultiplier;
     }
 
-    public Double getDefensiveBonus() {
-        return defensiveBonus;
+    public double getOffensiveBonus() {
+        return offensiveMultiplier;
     }
 
-    public Double getOffensiveBonus() {
-        return offensiveBonus;
+    public double getKillEnemyWeight() {
+        return killEnemyWeight;
     }
 
     public Double getHatedBonus(){ return hatedBonus; }
 
+    public double getClusteringWeight() {
+        return clusteringWeight;
+    }
 }
