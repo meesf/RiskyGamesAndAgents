@@ -114,11 +114,37 @@ public class Mars extends Player {
     }
 
     @Override
-    public void movingInAfterInvasion(CombatMove combatMove) {
+    public void movingInAfterInvasion(Board board, CombatMove combatMove) {
         setHasConqueredTerritoryInTurn(true);
-        int transferredunits = combatMove.getAttackingTerritory().getUnits() - 1;
-        combatMove.getDefendingTerritory().setUnits(transferredunits);
-        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - transferredunits);
+        combatMove.getDefendingTerritory().setUnits(1);
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - 1);
+        
+        CountryAgent fortifier = countryAgentsByTerritory.get(combatMove.getAttackingTerritory());
+        CountryAgent reinforced = countryAgentsByTerritory.get(combatMove.getDefendingTerritory());
+        
+        ArrayList<FortifierBid> fortifierBids = fortifier.getFortifierBids();
+        ArrayList<ReinforcementBid> reinforcementBids = reinforced.getBids(combatMove.getAttackingTerritory().getUnits() - 1);
+        
+        FortifierBid bestfb = null;
+        ReinforcementBid bestrb = null;
+        double bestUtilGain = 0;
+        for (FortifierBid fb : fortifierBids) {
+            for (ReinforcementBid rb : reinforcementBids) {
+                if (fb.getFortifier() != rb.getReinforcedAgent() &&
+                        fb.getUnits() == rb.getUnits()) {
+                    double utilGain = rb.getUtility() * rb.getUnits() + fb.getUtility();
+                    if (utilGain > bestUtilGain) {
+                        bestfb = fb;
+                        bestrb = rb;
+                        bestUtilGain = utilGain;
+                    }
+                }
+            }
+        }
+        
+        if (bestUtilGain > 0) {
+            board.moveUnits(bestfb.getFortifier().getTerritory(), bestrb.getReinforcedAgent().getTerritory(), bestfb.getUnits());
+        }
     }
 
     @Override
