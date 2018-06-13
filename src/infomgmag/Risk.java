@@ -47,7 +47,6 @@ public class Risk implements CombatInterface{
 
     public static void main(String[] args) {
         long seed = System.currentTimeMillis();
-//        seed = (long) 1528875974482;
         random = new Random(seed);
         System.out.println(seed);
         createDiceOdds();
