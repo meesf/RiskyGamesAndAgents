@@ -93,6 +93,7 @@ public class Risk implements CombatInterface{
         initializePlayers();
         int currentPlayerIndex = divideTerritories();
         initialPlaceReinforcements(currentPlayerIndex);
+        visuals.setTargetFrameDuration(250);
         currentPlayer = activePlayers.get(0);
     }
     
