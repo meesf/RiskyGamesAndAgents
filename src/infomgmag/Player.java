@@ -91,5 +91,4 @@ public abstract class Player {
     public void setHasConqueredTerritoryInTurn(boolean hasConquered){
         this.hasConqueredTerritoryInTurn = hasConquered;
     }
-
 }

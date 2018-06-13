@@ -15,6 +15,7 @@ public class Personality {
     private double killEnemyWeight;
     private String name;
     private double clusteringWeight;
+    private double attackFirstCountryWeight;
 
     public Personality(String name,
                        double defensiveMultiplier,
@@ -29,7 +30,8 @@ public class Personality {
                        double percentageOfContinentWeight,
                        double killEnemyWeight,
                        double clusteringWeight,
-                       int goalLength){
+                       int goalLength,
+                       double attackFirstTerritoryWeight){
         this.name = name;
         this.defensiveMultiplier = defensiveMultiplier;
         this.offensiveMultiplier = offensiveMultiplier;
@@ -44,6 +46,8 @@ public class Personality {
         this.killEnemyWeight = killEnemyWeight;
         this.goalLength = goalLength;
         this.clusteringWeight = clusteringWeight;
+        this.attackFirstCountryWeight = attackFirstTerritoryWeight;
+
     }
 
     public String getName() {
@@ -105,4 +109,6 @@ public class Personality {
     public double getClusteringWeight() {
         return clusteringWeight;
     }
+
+    public double getAttackFirstCountryWeight() { return attackFirstCountryWeight; }
 }

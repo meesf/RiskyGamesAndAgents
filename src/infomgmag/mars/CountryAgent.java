@@ -228,6 +228,7 @@ public class CountryAgent {
         OffensiveBid bestBid = null;
         for (int i = 0; i <= unitsLeft; i++) {
             double bidUtil = getGoalUtilityPerUnit(goal, i);
+            bidUtil += (mars.hasConqueredTerritoryInTurn() ? 1 : 0) * mars.getPersonality().getAttackFirstCountryWeight();
             OffensiveBid bid = new OffensiveBid(this, goal, i, bidUtil);
             result.add(bid);
             if (bestBid == null || bidUtil > bestBid.getUtility()) {
