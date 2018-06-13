@@ -245,7 +245,7 @@ public class Risk implements CombatInterface{
             Color.RED,
             Color.BLUE,
             Color.BLACK,
-            Color.GREEN,
+            Color.GRAY,
             Color.ORANGE,
             Color.MAGENTA
     };
