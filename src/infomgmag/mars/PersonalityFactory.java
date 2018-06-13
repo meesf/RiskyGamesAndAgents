@@ -41,7 +41,7 @@ public class PersonalityFactory {
         return new Personality(
                 "Defensive",
                 40.0,
-                4.0,
+                40.0,
                 1.2,
                 -0.3,
                 0.05,
