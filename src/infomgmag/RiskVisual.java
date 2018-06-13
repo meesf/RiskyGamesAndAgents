@@ -191,7 +191,7 @@ public class RiskVisual extends JFrame {
             g.drawImage(map, 0, 0, gameWidth, gameHeight, null);
     }
 
-    long targetFrameDuration = 250;
+    long targetFrameDuration = 20;
     long frameDuration = 1000;
     long lastFrameTime = targetFrameDuration;
 
