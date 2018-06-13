@@ -100,7 +100,7 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public void movingInAfterInvasion(CombatMove combatMove) {
+    public void movingInAfterInvasion(Board board, CombatMove combatMove) {
         int transferredUnits = nrOfUnitsmovingInAfterInvasion(combatMove);
         combatMove.getDefendingTerritory().setUnits(transferredUnits);
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - transferredUnits);

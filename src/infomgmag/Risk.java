@@ -47,6 +47,7 @@ public class Risk implements CombatInterface{
 
     public static void main(String[] args) {
         long seed = System.currentTimeMillis();
+//        seed = (long) 1528875974482;
         random = new Random(seed);
         System.out.println(seed);
         createDiceOdds();
@@ -180,7 +181,7 @@ public class Risk implements CombatInterface{
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);
-            currentPlayer.movingInAfterInvasion(combatMove);
+            currentPlayer.movingInAfterInvasion(board, combatMove);
 
             if (isPlayerDead(defender)) {
                 // Attacker receives all the territory cards of the defender.
