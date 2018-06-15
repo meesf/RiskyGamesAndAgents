@@ -147,7 +147,9 @@ public class Mars extends Player {
         }
         
         if (bestUtilGain > 0) {
-            board.moveUnits(bestfb.getFortifier().getTerritory(), bestrb.getReinforcedAgent().getTerritory(), bestfb.getUnits());
+        	int transferredUnits = bestfb.getUnits();
+            combatMove.getDefendingTerritory().setUnits( combatMove.getDefendingTerritory().getUnits() + transferredUnits);
+            combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - transferredUnits);
         }
     }
 
