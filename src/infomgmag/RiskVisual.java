@@ -49,12 +49,14 @@ public class RiskVisual extends JFrame {
     int attackMarkerCrossResolution = playerRadius * 1 / 2;
 
     boolean drawNames = false;
+    long targetFrameDuration;
 
     Image map;
 
     public RiskVisual(Risk risk, boolean visible) {
         this.risk = risk;
         this.visible = visible;
+        this.targetFrameDuration = 20;
 
         if (visible) {
             try {
@@ -191,7 +193,6 @@ public class RiskVisual extends JFrame {
             g.drawImage(map, 0, 0, gameWidth, gameHeight, null);
     }
 
-    long targetFrameDuration = 600;
     long frameDuration = 1000;
     long lastFrameTime = targetFrameDuration;
 
@@ -327,5 +328,9 @@ public class RiskVisual extends JFrame {
             g.setColor(Color.WHITE);
             g.drawString(p.getName(), 30, offset += 25);
         }
+    }
+
+    public void setTargetFrameDuration(long targetFrameDuration) {
+        this.targetFrameDuration = targetFrameDuration;
     }
 }

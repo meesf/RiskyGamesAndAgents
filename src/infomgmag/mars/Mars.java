@@ -118,11 +118,37 @@ public class Mars extends Player {
     }
 
     @Override
-    public void movingInAfterInvasion(CombatMove combatMove) {
+    public void movingInAfterInvasion(Board board, CombatMove combatMove) {
         setHasConqueredTerritoryInTurn(true);
-        int transferredunits = combatMove.getAttackingTerritory().getUnits() - 1;
-        combatMove.getDefendingTerritory().setUnits(transferredunits);
-        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - transferredunits);
+        combatMove.getDefendingTerritory().setUnits(1);
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - 1);
+        
+        CountryAgent fortifier = countryAgentsByTerritory.get(combatMove.getAttackingTerritory());
+        CountryAgent reinforced = countryAgentsByTerritory.get(combatMove.getDefendingTerritory());
+        
+        ArrayList<FortifierBid> fortifierBids = fortifier.getFortifierBids();
+        ArrayList<ReinforcementBid> reinforcementBids = reinforced.getBids(combatMove.getAttackingTerritory().getUnits() - 1);
+        
+        FortifierBid bestfb = null;
+        ReinforcementBid bestrb = null;
+        double bestUtilGain = 0;
+        for (FortifierBid fb : fortifierBids) {
+            for (ReinforcementBid rb : reinforcementBids) {
+                if (fb.getFortifier() != rb.getReinforcedAgent() &&
+                        fb.getUnits() == rb.getUnits()) {
+                    double utilGain = rb.getUtility() * rb.getUnits() + fb.getUtility();
+                    if (utilGain > bestUtilGain) {
+                        bestfb = fb;
+                        bestrb = rb;
+                        bestUtilGain = utilGain;
+                    }
+                }
+            }
+        }
+        
+        if (bestUtilGain > 0) {
+            board.moveUnits(bestfb.getFortifier().getTerritory(), bestrb.getReinforcedAgent().getTerritory(), bestfb.getUnits());
+        }
     }
 
     @Override
@@ -210,10 +236,8 @@ public class Mars extends Player {
         }
         if (risk.combatLog.isEmpty()){ }
         else {
-            for (int i = 1; i <= Math.min(75, risk.combatLog.size()); i++) {
+            for (int i = 1; i <= Math.min(125, risk.combatLog.size()); i++) {
                 if (risk.combatLog.get(risk.combatLog.size() - i ).getDefendingPlayer() == this) {
-                    System.out.println(risk.combatLog.get(risk.combatLog.size() - i ).getDefendingPlayer().getName() + " defending player");
-                    System.out.println(risk.combatLog.get(risk.combatLog.size() - i ).getAttackingPlayer().getName() + " attacking player");
                     playerHatred += 0.5;
                     if (risk.combatLog.get(risk.combatLog.size() - i).getCaptured()) {
                         playerHatred += 2.0;
@@ -223,12 +247,14 @@ public class Mars extends Player {
                 }
             }
         }
-        for (CountryAgent ca : countryAgents){
-            if (playerHatred != 0) {
+        for (Player player : risk.getDefeatedPlayers()) {
+            if (playerDispositions.containsKey(player)){
+                playerDispositions.remove(player);
+            }
+        }
+        if (playerHatred != 0) {
+            for (CountryAgent ca : countryAgents){
                 ca.isHated(playerDispositions.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey());
-                System.out.println(playerDispositions.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey() + " most hated player");
-                System.out.println(this.name + "current player");
-                System.out.println(playerDispositions.get(playerDispositions.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey()) + " value");
             }
         }
     }

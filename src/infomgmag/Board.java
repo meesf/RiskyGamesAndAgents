@@ -358,8 +358,7 @@ public class Board {
             visuals.updateWithFortification(a, b, units);
             a.setUnits(a.getUnits() - units);
             b.setUnits(b.getUnits() + units);
-        }
-        
+        }        
     }
 
     @Override

@@ -17,7 +17,8 @@ public class PersonalityFactory {
                 80.0,
                 0.25,
                 4,
-                50000000.0);
+                900000,
+                10);
     }
 
     public static Personality normalPersonality() {
@@ -36,7 +37,8 @@ public class PersonalityFactory {
                 40.0,
                 0.05,
                 4,
-                0.0);
+                0.0,
+                10);
     }
 
     public static Personality defensivePersonality() {
@@ -55,7 +57,8 @@ public class PersonalityFactory {
                 20.0,
                 0.05,
                 4,
-                0.0);
+                0.0,
+                10);
     }
 
     public static Personality continentPersonality() {
@@ -74,6 +77,7 @@ public class PersonalityFactory {
                 40.0,
                 0.05,
                 4,
-                0.0);
+                0.0,
+                10);
     }
 }

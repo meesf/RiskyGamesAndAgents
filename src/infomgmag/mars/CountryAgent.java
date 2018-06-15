@@ -2,6 +2,8 @@ package infomgmag.mars;
 
 import infomgmag.Player;
 import infomgmag.Territory;
+
+import java.awt.desktop.SystemEventListener;
 import java.util.ArrayList;
 
 public class CountryAgent {
@@ -232,6 +234,7 @@ public class CountryAgent {
         OffensiveBid bestBid = null;
         for (int i = 0; i <= unitsLeft; i++) {
             double bidUtil = getGoalUtilityPerUnit(goal, i);
+            bidUtil += (mars.hasConqueredTerritoryInTurn() ? 0 : 1) * mars.getPersonality().getAttackFirstCountryWeight();
             OffensiveBid bid = new OffensiveBid(this, goal, i, bidUtil);
             result.add(bid);
             if (bestBid == null || bidUtil > bestBid.getUtility()) {
@@ -254,6 +257,7 @@ public class CountryAgent {
     }
 
     public void isHated(Player player){
+        ownedByHatedEnemy = false;
         if (territory.getOwner() == player) {
             ownedByHatedEnemy = true;
         }
@@ -286,5 +290,9 @@ public class CountryAgent {
         double bidUtil = getDefenseUtility(0);
         result.add(new DefensiveBid(this, 0, bidUtil));
         return result.stream().max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1))).get();
+    }
+
+    public Double getValue(){
+        return value;
     }
 }

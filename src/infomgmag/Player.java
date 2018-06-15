@@ -33,7 +33,7 @@ public abstract class Player {
 
     public abstract void fortifyTerritory(Board board);
 
-    public abstract void movingInAfterInvasion(CombatMove combatMove);
+    public abstract void movingInAfterInvasion(Board board, CombatMove combatMove);
 
     public abstract int getDefensiveDice(CombatMove combatMove);
 
@@ -91,5 +91,4 @@ public abstract class Player {
     public void setHasConqueredTerritoryInTurn(boolean hasConquered){
         this.hasConqueredTerritoryInTurn = hasConquered;
     }
-
 }

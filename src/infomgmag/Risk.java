@@ -93,6 +93,7 @@ public class Risk implements CombatInterface {
         initializePlayers();
         int currentPlayerIndex = divideTerritories();
         initialPlaceReinforcements(currentPlayerIndex);
+        visuals.setTargetFrameDuration(50);
         currentPlayer = activePlayers.get(0);
     }
 
@@ -197,7 +198,7 @@ public class Risk implements CombatInterface {
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);
-            currentPlayer.movingInAfterInvasion(combatMove);
+            currentPlayer.movingInAfterInvasion(board, combatMove);
 
             if (isPlayerDead(defender)) {
                 // Attacker receives all the territory cards of the defender.
@@ -249,7 +250,7 @@ public class Risk implements CombatInterface {
             Color.RED,
             Color.BLUE,
             Color.BLACK,
-            Color.GREEN,
+            Color.GRAY,
             Color.ORANGE,
             Color.MAGENTA
     };
