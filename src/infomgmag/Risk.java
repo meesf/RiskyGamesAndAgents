@@ -291,6 +291,18 @@ public class Risk implements CombatInterface{
             Mars player = new Mars(this, objective, 0, "Player " + i + " (" + personality + " MARS)",color, personality);
             activePlayers.add(player);
         }
+        shufflePlayers();
+    }
+    
+    private void shufflePlayers() {
+    	int index;
+    	Player temp;
+    	for(int i = activePlayers.size() - 1; i > 0; i--) {
+    		index = random.nextInt(i + 1);
+    		temp = activePlayers.get(index);
+    		activePlayers.set(index, activePlayers.get(i));
+    		activePlayers.set(i, temp);
+    	}
     }
 
     // Divide players randomly over territories
