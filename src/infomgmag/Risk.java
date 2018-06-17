@@ -23,7 +23,7 @@ public class Risk implements CombatInterface{
     // Variables to be customized by debugger
     private boolean visible = true;
     private int randomPlayers = 0;
-    private int agressivePlayers = 1;
+    private int aggressivePlayers = 1;
     private int normalPlayers = 2;
     private int defensivePlayers = 2;
     private int continentPlayers = 1;
@@ -40,7 +40,7 @@ public class Risk implements CombatInterface{
     private RiskVisual visuals;
 
     private int turn = 0;
-    private int nrOfStartingUnits;
+    private int initialArmies;
     private boolean StopGame;
     
     private ArrayList<CombatEvent> combatLog;
@@ -89,7 +89,7 @@ public class Risk implements CombatInterface{
         board = new Board(visuals);
         combatLog = new ArrayList<>();
         defeatedPlayers = new ArrayList<Player>();
-        nrOfStartingUnits = 30;
+        initialArmies = getInitialArmies();
         initializePlayers();
         int currentPlayerIndex = divideTerritories();
         initialPlaceReinforcements(currentPlayerIndex);
@@ -252,8 +252,6 @@ public class Risk implements CombatInterface{
 
     private void initializePlayers() {
         activePlayers = new ArrayList<>();
-        // TODO deciding number of startingUnits using number of players and evt. number
-        // territorries
         int i;
         for (i = 0; i < randomPlayers; i++) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
@@ -271,14 +269,14 @@ public class Risk implements CombatInterface{
         ArrayList<Personality> personalities = new ArrayList<>();
         for (int j = 0; j < defensivePlayers; j++)
             personalities.add(PersonalityFactory.defensivePersonality());
-        for (int j = 0; j < agressivePlayers; j++)
+        for (int j = 0; j < aggressivePlayers; j++)
             personalities.add(PersonalityFactory.agressivePersonality());
         for (int j = 0; j < normalPlayers; j++)
             personalities.add(PersonalityFactory.normalPersonality());
         for (int j = 0; j < continentPlayers; j++)
             personalities.add(PersonalityFactory.continentPersonality());
 
-        for (; i < randomPlayers + agressivePlayers + defensivePlayers + normalPlayers + continentPlayers; i++) {
+        for (; i < randomPlayers + aggressivePlayers + defensivePlayers + normalPlayers + continentPlayers; i++) {
             Color color;
             if (i < playerColors.length) {
                 color = playerColors[i];
@@ -319,7 +317,7 @@ public class Risk implements CombatInterface{
 
     private void initialPlaceReinforcements(int currentPlayerIndex) {
         int player = currentPlayerIndex;
-        for (int i = 0; i < (activePlayers.size() * nrOfStartingUnits) - board.getTerritories().size(); i++) {
+        for (int i = 0; i < (activePlayers.size() * initialArmies) - board.getTerritories().size(); i++) {
             activePlayers.get(player % activePlayers.size()).setReinforcements(1);
             activePlayers.get(player % activePlayers.size()).placeReinforcements(board);
             player++;
@@ -362,6 +360,10 @@ public class Risk implements CombatInterface{
                 result.add(t);
         }
         return result;
+    }
+    
+    public int getInitialArmies() {
+    	return 50 - (5 * (randomPlayers + aggressivePlayers + normalPlayers + defensivePlayers + continentPlayers));
     }
 
     public static void printError(String str) {
