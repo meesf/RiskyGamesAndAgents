@@ -3,14 +3,6 @@ package infomgmag;
 import java.awt.Color;
 import java.util.ArrayList;
 
-/**
- * This class contains all the objects on the board and methods that interact
- * with these objects.
- * 
- * @author Games&AgentsGroup8
- * @version FirstPrototype
- * @date 4/5/2018
- */
 public class Board {
     private ArrayList<Continent> continents;
     private ArrayList<Territory> territories;

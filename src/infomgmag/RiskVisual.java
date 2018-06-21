@@ -18,13 +18,6 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.text.DefaultCaret;
 
-/**
- * This class updates the visual presentation of the board.
- *
- * @author Games&AgentsGroup8
- * @version FirstPrototype
- * @date 4/5/2018
- */
 public class RiskVisual extends JFrame {
     private static final long serialVersionUID = 1L;
 
