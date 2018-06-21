@@ -126,7 +126,6 @@ public class Mars extends Player {
         ArrayList<ReinforcementBid> reinforcementBids = reinforced.getBids(combatMove.getAttackingTerritory().getUnits() - 1);
         
         FortifierBid bestfb = null;
-        ReinforcementBid bestrb = null;
         double bestUtilGain = 0;
         for (FortifierBid fb : fortifierBids) {
             for (ReinforcementBid rb : reinforcementBids) {
@@ -135,16 +134,15 @@ public class Mars extends Player {
                     double utilGain = rb.getUtility() * rb.getUnits() + fb.getUtility();
                     if (utilGain > bestUtilGain) {
                         bestfb = fb;
-                        bestrb = rb;
                         bestUtilGain = utilGain;
                     }
                 }
             }
         }
-        
+
         if (bestUtilGain > 0) {
         	int transferredUnits = bestfb.getUnits();
-            combatMove.getDefendingTerritory().setUnits( combatMove.getDefendingTerritory().getUnits() + transferredUnits);
+            combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getUnits() + transferredUnits);
             combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - transferredUnits);
         }
     }
