@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Risk implements CombatInterface {
 
-    // Variables to be customized by debugger
+    // Variables to be customized by user
     private boolean visible = true;
     private int randomPlayers = 0;
     private int aggressivePlayers = 1;
