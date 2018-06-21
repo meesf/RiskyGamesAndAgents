@@ -120,8 +120,8 @@ public class Mars extends Player {
     @Override
     public void movingInAfterInvasion(Board board, CombatMove combatMove) {
         setHasConqueredTerritoryInTurn(true);
-        combatMove.getDefendingTerritory().setUnits(1);
-        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - 1);
+        combatMove.getDefendingTerritory().setUnits(combatMove.getAttackingUnits());
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - combatMove.getAttackingUnits());
         
         CountryAgent fortifier = countryAgentsByTerritory.get(combatMove.getAttackingTerritory());
         CountryAgent reinforced = countryAgentsByTerritory.get(combatMove.getDefendingTerritory());
