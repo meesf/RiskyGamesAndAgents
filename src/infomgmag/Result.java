@@ -16,11 +16,20 @@ public class Result {
     public HashMap<String, Integer> loseTerritoryCount;
     public HashMap<String, ArrayList<Integer>> ownedContinentMap;
     public HashMap<String, Double> ownedContinent;
+    public HashMap<String, ArrayList<Integer>> totalArmies;
+    public HashMap<String, ArrayList<Integer>> receivedReinforcements;
     
-    public Result(Risk risk, Integer seed, HashMap<String, ArrayList<Territory>> startingTerritories) {
+    public Result(Risk risk, Integer seed) {
         this.winner = risk.getActivePlayers().get(0).getName();
         this.turns = risk.getTurn();
         this.seed = seed;
+        HashMap<String, Player> players = getPlayers(risk);
+        getStatistics(risk, players);
+        calcCaptureRatio();
+        calcOwnedContinent();
+    }
+    
+    private HashMap<String, Player> getPlayers(Risk risk) {
         HashMap<String, Player> players = new HashMap<String, Player>();
         for(Player p : risk.getActivePlayers()) {
             players.put(p.getName(), p);
@@ -28,31 +37,34 @@ public class Result {
         for(Player p : risk.getDefeatedPlayers()) {
             players.put(p.getName(), p);
         }
-        getStatistics(risk, players, startingTerritories);
-        calcCaptureRatio();
-        calcOwnedContinent();
+        return players;
     }
     
-    public void getStatistics(Risk risk, HashMap<String, Player> players, HashMap<String, ArrayList<Territory>> startingTerritories) {
+    public void getStatistics(Risk risk, HashMap<String, Player> players) {
         captureRatioMap = new HashMap<String, ArrayList<Integer>>();
         captureTerritoryCount = new HashMap<String, Integer>();
         loseTerritoryCount = new HashMap<String, Integer>();
         ownedContinentMap = new HashMap<String, ArrayList<Integer>>();
-        
-        HashMap<String, ArrayList<Territory>> ownedTerritories = startingTerritories; 
+        receivedReinforcements = new HashMap<String, ArrayList<Integer>>();
+        totalArmies = new HashMap<String, ArrayList<Integer>>();
         
         for(String p : players.keySet()) {
             captureRatioMap.put(p, new ArrayList<Integer>());
             captureTerritoryCount.put(p, 0);
             loseTerritoryCount.put(p, 0);
             ownedContinentMap.put(p, new ArrayList<Integer>());
+            receivedReinforcements.put(p, new ArrayList<Integer>());
+            totalArmies.put(p, new ArrayList<Integer>());
         }
         
-        for(String p : players.keySet()) {
-            ownedContinentMap.get(p).add(ownsContinent(risk, ownedTerritories.get(p)));
+        for(TurnLog turnLog : risk.turnLog) {
+            receivedReinforcements.get(turnLog.player.getName()).add(turnLog.receivedReinforcements);
+            for(String p : players.keySet()) {
+                totalArmies.get(p).add(turnLog.totalArmies.get(players.get(p)));
+                ownedContinentMap.get(p).add(ownsContinent(risk, turnLog.territories.get(players.get(p))));
+            }
         }
         
-        int turn = 1;
         for(CombatEvent ce : risk.getCombatLog()) {
             String attacker = ce.getAttackingPlayer().getName();
             String defender = ce.getDefendingPlayer().getName();
@@ -60,34 +72,12 @@ public class Result {
             if(ce.getCombatResult() == CombatEvent.CAPTURE) {
                 captureTerritoryCount.put(attacker, captureTerritoryCount.get(attacker) + 1);
                 loseTerritoryCount.put(defender, loseTerritoryCount.get(defender) + 1);
-                if(!ownedTerritories.get(attacker).contains(ce.getDefendingTerritory())) {
-                    ownedTerritories.get(attacker).add(ce.getDefendingTerritory());
-                }
-                ownedTerritories.get(defender).remove(ce.getDefendingTerritory());
-            }
-            
-            // Should loop over turns...
-            if(ce.getTurn() != turn) {
-                for(String p : players.keySet()) {
-                    if(ownedTerritories.get(p).size() != 0)
-                        ownedContinentMap.get(p).add(ownsContinent(risk, ownedTerritories.get(p)));
-                }
-                turn = ce.getTurn();
             }
         }
     }
     
-    public int ownsContinent(Risk risk, ArrayList<Territory> ownedTerritories) {
+    public Integer ownsContinent(Risk risk, ArrayList<Territory> ownedTerritories) {
         for(Continent continent : risk.getBoard().getContinents()) {
-//            for(Territory t : continent.getTerritories()) {
-//                System.out.print(t.getName() + ", ");
-//            }
-//            System.out.println("");
-//            for(Territory t : ownedTerritories) {
-//                System.out.print(t.getName() + ", ");
-//            }
-//            System.out.println("");
-////            System.out.println(ownedTerritories);
             if(ownedTerritories.containsAll(continent.getTerritories()))
                 return 1;
         }

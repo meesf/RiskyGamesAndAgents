@@ -31,6 +31,7 @@ public class Risk implements CombatInterface {
     private boolean StopGame;
     
     public ArrayList<CombatEvent> combatLog;
+    public ArrayList<TurnLog> turnLog;
     
     public Risk(boolean visible) {
         this.visible = visible;
@@ -45,6 +46,7 @@ public class Risk implements CombatInterface {
 
         board = new Board(visuals);
         combatLog = new ArrayList<>();
+        turnLog = new ArrayList<>();
         defeatedPlayers = new ArrayList<Player>();
         initialArmies = getInitialArmies(players);
         initializePlayers(players);
@@ -84,24 +86,12 @@ public class Risk implements CombatInterface {
         DICE_ODDS_TWO.add(twoL);
     }
 
-//    public Risk() {
-//        visuals = new RiskVisual(this,visible);
-//        board = new Board(visuals);
-//        combatLog = new ArrayList<>();
-//        defeatedPlayers = new ArrayList<Player>();
-//        initialArmies = getInitialArmies();
-//        initializePlayers();
-//        int currentPlayerIndex = divideTerritories();
-//        initialPlaceReinforcements(currentPlayerIndex);
-//        visuals.setTargetFrameDuration(45);
-//        currentPlayer = activePlayers.get(0);
-//    }
-
     public void run() {
         while (!finished()) {
             visuals.update();
             currentPlayer.setHasConqueredTerritoryInTurn(false);
             int nrOfReinforcements = calculateReinforcements();
+            addTurnLog(nrOfReinforcements);
             currentPlayer.setReinforcements(nrOfReinforcements);
             currentPlayer.turnInCards(board);
             currentPlayer.placeReinforcements(board);
@@ -121,6 +111,27 @@ public class Risk implements CombatInterface {
         }
         visuals.log(activePlayers.get(0) + " has won!");
         visuals.setVisible(false);
+    }
+    
+    public void addTurnLog(Integer reinforcements) {
+        HashMap<Player, Integer> totalArmies = new HashMap<Player, Integer>();
+        HashMap<Player, ArrayList<Territory>> territories = new HashMap<Player, ArrayList<Territory>>();
+        for(Player p : activePlayers) {
+            int armies = 0;
+            ArrayList<Territory> playerTerritories = new ArrayList<Territory>(); 
+            for(Territory t : p.getTerritories()) {
+                armies += t.getUnits();
+                playerTerritories.add(t);
+            }
+            totalArmies.put(p, armies);
+            territories.put(p, playerTerritories);
+        }
+        for(Player p : defeatedPlayers) {
+            totalArmies.put(p, 0);
+            territories.put(p, new ArrayList<Territory>());
+        }
+
+        turnLog.add(new TurnLog(turn, currentPlayer, reinforcements, totalArmies, territories));
     }
 
     public int getTurn() {

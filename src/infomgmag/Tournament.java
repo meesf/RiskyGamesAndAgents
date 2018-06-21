@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 public class Tournament {
 	
-	public static final boolean VISIBLE = false;
+	public static final boolean VISIBLE = true;
 	public static final int SPEED = 10;
 	
-	public static final int RUNS = 2;
+	public static final int RUNS = 20;
 	public static final int STARTING_SEED = 83075;
 	
 	public static HashMap<String, String> players;
@@ -20,20 +20,9 @@ public class Tournament {
         
         for(int i = STARTING_SEED; i < RUNS + STARTING_SEED; i++) {
             Risk risk = new Risk(VISIBLE);
-        	risk.initialize(i, players, SPEED);
-        	
-        	HashMap<String, ArrayList<Territory>> startingTerritories = new HashMap<String, ArrayList<Territory>>();
-        	for(Player p : risk.getActivePlayers()) {
-        	    ArrayList<Territory> starting = new ArrayList<Territory>();
-        	    for(Territory t : p.getTerritories()) {
-        	        starting.add(t);
-        	    }
-        	    startingTerritories.put(p.getName(), starting);
-        	}
-        	
+        	risk.initialize(i, players, SPEED);        	
         	risk.run();
-        	
-        	results.add(new Result(risk, i, startingTerritories));
+        	results.add(new Result(risk, i));
         }
         
         printResults(results);
@@ -41,15 +30,15 @@ public class Tournament {
 	
 	private static void setPlayers() {
 	    players = new HashMap<String, String>();
-	    players.put("randomA", "random");
-	    players.put("randomB", "random");
-	    players.put("randomC", "random");
+//	    players.put("randomA", "random");
+//	    players.put("randomB", "random");
+//	    players.put("randomC", "random");
         players.put("aggressiveA", "aggressive");
         players.put("normalA", "normal");
-//        players.put("normalB", "normal");
-//        players.put("defensiveA", "defensive");
+        players.put("normalB", "normal");
+        players.put("defensiveA", "defensive");
 //        players.put("defensiveB", "defensive");
-//        players.put("continentA", "continent");
+        players.put("continentA", "continent");
 	}
 	
 	private static void printResults(ArrayList<Result> results) {
@@ -73,7 +62,7 @@ public class Tournament {
 	            captureRatios.get(player).add(r.captureRatio.get(player));
 	            captureCounts.get(player).add(r.captureTerritoryCount.get(player));
 	            loseCounts.get(player).add(r.loseTerritoryCount.get(player));
-//	            ownedContinents.get(player).add(r.ownedContinent.get(player));
+	            ownedContinents.get(player).add(r.ownedContinent.get(player));
 	            System.out.println(r.ownedContinentMap);
 	        }
 	    }
@@ -94,9 +83,9 @@ public class Tournament {
 	    for(String player : players.keySet()) {
 	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
         }
-//	    System.out.println("ownedContinent:");
-//        for(String player : players.keySet()) {
-//            System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
-//        }
+	    System.out.println("ownedContinent:");
+        for(String player : players.keySet()) {
+            System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
+        }
 	}
 }
