@@ -214,23 +214,15 @@ public class Board {
         for (Continent continent : continents)
             for (Territory territory : continent.getTerritories())
                 territories.add(territory);
-
-        setNrOfContinentsBorderedToTerritory();
-
-
-    }
-
-    private void setNrOfContinentsBorderedToTerritory(){
-        for (Continent continent : continents)
-            for (Territory territory : continent.getTerritories()){
-                long nr = territory.getAdjacentTerritories().stream().map(x -> x.getContinent()).distinct().count();
-                territory.setContinentsBorderedAmount(nr);
-            }
     }
 
     private void makeEdge(Territory t, Territory s) {
         t.addAdjacentTerritory(s);
         s.addAdjacentTerritory(t);
+        if(t.getContinent() != s.getContinent()) {
+            t.setContinentsBorderedAmount((int)t.getContinentsBorderedAmount() + 1);
+            s.setContinentsBorderedAmount((int)s.getContinentsBorderedAmount() + 1);
+        }
     }
 
     /**
