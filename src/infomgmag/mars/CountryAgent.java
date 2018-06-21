@@ -3,7 +3,6 @@ package infomgmag.mars;
 import infomgmag.Player;
 import infomgmag.Territory;
 
-import java.awt.desktop.SystemEventListener;
 import java.util.ArrayList;
 
 public class CountryAgent {

@@ -13,7 +13,8 @@ public class CombatEvent {
     boolean captured;
     
     public static final int ATTACKER_WINS = 0, DEFENDER_WINS = 1, ONE_EACH = 2;
-    
+    public static final int NO_CAPTURE = 0, CAPTURE = 1;
+
     CombatEvent(
             Player attackingPlayer, 
             Player defendingPlayer, 
