@@ -237,9 +237,9 @@ public class Board {
      */
     public void addUnits(Player player, Territory territory, int number) {
         if(player!=territory.getOwner()) {
-            Risk.printError(player.getName()+" tried reinforcing "+territory.getName()+", but does not own this territory");
+            throw new RuntimeException(player.getName()+" tried reinforcing "+territory.getName()+", but does not own this territory");
         } else if(player.getReinforcements() < number) {
-            Risk.printError(player.getName()+" does not have "+number+" reinforcements");
+            throw new RuntimeException(player.getName()+" does not have "+number+" reinforcements");
         } else {
             visuals.updateWithReinforcement(territory, number);
             territory.setUnits(territory.getUnits() + number);
@@ -346,9 +346,9 @@ public class Board {
     
     public void moveUnits(Territory a, Territory b, int units) {
         if(a.getUnits() < 2) {
-            Risk.printError("The fortifying territory, "+a.getName()+", doesn't have enough units to fortify "+b.getName());
+            throw new RuntimeException("The fortifying territory, "+a.getName()+", doesn't have enough units to fortify "+b.getName());
         } else if(!Risk.getConnectedTerritories(a).contains(b)) {
-            Risk.printError("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
+            throw new RuntimeException("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
         } else {
             visuals.updateWithFortification(a, b, units);
             a.setUnits(a.getUnits() - units);

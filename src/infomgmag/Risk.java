@@ -373,11 +373,6 @@ public class Risk implements CombatInterface{
     	return 50 - (5 * (randomPlayers + aggressivePlayers + normalPlayers + defensivePlayers + continentPlayers));
     }
 
-    public static void printError(String str) {
-        System.err.println("Error:"+str);
-        System.exit(1);
-    }
-
     public ArrayList<Player> getDefeatedPlayers(){
         return this.defeatedPlayers;
     }
