@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 public class Tournament {
 	
-	public static final boolean VISIBLE = true;
-	public static final int SPEED = 10;
+	public static final boolean VISIBLE = false;
+	public static final int SPEED = 100;
 	
-	public static final int RUNS = 20;
+	public static final int RUNS = 2;
 	public static final int STARTING_SEED = 83075;
 	
 	public static HashMap<String, String> players;
@@ -16,7 +16,6 @@ public class Tournament {
 	public static void main(String[] args) {
 		setPlayers();
 		ArrayList<Result> results = new ArrayList<Result>();
-		
         
         for(int i = STARTING_SEED; i < RUNS + STARTING_SEED; i++) {
             Risk risk = new Risk(VISIBLE);
@@ -63,7 +62,6 @@ public class Tournament {
 	            captureCounts.get(player).add(r.captureTerritoryCount.get(player));
 	            loseCounts.get(player).add(r.loseTerritoryCount.get(player));
 	            ownedContinents.get(player).add(r.ownedContinent.get(player));
-	            System.out.println(r.ownedContinentMap);
 	        }
 	    }
 	    

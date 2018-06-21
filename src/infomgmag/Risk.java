@@ -186,6 +186,9 @@ public class Risk implements CombatInterface {
         else if (combatMove.getDefendingUnits() > 1 && combatMove.getAttackingUnits() > 1)
             attackLoss++;
 
+        if(combatLog.size() > 18){
+            int g = 0;
+        }
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - attackLoss);
         combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getUnits() - defenseLoss);
 
