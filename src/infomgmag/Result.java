@@ -17,8 +17,8 @@ public class Result {
     public HashMap<String, ArrayList<Integer>> ownedContinentMap;
     public HashMap<String, Double> ownedContinent;
     
-    public Result(String winner, Risk risk, Integer seed, HashMap<String, ArrayList<Territory>> startingTerritories) {
-        this.winner = winner;
+    public Result(Risk risk, Integer seed, HashMap<String, ArrayList<Territory>> startingTerritories) {
+        this.winner = risk.getActivePlayers().get(0).getName();
         this.turns = risk.getTurn();
         this.seed = seed;
         HashMap<String, Player> players = new HashMap<String, Player>();
@@ -52,7 +52,7 @@ public class Result {
             ownedContinentMap.get(p).add(ownsContinent(risk, ownedTerritories.get(p)));
         }
         
-        int turn = 0;
+        int turn = 1;
         for(CombatEvent ce : risk.getCombatLog()) {
             String attacker = ce.getAttackingPlayer().getName();
             String defender = ce.getDefendingPlayer().getName();
@@ -60,11 +60,13 @@ public class Result {
             if(ce.getCombatResult() == CombatEvent.CAPTURE) {
                 captureTerritoryCount.put(attacker, captureTerritoryCount.get(attacker) + 1);
                 loseTerritoryCount.put(defender, loseTerritoryCount.get(defender) + 1);
-//                if(!ownedTerritories.get(attacker).contains(ce.getDefendingTerritory()))
-                ownedTerritories.get(attacker).add(ce.getDefendingTerritory());
+                if(!ownedTerritories.get(attacker).contains(ce.getDefendingTerritory())) {
+                    ownedTerritories.get(attacker).add(ce.getDefendingTerritory());
+                }
                 ownedTerritories.get(defender).remove(ce.getDefendingTerritory());
             }
             
+            // Should loop over turns...
             if(ce.getTurn() != turn) {
                 for(String p : players.keySet()) {
                     if(ownedTerritories.get(p).size() != 0)
@@ -77,15 +79,15 @@ public class Result {
     
     public int ownsContinent(Risk risk, ArrayList<Territory> ownedTerritories) {
         for(Continent continent : risk.getBoard().getContinents()) {
-            for(Territory t : continent.getTerritories()) {
-                System.out.print(t.getName() + ", ");
-            }
-            System.out.println("");
-            for(Territory t : ownedTerritories) {
-                System.out.print(t.getName() + ", ");
-            }
-            System.out.println("");
-//            System.out.println(ownedTerritories);
+//            for(Territory t : continent.getTerritories()) {
+//                System.out.print(t.getName() + ", ");
+//            }
+//            System.out.println("");
+//            for(Territory t : ownedTerritories) {
+//                System.out.print(t.getName() + ", ");
+//            }
+//            System.out.println("");
+////            System.out.println(ownedTerritories);
             if(ownedTerritories.containsAll(continent.getTerritories()))
                 return 1;
         }

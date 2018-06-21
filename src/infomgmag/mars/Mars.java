@@ -20,6 +20,8 @@ public class Mars extends Player {
     private List<CountryAgent> countryAgents;
     public HashMap<Territory, CountryAgent> countryAgentsByTerritory;
     private Personality personality;
+    private HashMap<Player, Double> playerDispositions;
+    private Risk risk;
 
     public Mars(Risk risk, Objective objective, int reinforcements, String name, Color color, Personality personality) {
         super(objective, reinforcements, name, color);
@@ -28,6 +30,8 @@ public class Mars extends Player {
         countryAgents = new ArrayList<>();
         countryAgentsByTerritory = new HashMap<Territory, CountryAgent>();
         this.personality = personality;
+        this.risk = risk;
+        playerDispositions = new HashMap<>();
 
         for (Territory t : risk.getBoard().getTerritories()) {
             CountryAgent ca = new CountryAgent(t, this);
@@ -116,8 +120,8 @@ public class Mars extends Player {
     @Override
     public void movingInAfterInvasion(Board board, CombatMove combatMove) {
         setHasConqueredTerritoryInTurn(true);
-        combatMove.getDefendingTerritory().setUnits(1);
-        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - 1);
+        combatMove.getDefendingTerritory().setUnits(combatMove.getAttackingUnits());
+        combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - combatMove.getAttackingUnits());
         
         CountryAgent fortifier = countryAgentsByTerritory.get(combatMove.getAttackingTerritory());
         CountryAgent reinforced = countryAgentsByTerritory.get(combatMove.getDefendingTerritory());
@@ -126,7 +130,6 @@ public class Mars extends Player {
         ArrayList<ReinforcementBid> reinforcementBids = reinforced.getBids(combatMove.getAttackingTerritory().getUnits() - 1);
         
         FortifierBid bestfb = null;
-        ReinforcementBid bestrb = null;
         double bestUtilGain = 0;
         for (FortifierBid fb : fortifierBids) {
             for (ReinforcementBid rb : reinforcementBids) {
@@ -135,22 +138,22 @@ public class Mars extends Player {
                     double utilGain = rb.getUtility() * rb.getUnits() + fb.getUtility();
                     if (utilGain > bestUtilGain) {
                         bestfb = fb;
-                        bestrb = rb;
                         bestUtilGain = utilGain;
                     }
                 }
             }
         }
-        
+
         if (bestUtilGain > 0) {
         	int transferredUnits = bestfb.getUnits();
-            combatMove.getDefendingTerritory().setUnits( combatMove.getDefendingTerritory().getUnits() + transferredUnits);
+            combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getUnits() + transferredUnits);
             combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - transferredUnits);
         }
     }
 
     @Override
     public void placeReinforcements(Board board) {
+        this.calculateHatedPlayer();
         for (CountryAgent ca : countryAgents) {
             ca.clearGoals();
         }
@@ -178,7 +181,7 @@ public class Mars extends Player {
                         (x, y) -> x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1))
                         .get();
 
-            board.addUnits(this, bid.getReinforcedAgent().getTerritory(), bid.getUnits());
+            board.addUnits(bid.getReinforcedAgent().getTerritory(), bid.getUnits());
             reinforcements -= bid.getUnits();
 
         }
@@ -186,8 +189,9 @@ public class Mars extends Player {
 
     @Override
     public int getDefensiveDice(CombatMove combatMove) {
-        // TODO Auto-generated method stub
-        return Math.min(2, combatMove.getDefendingTerritory().getUnits());
+        if (combatMove.getAttackThrows().stream().mapToDouble(x -> x).average().getAsDouble() < 3.5)
+            return Math.min(combatMove.getDefendingTerritory().getUnits(), 2);
+        return 1;
     }
 
     @Override
@@ -222,7 +226,38 @@ public class Mars extends Player {
             cm.setAttackingTerritory(ob.get().reinforcedAgent.getTerritory());
             cm.setDefendingTerritory(ob.get().getGoal().getFirstGoal().getTerritory());
             cm.setAttackingUnits(ob.get().reinforcedAgent.getTerritory().getUnits() - 1);
+//            if(ob.get().reinforcedAgent.getTerritory().getName() == ob.get().getGoal().getFirstGoal().getTerritory())
             ci.performCombatMove(cm);
+        }
+    }
+
+    public void calculateHatedPlayer(){
+        Double playerHatred = 0.0;
+        for (Player enemyPlayer : risk.getActivePlayers()){
+            playerDispositions.put(enemyPlayer, playerHatred);
+        }
+        if (risk.combatLog.isEmpty()){ }
+        else {
+            for (int i = 1; i <= Math.min(125, risk.combatLog.size()); i++) {
+                if (risk.combatLog.get(risk.combatLog.size() - i ).getDefendingPlayer() == this) {
+                    playerHatred += 0.5;
+                    if (risk.combatLog.get(risk.combatLog.size() - i).getCaptured()) {
+                        playerHatred += 2.0;
+                    }
+                    playerHatred += (risk.combatLog.get(risk.combatLog.size() - i).getDefendingCasualties()) * 0.25;
+                    playerDispositions.put(risk.combatLog.get(risk.combatLog.size() - i).getAttackingPlayer(), playerHatred);
+                }
+            }
+        }
+        for (Player player : risk.getDefeatedPlayers()) {
+            if (playerDispositions.containsKey(player)){
+                playerDispositions.remove(player);
+            }
+        }
+        if (playerHatred != 0) {
+            for (CountryAgent ca : countryAgents){
+                ca.isHated(playerDispositions.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey());
+            }
         }
     }
 

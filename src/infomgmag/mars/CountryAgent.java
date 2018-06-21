@@ -1,6 +1,8 @@
 package infomgmag.mars;
 
+import infomgmag.Player;
 import infomgmag.Territory;
+
 import java.util.ArrayList;
 
 public class CountryAgent {
@@ -9,6 +11,7 @@ public class CountryAgent {
     private ArrayList<Goal> goalList;
     private Mars mars;
     private double value;
+    private boolean ownedByHatedEnemy;
 
     CountryAgent(Territory territory, Mars mars) {
         this.territory = territory;
@@ -31,7 +34,8 @@ public class CountryAgent {
                  enemyArmies() * personality.getEnemyArmyWeight() +
                  territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
-                 percentageOfContinentOwned() * personality.getPercentageOfContinentWeight());
+                 percentageOfContinentOwned() * personality.getPercentageOfContinentWeight() +
+                 (ownedByHatedEnemy ? 1 : 0) * personality.getHatedBonus());
     }
 
     // calculates how many friendly neighbouring territories border this territory
@@ -119,6 +123,7 @@ public class CountryAgent {
         goalValue += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
         goalValue += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
         goalValue += territory.getUnits() * mars.getPersonality().getClusteringWeight();
+        goalValue += (ownedByHatedEnemy ? 1 : 0) * mars.getPersonality().getHatedBonus();
         return goalValue;
     }
 
@@ -250,6 +255,13 @@ public class CountryAgent {
         }
     }
 
+    public void isHated(Player player){
+        ownedByHatedEnemy = false;
+        if (territory.getOwner() == player) {
+            ownedByHatedEnemy = true;
+        }
+    }
+
     public void createGoals(Goal goal) {
         if(goal.size() >= this.mars.getPersonality().getGoalLength())
             return;
@@ -277,5 +289,9 @@ public class CountryAgent {
         double bidUtil = getDefenseUtility(0);
         result.add(new DefensiveBid(this, 0, bidUtil));
         return result.stream().max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1))).get();
+    }
+
+    public Double getValue(){
+        return value;
     }
 }

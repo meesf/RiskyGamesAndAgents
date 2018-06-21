@@ -21,6 +21,7 @@ public class Tournament {
         for(int i = STARTING_SEED; i < RUNS + STARTING_SEED; i++) {
             Risk risk = new Risk(VISIBLE);
         	risk.initialize(i, players, SPEED);
+        	
         	HashMap<String, ArrayList<Territory>> startingTerritories = new HashMap<String, ArrayList<Territory>>();
         	for(Player p : risk.getActivePlayers()) {
         	    ArrayList<Territory> starting = new ArrayList<Territory>();
@@ -32,8 +33,7 @@ public class Tournament {
         	
         	risk.run();
         	
-        	String winner = risk.getActivePlayers().get(0).getName();
-        	results.add(new Result(winner, risk, i, startingTerritories));
+        	results.add(new Result(risk, i, startingTerritories));
         }
         
         printResults(results);

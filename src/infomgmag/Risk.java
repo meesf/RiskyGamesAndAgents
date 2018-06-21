@@ -10,18 +10,9 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
-/**
- * This class contains the main() method. This class is the bridge between the
- * visual presentation of the game (RiskVisual) and the data presentation of the
- * game (RiskPhysics).
- * 
- * @author Games&AgentsGroup8
- * @version FirstPrototype
- * @date 4/5/2018
- */
-public class Risk implements CombatInterface{
+public class Risk implements CombatInterface {
 
-    // Variables to be customized by debugger
+    // Variables to be customized by user
     private boolean visible = true;
 
     public static Random random;
@@ -39,7 +30,7 @@ public class Risk implements CombatInterface{
     private int initialArmies;
     private boolean StopGame;
     
-    private ArrayList<CombatEvent> combatLog;
+    public ArrayList<CombatEvent> combatLog;
     
     public Risk(boolean visible) {
         this.visible = visible;
@@ -62,7 +53,7 @@ public class Risk implements CombatInterface{
         visuals.setTargetFrameDuration(speed);
         currentPlayer = activePlayers.get(random.nextInt(activePlayers.size()));
     }
-    
+
     public static void createDiceOdds() {
         DICE_ODDS_ONE = new ArrayList<ArrayList<Double>>();
         ArrayList<Double> oneA = new ArrayList<Double>();
@@ -92,7 +83,20 @@ public class Risk implements CombatInterface{
         twoL.add(2611.0/7776);
         DICE_ODDS_TWO.add(twoL);
     }
-    
+
+//    public Risk() {
+//        visuals = new RiskVisual(this,visible);
+//        board = new Board(visuals);
+//        combatLog = new ArrayList<>();
+//        defeatedPlayers = new ArrayList<Player>();
+//        initialArmies = getInitialArmies();
+//        initializePlayers();
+//        int currentPlayerIndex = divideTerritories();
+//        initialPlaceReinforcements(currentPlayerIndex);
+//        visuals.setTargetFrameDuration(45);
+//        currentPlayer = activePlayers.get(0);
+//    }
+
     public void run() {
         while (!finished()) {
             visuals.update();
@@ -103,7 +107,7 @@ public class Risk implements CombatInterface{
             currentPlayer.placeReinforcements(board);
 
             int startingNrOfTerritories = currentPlayer.getTerritories().size();
-            
+
             currentPlayer.attackPhase((CombatInterface) this);
             currentPlayer.fortifyTerritory(board);
             visuals.update();
@@ -128,20 +132,27 @@ public class Risk implements CombatInterface{
     }
 
     public void performCombatMove(CombatMove combatMove) {
+        if (combatMove.getAttackingUnits() > 3)
+            combatMove.setAttackingUnits(3);
+        if (combatMove.getAttackingUnits() > combatMove.getAttackingTerritory().getUnits() - 1)
+            throw new RuntimeException("Rule breach: Not enough units on attacking territory");
+
+        // Attacker throws dice
+        ArrayList<Integer> attackThrows = new ArrayList<>();
+        for (int i = 0; i < combatMove.getAttackingUnits(); i++) {
+            int value = Risk.random.nextInt(6) + 1;
+            attackThrows.add(value);
+        }
+        combatMove.setAttackThrows(attackThrows);
+
         int defendingAmount = combatMove.getDefendingTerritory().getOwner().getDefensiveDice(combatMove);
         if (defendingAmount > combatMove.getDefendingTerritory().getUnits() || defendingAmount > 2 || defendingAmount < 1)
             throw new RuntimeException("Rule breach: Defending amount not allowed: " + combatMove);
         combatMove.setDefendingUnits(defendingAmount);
 
         visuals.update(combatMove);
-        ArrayList<Integer> attackThrows = new ArrayList<>();
-        ArrayList<Integer> defenseThrows = new ArrayList<>();
 
-        // Attacker throws dices
-        for (int i = 0; i < combatMove.getAttackingUnits(); i++) {
-            int value = Risk.random.nextInt(6) + 1;
-            attackThrows.add(value);
-        }
+        ArrayList<Integer> defenseThrows = new ArrayList<>();
 
         // Defender throws dices
         for (int i = 0; i < combatMove.getDefendingUnits(); i++) {
@@ -166,22 +177,25 @@ public class Risk implements CombatInterface{
 
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - attackLoss);
         combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getUnits() - defenseLoss);
+
+        boolean captured = combatMove.getDefendingTerritory().getUnits() == 0;
+
+        combatLog.add(new CombatEvent(
+                combatMove.getAttackingTerritory().getOwner(),
+                combatMove.getDefendingTerritory().getOwner(),
+                combatMove.getAttackingTerritory(),
+                combatMove.getDefendingTerritory(),
+                combatMove.getAttackingUnits(),
+                combatMove.getDefendingUnits(),
+                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
+                        (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
+                                CombatEvent.ONE_EACH),
+                turn,
+                captured,
+                attackLoss,
+                defenseLoss));
         
         // Update number of units on both territories and new owner
-        boolean captured = combatMove.getDefendingTerritory().getUnits() == 0;
-        combatLog.add(new CombatEvent(
-                combatMove.getAttackingTerritory().getOwner(), 
-                combatMove.getDefendingTerritory().getOwner(), 
-                combatMove.getAttackingTerritory(), 
-                combatMove.getDefendingTerritory(), 
-                combatMove.getAttackingUnits(), 
-                combatMove.getDefendingUnits(), 
-                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
-                    (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
-                        CombatEvent.ONE_EACH), 
-                turn,
-                captured));
-        
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);
@@ -255,6 +269,7 @@ public class Risk implements CombatInterface{
                 color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
                         Risk.random.nextFloat() * 0.8f + 0.2f);
             }
+
             if(entry.getValue() == "aggressive")
                 player = new Mars(this, objective, 0, entry.getKey(), color, PersonalityFactory.agressivePersonality());
             if(entry.getValue() == "normal")
@@ -316,7 +331,7 @@ public class Risk implements CombatInterface{
     private boolean finished() {
         return activePlayers.size() == 1 || StopGame;
     }
-    
+
     public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
         ArrayList<Territory> visited = new ArrayList<>();
         ArrayList<Territory> result = new ArrayList<>();
@@ -344,20 +359,17 @@ public class Risk implements CombatInterface{
     	return 50 - (5 * players.size());
     }
 
-    public static void printError(String str) {
-        System.err.println("Error:"+str);
-        System.exit(1);
-    }
-
-    public ArrayList<Player> getDefeatedPlayers(){
+    public ArrayList<Player> getDefeatedPlayers() {
         return this.defeatedPlayers;
     }
 
     public int getActivePlayerAmount() {
         return activePlayers.size();
     }
-    
+
     public ArrayList<CombatEvent> getCombatLog() {
         return combatLog;
     }
 }
+
+

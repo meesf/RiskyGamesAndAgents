@@ -3,27 +3,23 @@ package infomgmag;
 import java.awt.Color;
 import java.util.ArrayList;
 
-/**
- * This class contains all the objects on the board and methods that interact
- * with these objects.
- * 
- * @author Games&AgentsGroup8
- * @version FirstPrototype
- * @date 4/5/2018
- */
 public class Board {
     private ArrayList<Continent> continents;
     private ArrayList<Territory> territories;
 
+    // Cards without owner
     private int artillery, cavalry, infantry, wildcard;
 
+    // This increases the amount of reinforcements
     private int goldenCavalry;
+
+    // Link to visuals such that board actions can be visualized
     private RiskVisual visuals;
 
     public Board(RiskVisual visuals) {
         this.visuals = visuals;
 
-        continents = new ArrayList<>();
+        this.continents = new ArrayList<>();
 
         this.goldenCavalry = 4;
         this.artillery = 14;
@@ -31,20 +27,19 @@ public class Board {
         this.infantry = 14;
         this.wildcard = 2;
 
+        // Official board layout; is static so might as well be hardcoded
         Continent northAmerica = new Continent(new Color(1.0f, 1.0f, 0.0f), "northAmerica", 5);
         continents.add(northAmerica);
         Continent southAmerica = new Continent(new Color(0.6f, 0f, 0f), "southAmerica", 2);
         continents.add(southAmerica);
         Continent europe = new Continent(new Color(0.33f, 0f, 1f),"europe", 5);
         continents.add(europe);
-
         Continent asia = new Continent(new Color(0.1f, 0.5f, 0.1f), "asia", 7);
         continents.add(asia);
         Continent africa = new Continent(new Color(1f, 0.5f, 0f),"africa", 3);
         continents.add(africa);
         Continent australia = new Continent(new Color(1f, 0.4f, 0.55f),"australia", 2);
         continents.add(australia);
-
 
         Territory yakutsk = new Territory("Yakutsk", 0.84, 0.79);
         asia.addTerritory(yakutsk);
@@ -211,44 +206,25 @@ public class Board {
         makeEdge(westernAustralia, easternAustralia);
         makeEdge(kamchatka, alaska);
 
+        // It is useful that apart from using continents we can loop through territories
         territories = new ArrayList<>();
         for (Continent continent : continents)
             for (Territory territory : continent.getTerritories())
                 territories.add(territory);
-
-        setNrOfContinentsBorderedToTerritory();
-
-
-    }
-
-    private void setNrOfContinentsBorderedToTerritory(){
-        for (Continent continent : continents)
-            for (Territory territory : continent.getTerritories()){
-                long nr = territory.getAdjacentTerritories().stream().map(x -> x.getContinent()).distinct().count();
-                territory.setContinentsBorderedAmount(nr);
-            }
     }
 
     private void makeEdge(Territory t, Territory s) {
         t.addAdjacentTerritory(s);
         s.addAdjacentTerritory(t);
+        if(t.getContinent() != s.getContinent()) {
+            t.setContinentsBorderedAmount((int)t.getContinentsBorderedAmount() + 1);
+            s.setContinentsBorderedAmount((int)s.getContinentsBorderedAmount() + 1);
+        }
     }
 
-    /**
-     * Add the given amount of units to the given territory.
-     *
-     * @return boolean if the action succeeded, in other words if the action was
-     *         possible and has been executed.
-     */
-    public void addUnits(Player player, Territory territory, int number) {
-        if(player!=territory.getOwner()) {
-            Risk.printError(player.getName()+" tried reinforcing "+territory.getName()+", but does not own this territory");
-        } else if(player.getReinforcements() < number) {
-            Risk.printError(player.getName()+" does not have "+number+" reinforcements");
-        } else {
-            visuals.updateWithReinforcement(territory, number);
-            territory.setUnits(territory.getUnits() + number);
-        }
+    public void addUnits(Territory territory, int number) {
+        visuals.updateWithReinforcement(territory, number);
+        territory.setUnits(territory.getUnits() + number);
     }
 
     /**
@@ -351,9 +327,9 @@ public class Board {
     
     public void moveUnits(Territory a, Territory b, int units) {
         if(a.getUnits() < 2) {
-            Risk.printError("The fortifying territory, "+a.getName()+", doesn't have enough units to fortify "+b.getName());
+            throw new RuntimeException("The fortifying territory, "+a.getName()+", doesn't have enough units to fortify "+b.getName());
         } else if(!Risk.getConnectedTerritories(a).contains(b)) {
-            Risk.printError("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
+            throw new RuntimeException("The territories "+a.getName()+" and "+b.getName()+" cannot fortify each other, bacause they are not connected.");
         } else {
             visuals.updateWithFortification(a, b, units);
             a.setUnits(a.getUnits() - units);
