@@ -1,8 +1,11 @@
 package infomgmag;
 
+import java.util.ArrayList;
+
 public class CombatMove {
     private Territory attackingTerritory, defendingTerritory;
     private int attackingUnits, defendingUnits;
+    private ArrayList<Integer> attackThrows;
 
     public CombatMove() {
     }
@@ -43,5 +46,13 @@ public class CombatMove {
     public String toString() {
         return "AttackingTerritory: " + attackingTerritory.toString() + " DefendingTerritory: "
                 + defendingTerritory.toString() + " DefendingUnits: " + defendingUnits;
+    }
+
+    public void setAttackThrows(ArrayList<Integer> attackThrows) {
+        this.attackThrows = attackThrows;
+    }
+
+    public ArrayList<Integer> getAttackThrows() {
+        return attackThrows;
     }
 }
