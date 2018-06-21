@@ -117,7 +117,7 @@ public class RandomBot extends Player {
 
     private int nrOfUnitsmovingInAfterInvasion(CombatMove combatMove) {
         // Note that the value is random int *strictly* smaller than the argument
-        return Risk.random.nextInt(combatMove.getAttackingTerritory().getUnits() - 1) + 1;
+        return Risk.random.nextInt(combatMove.getAttackingTerritory().getUnits() - combatMove.getAttackingUnits()) + combatMove.getAttackingUnits();
     }
 
     public int getDefensiveDice(CombatMove combatMove) {
