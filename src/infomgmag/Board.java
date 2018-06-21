@@ -23,7 +23,7 @@ public class Board {
     public Board(RiskVisual visuals) {
         this.visuals = visuals;
 
-        continents = new ArrayList<>();
+        this.continents = new ArrayList<>();
 
         this.goldenCavalry = 4;
         this.artillery = 14;
