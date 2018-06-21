@@ -10,6 +10,7 @@ public class Board {
     // Cards without owner
     private int artillery, cavalry, infantry, wildcard;
 
+    // This increases the amount of reinforcements
     private int goldenCavalry;
 
     // Link to visuals such that board actions can be visualized
