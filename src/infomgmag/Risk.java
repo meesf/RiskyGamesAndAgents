@@ -138,8 +138,8 @@ public class Risk implements CombatInterface{
 
     public void performCombatMove(CombatMove combatMove) {
         if (combatMove.getAttackingUnits() > 3)
-            throw new RuntimeException("Rule breach: No more than 3 attacking units allowed");
-        else if (combatMove.getAttackingUnits() > combatMove.getAttackingTerritory().getUnits() - 1)
+            combatMove.setAttackingUnits(3);
+        if (combatMove.getAttackingUnits() > combatMove.getAttackingTerritory().getUnits() - 1)
             throw new RuntimeException("Rule breach: Not enough units on attacking territory");
         ArrayList<Integer> attackThrows = new ArrayList<>();
         // Attacker throws dices
