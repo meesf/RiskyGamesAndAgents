@@ -137,20 +137,27 @@ public class Risk implements CombatInterface{
     }
 
     public void performCombatMove(CombatMove combatMove) {
+        if (combatMove.getAttackingUnits() > 3)
+            combatMove.setAttackingUnits(3);
+        if (combatMove.getAttackingUnits() > combatMove.getAttackingTerritory().getUnits() - 1)
+            throw new RuntimeException("Rule breach: Not enough units on attacking territory");
+
+        // Attacker throws dice
+        ArrayList<Integer> attackThrows = new ArrayList<>();
+        for (int i = 0; i < combatMove.getAttackingUnits(); i++) {
+            int value = Risk.random.nextInt(6) + 1;
+            attackThrows.add(value);
+        }
+        combatMove.setAttackThrows(attackThrows);
+
         int defendingAmount = combatMove.getDefendingTerritory().getOwner().getDefensiveDice(combatMove);
         if (defendingAmount > combatMove.getDefendingTerritory().getUnits() || defendingAmount > 2 || defendingAmount < 1)
             throw new RuntimeException("Rule breach: Defending amount not allowed: " + combatMove);
         combatMove.setDefendingUnits(defendingAmount);
 
         visuals.update(combatMove);
-        ArrayList<Integer> attackThrows = new ArrayList<>();
-        ArrayList<Integer> defenseThrows = new ArrayList<>();
 
-        // Attacker throws dices
-        for (int i = 0; i < combatMove.getAttackingUnits(); i++) {
-            int value = Risk.random.nextInt(6) + 1;
-            attackThrows.add(value);
-        }
+        ArrayList<Integer> defenseThrows = new ArrayList<>();
 
         // Defender throws dices
         for (int i = 0; i < combatMove.getDefendingUnits(); i++) {

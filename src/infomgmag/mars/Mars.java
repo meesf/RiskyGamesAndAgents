@@ -186,8 +186,9 @@ public class Mars extends Player {
 
     @Override
     public int getDefensiveDice(CombatMove combatMove) {
-        // TODO Auto-generated method stub
-        return Math.min(2, combatMove.getDefendingTerritory().getUnits());
+        if (combatMove.getAttackThrows().stream().mapToDouble(x -> x).average().getAsDouble() < 3.5)
+            return Math.min(combatMove.getDefendingTerritory().getUnits(), 2);
+        return 1;
     }
 
     @Override
