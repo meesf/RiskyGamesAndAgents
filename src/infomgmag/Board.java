@@ -15,9 +15,12 @@ public class Board {
     private ArrayList<Continent> continents;
     private ArrayList<Territory> territories;
 
+    // Cards without owner
     private int artillery, cavalry, infantry, wildcard;
 
     private int goldenCavalry;
+
+    // Link to visuals such that board actions can be visualized
     private RiskVisual visuals;
 
     public Board(RiskVisual visuals) {
@@ -31,13 +34,13 @@ public class Board {
         this.infantry = 14;
         this.wildcard = 2;
 
+        // Official board layout; is static so might as well be hardcoded
         Continent northAmerica = new Continent(new Color(1.0f, 1.0f, 0.0f), "northAmerica", 5);
         continents.add(northAmerica);
         Continent southAmerica = new Continent(new Color(0.6f, 0f, 0f), "southAmerica", 2);
         continents.add(southAmerica);
         Continent europe = new Continent(new Color(0.33f, 0f, 1f),"europe", 5);
         continents.add(europe);
-
         Continent asia = new Continent(new Color(0.1f, 0.5f, 0.1f), "asia", 7);
         continents.add(asia);
         Continent africa = new Continent(new Color(1f, 0.5f, 0f),"africa", 3);
@@ -210,6 +213,7 @@ public class Board {
         makeEdge(westernAustralia, easternAustralia);
         makeEdge(kamchatka, alaska);
 
+        // It is useful that apart from using continents we can loop through territories
         territories = new ArrayList<>();
         for (Continent continent : continents)
             for (Territory territory : continent.getTerritories())
