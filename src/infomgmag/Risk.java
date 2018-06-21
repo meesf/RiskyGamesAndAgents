@@ -166,9 +166,22 @@ public class Risk implements CombatInterface{
 
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - attackLoss);
         combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getUnits() - defenseLoss);
-
+        
         // Update number of units on both territories and new owner
         boolean captured = combatMove.getDefendingTerritory().getUnits() == 0;
+        combatLog.add(new CombatEvent(
+                combatMove.getAttackingTerritory().getOwner(), 
+                combatMove.getDefendingTerritory().getOwner(), 
+                combatMove.getAttackingTerritory(), 
+                combatMove.getDefendingTerritory(), 
+                combatMove.getAttackingUnits(), 
+                combatMove.getDefendingUnits(), 
+                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
+                    (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
+                        CombatEvent.ONE_EACH), 
+                turn,
+                captured));
+        
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);
@@ -188,18 +201,6 @@ public class Risk implements CombatInterface{
                 defeatedPlayers.add(defender);
             }
         }
-
-        combatLog.add(new CombatEvent(
-                combatMove.getAttackingTerritory().getOwner(), 
-                combatMove.getDefendingTerritory().getOwner(), 
-                combatMove.getAttackingTerritory(), 
-                combatMove.getDefendingTerritory(), 
-                combatMove.getAttackingUnits(), 
-                combatMove.getDefendingUnits(), 
-                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
-                    (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
-                        CombatEvent.ONE_EACH), 
-                captured));
     }
 
     private int calculateReinforcements() {
@@ -354,5 +355,9 @@ public class Risk implements CombatInterface{
 
     public int getActivePlayerAmount() {
         return activePlayers.size();
+    }
+    
+    public ArrayList<CombatEvent> getCombatLog() {
+        return combatLog;
     }
 }
