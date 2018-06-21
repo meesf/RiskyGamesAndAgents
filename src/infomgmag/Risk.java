@@ -18,7 +18,7 @@ import java.util.Random;
  * @version FirstPrototype
  * @date 4/5/2018
  */
-public class Risk implements CombatInterface{
+public class Risk implements CombatInterface {
 
     // Variables to be customized by debugger
     private boolean visible = true;
@@ -42,8 +42,8 @@ public class Risk implements CombatInterface{
     private int turn = 0;
     private int initialArmies;
     private boolean StopGame;
-    
-    private ArrayList<CombatEvent> combatLog;
+
+    public ArrayList<CombatEvent> combatLog;
 
     public static void main(String[] args) {
         long seed = System.currentTimeMillis();
@@ -53,7 +53,7 @@ public class Risk implements CombatInterface{
         Risk risk = new Risk();
         risk.run(); //this makes the game run
     }
-    
+
     public static void createDiceOdds() {
         DICE_ODDS_ONE = new ArrayList<ArrayList<Double>>();
         ArrayList<Double> oneA = new ArrayList<Double>();
@@ -83,7 +83,7 @@ public class Risk implements CombatInterface{
         twoL.add(2611.0/7776);
         DICE_ODDS_TWO.add(twoL);
     }
-    
+
     public Risk() {
         visuals = new RiskVisual(this,visible);
         board = new Board(visuals);
@@ -93,10 +93,10 @@ public class Risk implements CombatInterface{
         initializePlayers();
         int currentPlayerIndex = divideTerritories();
         initialPlaceReinforcements(currentPlayerIndex);
-        visuals.setTargetFrameDuration(450);
+        visuals.setTargetFrameDuration(45);
         currentPlayer = activePlayers.get(0);
     }
-    
+
     public void run() {
         while (!finished()) {
             visuals.update();
@@ -107,7 +107,7 @@ public class Risk implements CombatInterface{
             currentPlayer.placeReinforcements(board);
 
             int startingNrOfTerritories = currentPlayer.getTerritories().size();
-            
+
             currentPlayer.attackPhase((CombatInterface) this);
             currentPlayer.fortifyTerritory(board);
             visuals.update();
@@ -123,7 +123,7 @@ public class Risk implements CombatInterface{
         visuals.log(activePlayers.get(0) + " has won!");
 
         if (visible)
-            while(true) {
+            while (true) {
                 visuals.update();
             }
     }
@@ -183,8 +183,25 @@ public class Risk implements CombatInterface{
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - attackLoss);
         combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getUnits() - defenseLoss);
 
-        // Update number of units on both territories and new owner
         boolean captured = combatMove.getDefendingTerritory().getUnits() == 0;
+
+        combatLog.add(new CombatEvent(
+                combatMove.getAttackingTerritory().getOwner(),
+                combatMove.getDefendingTerritory().getOwner(),
+                combatMove.getAttackingTerritory(),
+                combatMove.getDefendingTerritory(),
+                combatMove.getAttackingUnits(),
+                combatMove.getDefendingUnits(),
+                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
+                        (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
+                                CombatEvent.ONE_EACH),
+                captured,
+                attackLoss,
+                defenseLoss));
+        // Update number of units on both territories and new owner
+
+        // Update number of units on both territories and new owner
+
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);
@@ -204,18 +221,6 @@ public class Risk implements CombatInterface{
                 defeatedPlayers.add(defender);
             }
         }
-
-        combatLog.add(new CombatEvent(
-                combatMove.getAttackingTerritory().getOwner(), 
-                combatMove.getDefendingTerritory().getOwner(), 
-                combatMove.getAttackingTerritory(), 
-                combatMove.getDefendingTerritory(), 
-                combatMove.getAttackingUnits(), 
-                combatMove.getDefendingUnits(), 
-                attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
-                    (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
-                        CombatEvent.ONE_EACH), 
-                captured));
     }
 
     private int calculateReinforcements() {
@@ -269,7 +274,7 @@ public class Risk implements CombatInterface{
                 color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
                         Risk.random.nextFloat() * 0.8f + 0.2f);
             }
-            RandomBot player = new RandomBot(objective, 0, "Player " + i + " (Random Bot)",color);
+            RandomBot player = new RandomBot(objective, 0, "Player " + i + " (Random Bot)", color);
             activePlayers.add(player);
         }
 
@@ -292,8 +297,10 @@ public class Risk implements CombatInterface{
                         Risk.random.nextFloat() * 0.8f + 0.2f);
             }
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
+
             Personality personality = personalities.get(i - randomPlayers);
             Mars player = new Mars(this, objective, 0, "Player " + i + " (" + personality + " MARS)",color, personality);
+
             activePlayers.add(player);
         }
         shufflePlayers();
@@ -345,7 +352,7 @@ public class Risk implements CombatInterface{
     private boolean finished() {
         return activePlayers.size() == 1 || StopGame;
     }
-    
+
     public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
         ArrayList<Territory> visited = new ArrayList<>();
         ArrayList<Territory> result = new ArrayList<>();
@@ -374,15 +381,23 @@ public class Risk implements CombatInterface{
     }
 
     public static void printError(String str) {
+
         System.err.println("Error:"+str);
+
         System.exit(1);
     }
 
-    public ArrayList<Player> getDefeatedPlayers(){
+    public ArrayList<Player> getDefeatedPlayers() {
         return this.defeatedPlayers;
     }
 
     public int getActivePlayerAmount() {
         return activePlayers.size();
     }
+
+    public ArrayList<CombatEvent> getCombatLog() {
+        return combatLog;
+    }
 }
+
+

@@ -1,6 +1,7 @@
 package infomgmag.mars;
 
 public class Personality {
+
     private double friendlyNeighbourWeight;
     private double enemyNeighbourWeight;
     private double friendlyArmyWeight;
@@ -15,6 +16,7 @@ public class Personality {
     private double killEnemyWeight;
     private String name;
     private double clusteringWeight;
+    private double hatedBonus;
     private double attackFirstCountryWeight;
 
     public Personality(String name,
@@ -31,7 +33,9 @@ public class Personality {
                        double killEnemyWeight,
                        double clusteringWeight,
                        int goalLength,
-                       double attackFirstTerritoryWeight){
+                       double hatedBonus,
+                       double attackFirstTerritoryWeight) {
+
         this.name = name;
         this.defensiveMultiplier = defensiveMultiplier;
         this.offensiveMultiplier = offensiveMultiplier;
@@ -45,9 +49,9 @@ public class Personality {
         this.percentageOfContinentWeight = percentageOfContinentWeight;
         this.killEnemyWeight = killEnemyWeight;
         this.goalLength = goalLength;
+        this.hatedBonus = hatedBonus;
         this.clusteringWeight = clusteringWeight;
         this.attackFirstCountryWeight = attackFirstTerritoryWeight;
-
     }
 
     public String getName() {
@@ -105,6 +109,8 @@ public class Personality {
     public double getKillEnemyWeight() {
         return killEnemyWeight;
     }
+
+    public Double getHatedBonus(){ return hatedBonus; }
 
     public double getClusteringWeight() {
         return clusteringWeight;
