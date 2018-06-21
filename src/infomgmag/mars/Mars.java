@@ -57,6 +57,7 @@ public class Mars extends Player {
         return agents;
     }
 
+    // Returns all the clusters of territories of the Mars agent
     private ArrayList<ArrayList<CountryAgent>> getClusters() {
         ArrayList<ArrayList<CountryAgent>> clusters = new ArrayList<ArrayList<CountryAgent>>();
         for (Territory t : territories) {
@@ -120,15 +121,18 @@ public class Mars extends Player {
     @Override
     public void movingInAfterInvasion(Board board, CombatMove combatMove) {
         setHasConqueredTerritoryInTurn(true);
+
+        // First the player invades the territory with the amount of units equal to the amount of dice he has thrown in the last combatMove
         combatMove.getDefendingTerritory().setUnits(combatMove.getAttackingUnits());
         combatMove.getAttackingTerritory().setUnits(combatMove.getAttackingTerritory().getUnits() - combatMove.getAttackingUnits());
-        
+
+        //Then a fortifying bid is created to decide if and with how many extra units he will invade
         CountryAgent fortifier = countryAgentsByTerritory.get(combatMove.getAttackingTerritory());
         CountryAgent reinforced = countryAgentsByTerritory.get(combatMove.getDefendingTerritory());
         
         ArrayList<FortifierBid> fortifierBids = fortifier.getFortifierBids();
         ArrayList<ReinforcementBid> reinforcementBids = reinforced.getBids(combatMove.getAttackingTerritory().getUnits() - 1);
-        
+
         FortifierBid bestfb = null;
         double bestUtilGain = 0;
         for (FortifierBid fb : fortifierBids) {
@@ -144,6 +148,7 @@ public class Mars extends Player {
             }
         }
 
+        // The extra units from the bid are then moved
         if (bestUtilGain > 0) {
         	int transferredUnits = bestfb.getUnits();
             combatMove.getDefendingTerritory().setUnits(combatMove.getDefendingTerritory().getUnits() + transferredUnits);
@@ -164,6 +169,7 @@ public class Mars extends Player {
             }
         }
 
+        // ReinforcementBids are created as long as there are still reinforcements left to divide
         while (reinforcements > 0) {
             ArrayList<ReinforcementBid> bids = new ArrayList<>();
             for (CountryAgent ca : countryAgents) {
@@ -181,6 +187,7 @@ public class Mars extends Player {
                         (x, y) -> x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1))
                         .get();
 
+            // The units from the bid are then added to the territory
             board.addUnits(bid.getReinforcedAgent().getTerritory(), bid.getUnits());
             reinforcements -= bid.getUnits();
 
@@ -210,6 +217,7 @@ public class Mars extends Player {
                 }
             }
 
+            // An offensive bid is created to determine which attack is the most useful
             Optional<OffensiveBid> ob = countryAgents.stream()
                     // Need to own territory, border an enemy, and have units to attack with
                     .filter(ca -> ca.getTerritory().getOwner() == this).filter(ca -> ca.bordersEnemy())
@@ -218,10 +226,11 @@ public class Mars extends Player {
                     .map(ca -> ca.getAttackBid()).filter(x -> x instanceof OffensiveBid).map(x -> (OffensiveBid) x)
                     // Create attackbids from the best
                     .max((x, y) -> x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1));
-            
+
             if (!ob.isPresent())
                 return;
 
+            //If the offensive bid is present, a combatMove is created using this bid and performed
             CombatMove cm = new CombatMove();
             cm.setAttackingTerritory(ob.get().reinforcedAgent.getTerritory());
             cm.setDefendingTerritory(ob.get().getGoal().getFirstGoal().getTerritory());
@@ -230,6 +239,7 @@ public class Mars extends Player {
         }
     }
 
+    // Keeps track of how much hated each player is
     public void calculateHatedPlayer(){
         Double playerHatred = 0.0;
         for (Player enemyPlayer : risk.getActivePlayers()){

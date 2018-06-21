@@ -33,6 +33,7 @@ public abstract class Player {
 
     public abstract void fortifyTerritory(Board board);
 
+    // If a territory is taken over, the owner will invade it with a certain amount of units
     public abstract void movingInAfterInvasion(Board board, CombatMove combatMove);
 
     public abstract int getDefensiveDice(CombatMove combatMove);
@@ -82,6 +83,7 @@ public abstract class Player {
         return false;
     }
 
+    // Multiple combatMoves are performed during the attackPhase
     abstract public void attackPhase(CombatInterface combatInterface);
 
     public boolean hasConqueredTerritoryInTurn(){

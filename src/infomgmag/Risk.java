@@ -150,13 +150,13 @@ public class Risk implements CombatInterface {
 
         ArrayList<Integer> defenseThrows = new ArrayList<>();
 
-        // Defender throws dices
+        // Defender throws dice
         for (int i = 0; i < combatMove.getDefendingUnits(); i++) {
             int value = Risk.random.nextInt(6) + 1;
             defenseThrows.add(value);
         }
 
-        // Determining the losses of both sides and changes those values
+        // Determining the losses of both sides and changes the number of units on the territories
         int attackLoss = 0, defenseLoss = 0;
 
         if (Collections.max(attackThrows) > Collections.max(defenseThrows))
@@ -189,9 +189,6 @@ public class Risk implements CombatInterface {
                 captured,
                 attackLoss,
                 defenseLoss));
-        // Update number of units on both territories and new owner
-
-        // Update number of units on both territories and new owner
 
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
@@ -320,6 +317,7 @@ public class Risk implements CombatInterface {
         return player % activePlayers.size();
     }
 
+    //Placing the starting reinforcements on the board
     private void initialPlaceReinforcements(int currentPlayerIndex) {
         int player = currentPlayerIndex;
         for (int i = 0; i < (activePlayers.size() * initialArmies) - board.getTerritories().size(); i++) {
