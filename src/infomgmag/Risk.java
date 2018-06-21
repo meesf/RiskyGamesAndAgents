@@ -115,13 +115,8 @@ public class Risk implements CombatInterface{
 
             turn++;
         }
-
         visuals.log(activePlayers.get(0) + " has won!");
-
-        if (visible)
-            while(true) {
-                visuals.update();
-            }
+        visuals.setVisible(false);
     }
 
     public int getTurn() {

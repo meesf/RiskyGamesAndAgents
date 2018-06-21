@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Tournament {
 	
-	public static final boolean VISIBLE = false;
+	public static final boolean VISIBLE = true;
 	public static final int SPEED = 10;
 	
 	public static final int RUNS = 25;
@@ -15,8 +15,9 @@ public class Tournament {
 		setPlayers();
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		
-        Risk risk = new Risk(VISIBLE);
+        
         for(int i = STARTING_SEED; i < RUNS + STARTING_SEED; i++) {
+            Risk risk = new Risk(VISIBLE);
         	risk.initialize(i, players, SPEED);
         	risk.run();
         	
