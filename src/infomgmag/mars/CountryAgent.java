@@ -35,7 +35,7 @@ public class CountryAgent {
                  territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
                  percentageOfContinentOwned() * personality.getPercentageOfContinentWeight() +
-                        (ownedByHatedEnemy ? 1 : 0) * personality.getHatedBonus());
+                 (ownedByHatedEnemy ? 1 : 0) * personality.getHatedBonus());
     }
 
     // calculates how many friendly neighbouring territories border this territory

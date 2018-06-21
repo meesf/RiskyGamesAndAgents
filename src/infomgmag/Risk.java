@@ -9,18 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-/**
- * This class contains the main() method. This class is the bridge between the
- * visual presentation of the game (RiskVisual) and the data presentation of the
- * game (RiskPhysics).
- * 
- * @author Games&AgentsGroup8
- * @version FirstPrototype
- * @date 4/5/2018
- */
 public class Risk implements CombatInterface {
 
-    // Variables to be customized by debugger
+    // Variables to be customized by user
     private boolean visible = true;
     private int randomPlayers = 0;
     private int aggressivePlayers = 1;
@@ -378,13 +369,6 @@ public class Risk implements CombatInterface {
     
     public int getInitialArmies() {
     	return 50 - (5 * (randomPlayers + aggressivePlayers + normalPlayers + defensivePlayers + continentPlayers));
-    }
-
-    public static void printError(String str) {
-
-        System.err.println("Error:"+str);
-
-        System.exit(1);
     }
 
     public ArrayList<Player> getDefeatedPlayers() {
