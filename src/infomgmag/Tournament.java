@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 public class Tournament {
 	
-	public static final boolean VISIBLE = false;
-	public static final int SPEED = 10;
+	public static final boolean VISIBLE = true;
+	public static final int SPEED = 100;
 	
-	public static final int RUNS = 2;
+	public static final int RUNS =1;
 	public static final int STARTING_SEED = 83075;
 	
 	public static HashMap<String, String> players;

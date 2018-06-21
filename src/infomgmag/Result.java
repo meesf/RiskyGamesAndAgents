@@ -53,9 +53,17 @@ public class Result {
         }
         
         int turn = 1;
+        int count = 0;
         for(CombatEvent ce : risk.getCombatLog()) {
+            count++;
+            if(count == 18){
+                int b = 0;
+            }
             String attacker = ce.getAttackingPlayer().getName();
             String defender = ce.getDefendingPlayer().getName();
+            if(ce.attackingTerritory.getName() == "Western United States"){
+                int b = 0;
+            }
             captureRatioMap.get(attacker).add(ce.getCombatResult());
             if(ce.getCombatResult() == CombatEvent.CAPTURE) {
                 captureTerritoryCount.put(attacker, captureTerritoryCount.get(attacker) + 1);
@@ -63,7 +71,18 @@ public class Result {
                 if(!ownedTerritories.get(attacker).contains(ce.getDefendingTerritory())) {
                     ownedTerritories.get(attacker).add(ce.getDefendingTerritory());
                 }
-                ownedTerritories.get(defender).remove(ce.getDefendingTerritory());
+                else{
+                    int a = 0;
+                }
+                if(ownedTerritories.get(defender).contains(ce.getDefendingTerritory())){
+                    ownedTerritories.get(defender).remove(ce.getDefendingTerritory());
+                }
+                else {
+                    int b = 0;
+                }
+            }
+            else {
+                int a = 0;
             }
             
             // Should loop over turns...
