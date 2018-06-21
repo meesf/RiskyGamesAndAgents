@@ -115,10 +115,9 @@ public class RandomBot extends Player {
         }
     }
 
-    // TODO: Here the agent is always leaving one unit behind and move the rest to
-    // the invaded territory. This should eventually be changed.
     private int nrOfUnitsmovingInAfterInvasion(CombatMove combatMove) {
-        return combatMove.getAttackingTerritory().getUnits() - 1;
+        // Note that the value is random int *strictly* smaller than the argument
+        return Risk.random.nextInt(combatMove.getAttackingTerritory().getUnits() - 1) + 1;
     }
 
     public int getDefensiveDice(CombatMove combatMove) {
