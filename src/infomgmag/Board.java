@@ -45,7 +45,6 @@ public class Board {
         Continent australia = new Continent(new Color(1f, 0.4f, 0.55f),"australia", 2);
         continents.add(australia);
 
-
         Territory yakutsk = new Territory("Yakutsk", 0.84, 0.79);
         asia.addTerritory(yakutsk);
         Territory kamchatka = new Territory("Kamchatka", 0.92, 0.78);
