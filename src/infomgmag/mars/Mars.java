@@ -178,7 +178,7 @@ public class Mars extends Player {
                         (x, y) -> x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1))
                         .get();
 
-            board.addUnits(this, bid.getReinforcedAgent().getTerritory(), bid.getUnits());
+            board.addUnits(bid.getReinforcedAgent().getTerritory(), bid.getUnits());
             reinforcements -= bid.getUnits();
 
         }

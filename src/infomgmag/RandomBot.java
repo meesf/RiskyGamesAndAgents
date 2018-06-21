@@ -110,7 +110,7 @@ public class RandomBot extends Player {
     public void placeReinforcements(Board board) {
         while (getReinforcements() != 0) {
             Territory randomTer = territories.get(Risk.random.nextInt(territories.size()));
-            board.addUnits(this, randomTer, 1);
+            board.addUnits(randomTer, 1);
             reinforcements--;
         }
     }

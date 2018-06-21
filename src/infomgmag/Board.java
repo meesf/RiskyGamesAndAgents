@@ -229,21 +229,9 @@ public class Board {
         }
     }
 
-    /**
-     * Add the given amount of units to the given territory.
-     *
-     * @return boolean if the action succeeded, in other words if the action was
-     *         possible and has been executed.
-     */
-    public void addUnits(Player player, Territory territory, int number) {
-        if(player!=territory.getOwner()) {
-            throw new RuntimeException(player.getName()+" tried reinforcing "+territory.getName()+", but does not own this territory");
-        } else if(player.getReinforcements() < number) {
-            throw new RuntimeException(player.getName()+" does not have "+number+" reinforcements");
-        } else {
-            visuals.updateWithReinforcement(territory, number);
-            territory.setUnits(territory.getUnits() + number);
-        }
+    public void addUnits(Territory territory, int number) {
+        visuals.updateWithReinforcement(territory, number);
+        territory.setUnits(territory.getUnits() + number);
     }
 
     /**
