@@ -16,7 +16,7 @@ public class PersonalityFactory {
                 5.0,
                 80.0,
                 0.25,
-                4,
+                7,
                 1000,
                 10);
     }

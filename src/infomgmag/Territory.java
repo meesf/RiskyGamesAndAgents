@@ -30,7 +30,6 @@ public class Territory {
         this.adjacentTerritories = new ArrayList<>();
     }
 
-
     public void setOwner(Player newOwner) {
 
         if (this.owner != null)
