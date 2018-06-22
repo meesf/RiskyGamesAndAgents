@@ -79,6 +79,15 @@ public class Territory {
     public String toString() {
         return "name: " + name + " nrOfUnits: " + units;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof Territory)) return false;
+        Territory o = (Territory) obj;
+        return o.getName() == this.name;
+    }
 
 
     public double getContinentsBorderedAmount() {

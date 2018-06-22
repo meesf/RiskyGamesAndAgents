@@ -1,23 +1,19 @@
 package infomgmag;
 
 import infomgmag.mars.Mars;
-import infomgmag.mars.Personality;
 import infomgmag.mars.PersonalityFactory;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class Risk implements CombatInterface {
 
     // Variables to be customized by user
     private boolean visible = true;
-    private int randomPlayers = 0;
-    private int aggressivePlayers = 1;
-    private int normalPlayers = 2;
-    private int defensivePlayers = 2;
-    private int continentPlayers = 1;
 
     public static Random random;
 
@@ -33,16 +29,31 @@ public class Risk implements CombatInterface {
     private int turn = 0;
     private int initialArmies;
     private boolean StopGame;
-
+    
     public ArrayList<CombatEvent> combatLog;
-
-    public static void main(String[] args) {
-        long seed = System.currentTimeMillis();
-        random = new Random(seed);
-        System.out.println(seed);
+    public ArrayList<TurnLog> turnLog;
+    
+    public Risk(boolean visible) {
+        this.visible = visible;
         createDiceOdds();
-        Risk risk = new Risk();
-        risk.run(); //this makes the game run
+        visuals = new RiskVisual(this,visible);
+    }
+    
+    public void initialize(long seed, HashMap<String, String> players, int speed) {
+        random = new Random(seed);
+        turn = 0;
+        StopGame = false;
+
+        board = new Board(visuals);
+        combatLog = new ArrayList<>();
+        turnLog = new ArrayList<>();
+        defeatedPlayers = new ArrayList<Player>();
+        initialArmies = getInitialArmies(players);
+        initializePlayers(players);
+        int currentPlayerIndex = divideTerritories();
+        initialPlaceReinforcements(currentPlayerIndex);
+        visuals.setTargetFrameDuration(speed);
+        currentPlayer = activePlayers.get(random.nextInt(activePlayers.size()));
     }
 
     public static void createDiceOdds() {
@@ -75,24 +86,12 @@ public class Risk implements CombatInterface {
         DICE_ODDS_TWO.add(twoL);
     }
 
-    public Risk() {
-        visuals = new RiskVisual(this,visible);
-        board = new Board(visuals);
-        combatLog = new ArrayList<>();
-        defeatedPlayers = new ArrayList<Player>();
-        initialArmies = getInitialArmies();
-        initializePlayers();
-        int currentPlayerIndex = divideTerritories();
-        initialPlaceReinforcements(currentPlayerIndex);
-        visuals.setTargetFrameDuration(45);
-        currentPlayer = activePlayers.get(0);
-    }
-
     public void run() {
         while (!finished()) {
             visuals.update();
             currentPlayer.setHasConqueredTerritoryInTurn(false);
             int nrOfReinforcements = calculateReinforcements();
+            addTurnLog(nrOfReinforcements);
             currentPlayer.setReinforcements(nrOfReinforcements);
             currentPlayer.turnInCards(board);
             currentPlayer.placeReinforcements(board);
@@ -110,13 +109,29 @@ public class Risk implements CombatInterface {
 
             turn++;
         }
-
         visuals.log(activePlayers.get(0) + " has won!");
-
-        if (visible)
-            while (true) {
-                visuals.update();
+        visuals.setVisible(false);
+    }
+    
+    public void addTurnLog(Integer reinforcements) {
+        HashMap<Player, Integer> totalArmies = new HashMap<Player, Integer>();
+        HashMap<Player, ArrayList<Territory>> territories = new HashMap<Player, ArrayList<Territory>>();
+        for(Player p : activePlayers) {
+            int armies = 0;
+            ArrayList<Territory> playerTerritories = new ArrayList<Territory>(); 
+            for(Territory t : p.getTerritories()) {
+                armies += t.getUnits();
+                playerTerritories.add(t);
             }
+            totalArmies.put(p, armies);
+            territories.put(p, playerTerritories);
+        }
+        for(Player p : defeatedPlayers) {
+            totalArmies.put(p, 0);
+            territories.put(p, new ArrayList<Territory>());
+        }
+
+        turnLog.add(new TurnLog(turn, currentPlayer, reinforcements, totalArmies, territories));
     }
 
     public int getTurn() {
@@ -186,10 +201,12 @@ public class Risk implements CombatInterface {
                 attackLoss == 0 ? CombatEvent.ATTACKER_WINS :
                         (defenseLoss == 0 ? CombatEvent.DEFENDER_WINS :
                                 CombatEvent.ONE_EACH),
+                turn,
                 captured,
                 attackLoss,
                 defenseLoss));
 
+        // Update number of units on both territories and new owner
         if (captured) {
             Player defender = combatMove.getDefendingTerritory().getOwner();
             combatMove.getDefendingTerritory().setOwner(currentPlayer);
@@ -250,45 +267,30 @@ public class Risk implements CombatInterface {
             Color.MAGENTA
     };
 
-    private void initializePlayers() {
+    private void initializePlayers(HashMap<String, String> players) {
         activePlayers = new ArrayList<>();
-        int i;
-        for (i = 0; i < randomPlayers; i++) {
+        
+        for (Entry<String, String> entry : players.entrySet()) {
             Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
             Color color;
-            if (i < playerColors.length) {
-                color = playerColors[i];
+            Player player = null;
+            if (activePlayers.size() < playerColors.length) {
+                color = playerColors[activePlayers.size()];
             } else {
                 color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
                         Risk.random.nextFloat() * 0.8f + 0.2f);
             }
-            RandomBot player = new RandomBot(objective, 0, "Player " + i + " (Random Bot)", color);
-            activePlayers.add(player);
-        }
 
-        ArrayList<Personality> personalities = new ArrayList<>();
-        for (int j = 0; j < defensivePlayers; j++)
-            personalities.add(PersonalityFactory.defensivePersonality());
-        for (int j = 0; j < aggressivePlayers; j++)
-            personalities.add(PersonalityFactory.agressivePersonality());
-        for (int j = 0; j < normalPlayers; j++)
-            personalities.add(PersonalityFactory.normalPersonality());
-        for (int j = 0; j < continentPlayers; j++)
-            personalities.add(PersonalityFactory.continentPersonality());
-
-        for (; i < randomPlayers + aggressivePlayers + defensivePlayers + normalPlayers + continentPlayers; i++) {
-            Color color;
-            if (i < playerColors.length) {
-                color = playerColors[i];
-            } else {
-                color = new Color(Risk.random.nextFloat() * 0.8f + 0.2f, Risk.random.nextFloat() * 0.8f + 0.2f,
-                        Risk.random.nextFloat() * 0.8f + 0.2f);
-            }
-            Objective objective = new Objective(Objective.type.TOTAL_DOMINATION);
-
-            Personality personality = personalities.get(i - randomPlayers);
-            Mars player = new Mars(this, objective, 0, "Player " + i + " (" + personality + " MARS)",color, personality);
-
+            if(entry.getValue() == "aggressive")
+                player = new Mars(this, objective, 0, entry.getKey(), color, PersonalityFactory.agressivePersonality());
+            if(entry.getValue() == "normal")
+                player = new Mars(this, objective, 0, entry.getKey(), color, PersonalityFactory.normalPersonality());
+            if(entry.getValue() == "defensive")
+                player = new Mars(this, objective, 0, entry.getKey(), color, PersonalityFactory.defensivePersonality());
+            if(entry.getValue() == "continent")
+                player = new Mars(this, objective, 0, entry.getKey(), color, PersonalityFactory.continentPersonality());
+            if(player == null)
+                player = new RandomBot(objective, 0, entry.getKey(), color);
             activePlayers.add(player);
         }
         shufflePlayers();
@@ -365,8 +367,8 @@ public class Risk implements CombatInterface {
         return result;
     }
     
-    public int getInitialArmies() {
-    	return 50 - (5 * (randomPlayers + aggressivePlayers + normalPlayers + defensivePlayers + continentPlayers));
+    public int getInitialArmies(HashMap<String,String> players) {
+    	return 50 - (5 * players.size());
     }
 
     public ArrayList<Player> getDefeatedPlayers() {
