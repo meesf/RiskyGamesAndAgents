@@ -2,14 +2,15 @@ package infomgmag;
 
 public class CombatEvent {
     Player attackingPlayer;
-    Player defendingPlayer; 
-    Territory attackingTerritory; 
+    Player defendingPlayer;
+    Territory attackingTerritory;
     Territory defendingTerritory;
     int attackingUnits;
     int defendingUnits;
     int attackingCasualties;
     int defendingCasualties;
     int combatResult;
+    int turn;
     boolean captured;
     
     public static final int ATTACKER_WINS = 0, DEFENDER_WINS = 1, ONE_EACH = 2;
@@ -23,9 +24,11 @@ public class CombatEvent {
             int attackingUnits,
             int defendingUnits,
             int combatResult,
+            int turn,
             boolean captured,
             int attackingCasualties,
             int defendingCasualties) {
+
         this.attackingPlayer = attackingPlayer;
         this.defendingPlayer = defendingPlayer;
         this.attackingTerritory = attackingTerritory;
@@ -33,6 +36,7 @@ public class CombatEvent {
         this.attackingUnits = attackingUnits;
         this.defendingUnits = defendingUnits;
         this.combatResult = combatResult;
+        this.turn = turn;
         this.captured = captured;
         this.attackingCasualties = attackingCasualties;
         this.defendingCasualties = defendingCasualties;
@@ -64,6 +68,10 @@ public class CombatEvent {
 
     public int getCombatResult() {
         return combatResult;
+    }
+    
+    public int getTurn() {
+        return turn;
     }
 
     public int getAttackingCasualties(){
