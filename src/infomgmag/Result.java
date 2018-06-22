@@ -21,7 +21,7 @@ public class Result {
     public HashMap<String, ArrayList<Integer>> receivedReinforcements;  // Amount of reinforcements earned per turn
     
     public Result(Risk risk, Integer seed) {
-        this.winner = risk.getActivePlayers().get(0).getName();
+        this.winner = risk.getActivePlayers().size() == 1 ? risk.getActivePlayers().get(0).getName() : "NoWinner";
         this.turns = risk.getTurn();
         this.seed = seed;
         HashMap<String, Player> players = getPlayers(risk);

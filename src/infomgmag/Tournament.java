@@ -1,24 +1,36 @@
 package infomgmag;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Tournament {
-	
-	public static final boolean VISIBLE = false;
-	public static final int SPEED = 100;
-	
-	public static final int RUNS = 5;
-	public static final int STARTING_SEED = 100;
+
+    public static final boolean VISIBLE = false;
+    public static final int SPEED = 100;
+
+    public static final int RUNS = 5;
+    public static final int STARTING_SEED = 100;
 	
 	public static HashMap<String, String> players;
-	
+
+	public static Random random;
+	public static boolean RANDOMIZE_PLAYERS = false;
+
 	public static void main(String[] args) {
-		setPlayers();
 		ArrayList<Result> results = new ArrayList<Result>();
-        
+		random = new Random(STARTING_SEED);
+        players = new HashMap<String, String>();
+
+        if(!RANDOMIZE_PLAYERS)
+            setPlayers();
+
         for(int i = STARTING_SEED; i < RUNS + STARTING_SEED; i++) {
             Risk risk = new Risk(VISIBLE);
+            if(RANDOMIZE_PLAYERS)
+                randomizePlayers();
         	risk.initialize(i, players, SPEED);        	
         	risk.run();
         	results.add(new Result(risk, i));
@@ -34,7 +46,8 @@ public class Tournament {
 	    HashMap<String, ArrayList<Integer>> loseCounts = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, ArrayList<Double>> ownedContinents = new HashMap<String, ArrayList<Double>>();
 	    // Could also add totalArmies and reinforcements (they are in the Result class already)
-	    
+
+        //wins.put("NoWinner", 0);
 	    for(String player : players.keySet()) {
 	        wins.put(player, 0);
 	        captureRatios.put(player, new ArrayList<Double>());
@@ -44,7 +57,8 @@ public class Tournament {
 	    }
 	    
 	    for(Result r : results) {
-	        wins.put(r.winner, wins.get(r.winner) + 1);
+	        if(r.winner != "NoWinner")
+	            wins.put(r.winner, wins.get(r.winner) + 1);
 	        for(String player : players.keySet()) {
 	            captureRatios.get(player).add(r.captureRatio.get(player));
 	            captureCounts.get(player).add(r.captureTerritoryCount.get(player));
@@ -74,9 +88,17 @@ public class Tournament {
             System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
         }
 	}
+
+	private static void randomizePlayers() {
+	    players.clear();
+	    ArrayList<String> playerOptions = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent"));
+	    for(int i = 0; i < 5; i++){
+            String player = playerOptions.get(random.nextInt(playerOptions.size()));
+            players.put(player + i, player);
+        }
+    }
 	
 	private static void setPlayers() {
-	    players = new HashMap<String, String>();
         players.put("aggressiveA", "aggressive");
         players.put("normalA", "normal");
         players.put("normalB", "normal");
@@ -84,14 +106,12 @@ public class Tournament {
         players.put("continentA", "continent");
     }
     private static void setPlayersNNNN() {
-        players = new HashMap<String, String>();
         players.put("normalA", "normal");
         players.put("normalB", "normal");
         players.put("normalC", "normal");
         players.put("normalD", "normal");
     }
     private static void setPlayersDDDD() {
-        players = new HashMap<String, String>();
         players.put("defensiveA", "defensive");
         players.put("defensiveB", "defensive");
         players.put("defensiveC", "defensive");
@@ -99,56 +119,48 @@ public class Tournament {
     }
     
     private static void setPlayersCCCC() {
-        players = new HashMap<String, String>();
         players.put("continentA", "continent");
         players.put("continentB", "continent");
         players.put("continentC", "continent");
         players.put("continentD", "continent");
     }
     private static void setPlayersAAAA() {
-        players = new HashMap<String, String>();
         players.put("aggressiveA", "aggressive");
         players.put("aggressiveB", "aggressive");
         players.put("aggressiveC", "aggressive");
         players.put("aggressiveD", "aggressive");
     }
     private static void setPlayersNNDD() {
-        players = new HashMap<String, String>();
         players.put("normalA", "normal");
         players.put("normalB", "normal");
         players.put("defensiveA", "defensive");
         players.put("defensiveB", "defensive");
     }
     private static void setPlayersNNCC() {
-        players = new HashMap<String, String>();
         players.put("normalA", "normal");
         players.put("normalB", "normal");
         players.put("continentA", "continent");
         players.put("continentB", "continent");
     }
     private static void setPlayersNNAA() {
-        players = new HashMap<String, String>();
         players.put("normalA", "normal");
         players.put("normalB", "normal");
         players.put("aggressiveA", "aggressive");
         players.put("aggressiveB", "aggressive");
     }
     private static void setPlayersDDCC() {
-        players = new HashMap<String, String>();
         players.put("defensiveA", "defensive");
         players.put("defensiveB", "defensive");
         players.put("continentA", "continent");
         players.put("continentB", "continent");
     }
     private static void setPlayersDDAA() {
-        players = new HashMap<String, String>();
         players.put("defensiveA", "defensive");
         players.put("defensiveB", "defensive");
         players.put("aggressiveA", "aggressive");
         players.put("aggressiveB", "aggressive");
     }
     private static void setPlayersCCAA() {
-        players = new HashMap<String, String>();
         players.put("continentA", "continent");
         players.put("continentB", "continent");
         players.put("aggressiveA", "aggressive");
