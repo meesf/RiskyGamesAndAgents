@@ -17,7 +17,7 @@ public class Tournament {
 	public static HashMap<String, String> players;
 
 	public static Random random;
-	public static boolean RANDOMIZE_PLAYERS = false;
+	public static boolean RANDOMIZE_PLAYERS = true;
 
 	public static void main(String[] args) {
 		ArrayList<Result> results = new ArrayList<Result>();
@@ -92,10 +92,19 @@ public class Tournament {
 	private static void randomizePlayers() {
 	    players.clear();
 	    ArrayList<String> playerOptions = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent"));
+        String str = "ABCDEF";
+        char[] ch  = str.toCharArray();
 	    for(int i = 0; i < 5; i++){
             String player = playerOptions.get(random.nextInt(playerOptions.size()));
+            System.out.println(player + i);
+            System.out.println(player);
             players.put(player + i, player);
         }
+//        players.put("aggressiveA", "aggressive");
+//        players.put("normalA", "normal");
+//        players.put("normalB", "normal");
+//        players.put("defensiveA", "defensive");
+//        players.put("continentA", "continent");
     }
 	
 	private static void setPlayers() {

@@ -340,7 +340,7 @@ public class Risk implements CombatInterface {
      * Returns true if there is a winner.
      */
     private boolean finished() {
-        return activePlayers.size() == 1 || StopGame;
+        return activePlayers.size() == 1 || StopGame || turn > 10;
     }
 
     public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
