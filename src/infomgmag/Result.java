@@ -8,25 +8,24 @@ public class Result {
     public String winner;
     public Integer turns;
     public Integer seed;
-    
-    public HashMap<String, ArrayList<Integer>> captureRatioMap;
-    public HashMap<String, Double> captureRatio;
-    
-    public HashMap<String, Integer> captureTerritoryCount;
-    public HashMap<String, Integer> loseTerritoryCount;
-    public HashMap<String, ArrayList<Integer>> ownedContinentMap;
-    public HashMap<String, Double> ownedContinent;
-    public HashMap<String, ArrayList<Integer>> totalArmies;
-    public HashMap<String, ArrayList<Integer>> receivedReinforcements;
+                                                                        // These are all maps from player -> data
+    public HashMap<String, ArrayList<Integer>> captureRatioMap;         // list of every combat result     
+    public HashMap<String, Double> captureRatio;                        // attacks that resulted in a capture divided 
+                                                                        // by the total amount of attacks
+    public HashMap<String, Integer> captureTerritoryCount;              // Count of attacks that resulted in a capture
+    public HashMap<String, Integer> loseTerritoryCount;                 // Count of battles that resulted in a capture for the opponent
+    public HashMap<String, ArrayList<Integer>> ownedContinentMap;       // List of booleans per turn, whether the player owned a 
+                                                                        // whole continent that turn 
+    public HashMap<String, Double> ownedContinent;                      // Ratio of what percentage of the game a continent was owned
+    public HashMap<String, ArrayList<Integer>> totalArmies;             // Amount of total armies owned per turn
+    public HashMap<String, ArrayList<Integer>> receivedReinforcements;  // Amount of reinforcements earned per turn
     
     public Result(Risk risk, Integer seed) {
         this.winner = risk.getActivePlayers().get(0).getName();
         this.turns = risk.getTurn();
         this.seed = seed;
         HashMap<String, Player> players = getPlayers(risk);
-        getStatistics(risk, players);
-        calcCaptureRatio();
-        calcOwnedContinent();
+        getInfo(risk, players);
     }
     
     private HashMap<String, Player> getPlayers(Risk risk) {
@@ -40,7 +39,7 @@ public class Result {
         return players;
     }
     
-    public void getStatistics(Risk risk, HashMap<String, Player> players) {
+    public void getInfo(Risk risk, HashMap<String, Player> players) {
         captureRatioMap = new HashMap<String, ArrayList<Integer>>();
         captureTerritoryCount = new HashMap<String, Integer>();
         loseTerritoryCount = new HashMap<String, Integer>();
@@ -48,6 +47,7 @@ public class Result {
         receivedReinforcements = new HashMap<String, ArrayList<Integer>>();
         totalArmies = new HashMap<String, ArrayList<Integer>>();
         
+        // Initialize the maps containing information
         for(String p : players.keySet()) {
             captureRatioMap.put(p, new ArrayList<Integer>());
             captureTerritoryCount.put(p, 0);
@@ -74,8 +74,14 @@ public class Result {
                 loseTerritoryCount.put(defender, loseTerritoryCount.get(defender) + 1);
             }
         }
+        
+        calcCaptureRatio();
+        calcOwnedContinent();
     }
     
+    /**
+     * Does a player with the given list of territories own a whole continent, return 1. Else return 0.
+     */
     public Integer ownsContinent(Risk risk, ArrayList<Territory> ownedTerritories) {
         for(Continent continent : risk.getBoard().getContinents()) {
             if(ownedTerritories.containsAll(continent.getTerritories()))
