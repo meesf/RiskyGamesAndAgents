@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.OptionalDouble;
 
 public class Result {
+    public HashMap<String, Player> players;
     public String winner;
     public Integer turns;
     public Integer seed;
@@ -24,7 +25,7 @@ public class Result {
         this.winner = risk.getActivePlayers().size() == 1 ? risk.getActivePlayers().get(0).getName() : "NoWinner";
         this.turns = risk.getTurn();
         this.seed = seed;
-        HashMap<String, Player> players = getPlayers(risk);
+        this.players = getPlayers(risk);
         getInfo(risk, players);
     }
     

@@ -19,6 +19,8 @@ public class Tournament {
 	public static Random random;
 	public static boolean RANDOMIZE_PLAYERS = true;
 
+    public static ArrayList<String> playerTypes = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent"));
+
 	public static void main(String[] args) {
 		ArrayList<Result> results = new ArrayList<Result>();
 		random = new Random(STARTING_SEED);
@@ -26,7 +28,6 @@ public class Tournament {
 
         if(!RANDOMIZE_PLAYERS)
             setPlayers();
-
         for(int i = STARTING_SEED; i < RUNS + STARTING_SEED; i++) {
             Risk risk = new Risk(VISIBLE);
             if(RANDOMIZE_PLAYERS)
@@ -38,6 +39,10 @@ public class Tournament {
         
         printResults(results);
     }
+
+    private static void getPlayerWithName(String name){
+        String player = name.substring(0, name.length() - 1);
+    }
 	
 	private static void printResults(ArrayList<Result> results) {
 	    HashMap<String, Integer> wins = new HashMap<String, Integer>();
@@ -47,64 +52,77 @@ public class Tournament {
 	    HashMap<String, ArrayList<Double>> ownedContinents = new HashMap<String, ArrayList<Double>>();
 	    // Could also add totalArmies and reinforcements (they are in the Result class already)
 
-        //wins.put("NoWinner", 0);
-	    for(String player : players.keySet()) {
-	        wins.put(player, 0);
-	        captureRatios.put(player, new ArrayList<Double>());
-	        captureCounts.put(player, new ArrayList<Integer>());
-	        loseCounts.put(player, new ArrayList<Integer>());
-	        ownedContinents.put(player, new ArrayList<Double>());
-	    }
-	    
+        for(String type : playerTypes){
+            wins.put(type, 0);
+            captureRatios.put(type, new ArrayList<Double>());
+            captureCounts.put(type, new ArrayList<Integer>());
+            loseCounts.put(type, new ArrayList<Integer>());
+            ownedContinents.put(type, new ArrayList<Double>());
+        }
+
 	    for(Result r : results) {
 	        if(r.winner != "NoWinner")
 	            wins.put(r.winner, wins.get(r.winner) + 1);
-	        for(String player : players.keySet()) {
-	            captureRatios.get(player).add(r.captureRatio.get(player));
-	            captureCounts.get(player).add(r.captureTerritoryCount.get(player));
-	            loseCounts.get(player).add(r.loseTerritoryCount.get(player));
-	            ownedContinents.get(player).add(r.ownedContinent.get(player));
+	        for(String player : r.players.keySet()) {
+	            String type = player.substring(0, player.length() - 1);
+	            System.out.println(type);
+	            if(type.equals("continent")){
+	                int a = 0;
+                }
+                captureRatios.get(type).add(r.captureRatio.get(player));
+	            captureCounts.get(type).add(r.captureTerritoryCount.get(player));
+	            loseCounts.get(type).add(r.loseTerritoryCount.get(player));
+	            ownedContinents.get(type).add(r.ownedContinent.get(player));
 	        }
 	    }
 	    
 	    System.out.println("\nWins:");
-	    for(String player : players.keySet()) {
+	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":"+wins.get(player));
 	    }
 	    System.out.println("\nPercentage of attacks that resulted in a capture:");
-	    for(String player : players.keySet()) {
+	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":" + captureRatios.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
         }
 	    System.out.println("\nTotal amount of territory captures:");
-	    for(String player : players.keySet()) {
+	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":" + captureCounts.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
         }
 	    System.out.println("\nTotal amount of lost territories:");
-	    for(String player : players.keySet()) {
+	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
         }
 	    System.out.println("\nPercentage of game owning a continent:");
-        for(String player : players.keySet()) {
+        for(String player : playerTypes) {
             System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
         }
 	}
 
 	private static void randomizePlayers() {
 	    players.clear();
-	    ArrayList<String> playerOptions = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent"));
+	    players = new HashMap<String, String>();
         String str = "ABCDEF";
         char[] ch  = str.toCharArray();
+        int aC = 0, nC = 0, dC = 0, cC = 0;
 	    for(int i = 0; i < 5; i++){
-            String player = playerOptions.get(random.nextInt(playerOptions.size()));
-            System.out.println(player + i);
-            System.out.println(player);
-            players.put(player + i, player);
+            String player = playerTypes.get(random.nextInt(playerTypes.size()));
+            if(player == "aggressive"){
+                players.put(player + ch[aC], player);
+                aC++;
+            }
+            else if(player == "normal"){
+                players.put(player + ch[nC], player);
+                nC++;
+            }
+            else if(player == "defensive"){
+                players.put(player + ch[dC], player);
+                dC++;
+            }
+            else if(player == "continent"){
+                players.put(player + ch[cC], player);
+                cC++;
+            }
         }
-//        players.put("aggressiveA", "aggressive");
-//        players.put("normalA", "normal");
-//        players.put("normalB", "normal");
-//        players.put("defensiveA", "defensive");
-//        players.put("continentA", "continent");
     }
 	
 	private static void setPlayers() {
