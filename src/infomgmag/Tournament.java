@@ -9,7 +9,7 @@ import java.util.Random;
 public class Tournament {
 
     public static final boolean VISIBLE = false;
-    public static final int SPEED = 100;
+    public static final int SPEED = 1;
 
     public static final int RUNS = 5;
     public static final int STARTING_SEED = 100;
@@ -40,10 +40,6 @@ public class Tournament {
         printResults(results);
     }
 
-    private static void getPlayerWithName(String name){
-        String player = name.substring(0, name.length() - 1);
-    }
-	
 	private static void printResults(ArrayList<Result> results) {
 	    HashMap<String, Integer> wins = new HashMap<String, Integer>();
 	    HashMap<String, ArrayList<Double>> captureRatios = new HashMap<String, ArrayList<Double>>();
