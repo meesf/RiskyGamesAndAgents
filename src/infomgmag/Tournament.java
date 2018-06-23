@@ -61,14 +61,12 @@ public class Tournament {
         }
 
 	    for(Result r : results) {
-	        if(r.winner != "NoWinner")
-	            wins.put(r.winner, wins.get(r.winner) + 1);
+	        if(r.winner != "NoWinner"){
+	            String type = r.winner.substring(0, r.winner.length() - 1);
+                wins.put(type, wins.get(type) + 1);
+            }
 	        for(String player : r.players.keySet()) {
 	            String type = player.substring(0, player.length() - 1);
-	            System.out.println(type);
-	            if(type.equals("continent")){
-	                int a = 0;
-                }
                 captureRatios.get(type).add(r.captureRatio.get(player));
 	            captureCounts.get(type).add(r.captureTerritoryCount.get(player));
 	            loseCounts.get(type).add(r.loseTerritoryCount.get(player));

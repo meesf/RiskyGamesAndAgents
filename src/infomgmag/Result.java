@@ -26,7 +26,7 @@ public class Result {
         this.turns = risk.getTurn();
         this.seed = seed;
         this.players = getPlayers(risk);
-        getInfo(risk, players);
+        getInfo(risk, this.players);
     }
     
     private HashMap<String, Player> getPlayers(Risk risk) {
