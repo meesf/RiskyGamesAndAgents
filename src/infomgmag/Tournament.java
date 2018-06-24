@@ -47,7 +47,7 @@ public class Tournament {
 	    HashMap<String, ArrayList<Double>> captureRatios = new HashMap<String, ArrayList<Double>>();
 	    HashMap<String, ArrayList<Integer>> captureCounts = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, ArrayList<Integer>> loseCounts = new HashMap<String, ArrayList<Integer>>();
-	    HashMap<String, ArrayList<Double>> ownedContinents = new HashMap<String, ArrayList<Double>>();
+	    HashMap<String, ArrayList<Integer>> ownedContinents = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, Integer> livedTurns = new HashMap<String, Integer>();
 
 	    // Could also add totalArmies and reinforcements (they are in the Result class already)
@@ -56,7 +56,7 @@ public class Tournament {
             captureRatios.put(type, new ArrayList<Double>());
             captureCounts.put(type, new ArrayList<Integer>());
             loseCounts.put(type, new ArrayList<Integer>());
-            ownedContinents.put(type, new ArrayList<Double>());
+            ownedContinents.put(type, new ArrayList<Integer>());
             livedTurns.put(type, 0);
         }
 
@@ -70,7 +70,7 @@ public class Tournament {
                 captureRatios.get(type).add(r.captureRatio.get(player));
 	            captureCounts.get(type).add(r.captureTerritoryCount.get(player));
 	            loseCounts.get(type).add(r.loseTerritoryCount.get(player));
-	            ownedContinents.get(type).add(r.ownedContinent.get(player));
+	            ownedContinents.get(type).add((int)r.ownedContinentMap.get(player).stream().mapToInt(x->x).sum());
 	            livedTurns.put(type, livedTurns.get(type) + r.turnsLived.get(player));
 	        }
 	    }
@@ -93,7 +93,7 @@ public class Tournament {
         }
 	    System.out.println("\nPart of turns alive owning a continent: ");
         for(String player : playerTypes) {
-            System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).sum() / (double) livedTurns.get(player));
+            System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> (double)x).sum() / (double) livedTurns.get(player));
         }
 	}
 
