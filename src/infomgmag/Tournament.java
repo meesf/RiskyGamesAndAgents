@@ -94,7 +94,6 @@ public class Tournament {
 
 	private static void randomizePlayers() {
 	    players.clear();
-	    players = new HashMap<String, String>();
         String str = "ABCDEF";
         char[] ch  = str.toCharArray();
         int aC = 0, nC = 0, dC = 0, cC = 0;
