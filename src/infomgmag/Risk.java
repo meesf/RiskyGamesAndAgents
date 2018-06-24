@@ -27,6 +27,7 @@ public class Risk implements CombatInterface {
     private RiskVisual visuals;
 
     private int turn = 0;
+    private int maxTurns = 100;
     private int initialArmies;
     private boolean StopGame;
     
@@ -109,7 +110,7 @@ public class Risk implements CombatInterface {
 
             turn++;
         }
-        visuals.log(activePlayers.get(0) + " has won!");
+        visuals.log(activePlayers.size() == 1 ? activePlayers.get(0) + " has won!" : "There is no winner, game takes too long");
         visuals.setVisible(false);
     }
     
@@ -340,7 +341,7 @@ public class Risk implements CombatInterface {
      * Returns true if there is a winner.
      */
     private boolean finished() {
-        return activePlayers.size() == 1 || StopGame;
+        return activePlayers.size() == 1 || StopGame || turn > maxTurns;
     }
 
     public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
