@@ -101,6 +101,7 @@ public class CountryAgent {
         this.adjacentAgents.add(ca);
     }
 
+    // Returns the odds of reaching a certain goal with a certain amount of extra units
     private double getGoalSuccessOdds(int i, Goal goal) {
         int attackingUnits = this.getTerritory().getUnits() + i - goal.size() - 1;
         if (attackingUnits < 1) {
@@ -120,6 +121,8 @@ public class CountryAgent {
         for (CountryAgent ca : goal) {
             goalValue += ca.value;
         }
+
+        // Adds extra bonusses to the goal
         goalValue += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
         goalValue += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
         goalValue += territory.getUnits() * mars.getPersonality().getClusteringWeight();
@@ -127,6 +130,7 @@ public class CountryAgent {
         return goalValue;
     }
 
+    // Returns the odds of preserve the territory with a certain amount of extra units
     public double getDefenseOdds(int units) {
         int totalEnemyUnits = 0;
         for (Territory t : getTerritory().getAdjacentTerritories()) {
@@ -138,6 +142,7 @@ public class CountryAgent {
         return grid.chanceOfWin();
     }
 
+    // Returns the odds of preserving the last territory in a goal with a certain amount of extra units after completing that goal
     public double getDefenseOddsOfCapture(Goal goal, int units) {
         int totalEnemyUnits = goal.getFinalGoal().getTerritory().getAdjacentTerritories().stream()
                 .filter(t -> t.getOwner() != this.getTerritory().getOwner()
@@ -204,15 +209,18 @@ public class CountryAgent {
                     bestGoal = goal;
                 }
             }
-            
+
+            // Creating fortifier bids using the loss of utility of the best goal when moving a certain amount of units to another territory
             for (int i = 1; i < territory.getUnits(); i++) {
                 double util = getGoalUtility(bestGoal, -i) - getGoalUtility(bestGoal,0);
                 result.add(new FortifierBid(this, i, util));
             }
         }
+
         double defensiveUtil = getDefenseUtility(0);
         if (defensiveUtil > bestUtil) {
             result = new ArrayList<>();
+            // Creating fortifier bids using the loss of utility of defending the territory when moving a certain amount of units to another territory
             for (int i = 1; i < territory.getUnits(); i++) {
                 double util = getDefenseUtility(-i) - getDefenseUtility(0);
                 result.add(new FortifierBid(this,i,util));
