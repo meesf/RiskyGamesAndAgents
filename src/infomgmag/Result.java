@@ -20,6 +20,7 @@ public class Result {
     public HashMap<String, Double> ownedContinent;                      // Ratio of what percentage of the game a continent was owned
     public HashMap<String, ArrayList<Integer>> totalArmies;             // Amount of total armies owned per turn
     public HashMap<String, ArrayList<Integer>> receivedReinforcements;  // Amount of reinforcements earned per turn
+    public HashMap<String, Integer> turnsLived;                         // Amount of turns lived
     
     public Result(Risk risk, Integer seed) {
         this.winner = risk.getActivePlayers().size() == 1 ? risk.getActivePlayers().get(0).getName() : "NoWinner";
@@ -47,6 +48,7 @@ public class Result {
         ownedContinentMap = new HashMap<String, ArrayList<Integer>>();
         receivedReinforcements = new HashMap<String, ArrayList<Integer>>();
         totalArmies = new HashMap<String, ArrayList<Integer>>();
+        turnsLived = new HashMap<>();
         
         // Initialize the maps containing information
         for(String p : players.keySet()) {
@@ -56,6 +58,7 @@ public class Result {
             ownedContinentMap.put(p, new ArrayList<Integer>());
             receivedReinforcements.put(p, new ArrayList<Integer>());
             totalArmies.put(p, new ArrayList<Integer>());
+            turnsLived.put(p, (int)risk.turnLog.stream().filter(tl -> tl.player == players.get(p)).count());
         }
         
         for(TurnLog turnLog : risk.turnLog) {

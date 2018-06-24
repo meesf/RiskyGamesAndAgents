@@ -29,6 +29,8 @@ public class Tournament {
         if(!RANDOMIZE_PLAYERS)
             setPlayers();
         for(int i = STARTING_SEED; i < RUNS + STARTING_SEED; i++) {
+            // So that you know how long you have to wait yet
+            System.out.println("Running game " + (i + 1 - STARTING_SEED) + " of " + RUNS);
             Risk risk = new Risk(VISIBLE);
             if(RANDOMIZE_PLAYERS)
                 randomizePlayers();
@@ -46,14 +48,16 @@ public class Tournament {
 	    HashMap<String, ArrayList<Integer>> captureCounts = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, ArrayList<Integer>> loseCounts = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, ArrayList<Double>> ownedContinents = new HashMap<String, ArrayList<Double>>();
-	    // Could also add totalArmies and reinforcements (they are in the Result class already)
+	    HashMap<String, Integer> livedTurns = new HashMap<String, Integer>();
 
+	    // Could also add totalArmies and reinforcements (they are in the Result class already)
         for(String type : playerTypes){
             wins.put(type, 0);
             captureRatios.put(type, new ArrayList<Double>());
             captureCounts.put(type, new ArrayList<Integer>());
             loseCounts.put(type, new ArrayList<Integer>());
             ownedContinents.put(type, new ArrayList<Double>());
+            livedTurns.put(type, 0);
         }
 
 	    for(Result r : results) {
@@ -67,6 +71,7 @@ public class Tournament {
 	            captureCounts.get(type).add(r.captureTerritoryCount.get(player));
 	            loseCounts.get(type).add(r.loseTerritoryCount.get(player));
 	            ownedContinents.get(type).add(r.ownedContinent.get(player));
+	            livedTurns.put(type, livedTurns.get(type) + r.turnsLived.get(player));
 	        }
 	    }
 	    
@@ -78,17 +83,17 @@ public class Tournament {
 	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":" + captureRatios.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
         }
-	    System.out.println("\nTotal amount of territory captures:");
+	    System.out.println("\nTotal amount of territory captures per turn alive:");
 	    for(String player : playerTypes) {
-	        System.out.println("   " + player + ":" + captureCounts.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
+	        System.out.println("   " + player + ":" + captureCounts.get(player).stream().mapToDouble(x -> x).sum() / (double) livedTurns.get(player));
         }
-	    System.out.println("\nTotal amount of lost territories:");
+	    System.out.println("\nTotal amount of lost territories per turn alive:");
 	    for(String player : playerTypes) {
-	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
+	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToDouble(x -> x).sum() / (double) livedTurns.get(player));
         }
-	    System.out.println("\nPercentage of game owning a continent:");
+	    System.out.println("\nPercentage of game owning a continent per turn alive:");
         for(String player : playerTypes) {
-            System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
+            System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).sum() / (double) livedTurns.get(player));
         }
 	}
 
