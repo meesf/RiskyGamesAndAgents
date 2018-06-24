@@ -79,19 +79,19 @@ public class Tournament {
 	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":"+wins.get(player));
 	    }
-	    System.out.println("\nPercentage of attacks that resulted in a capture:");
+	    System.out.println("\nPart of attacks that resulted in a capture: ");
 	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":" + captureRatios.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
         }
-	    System.out.println("\nTotal amount of territory captures per turn alive:");
+	    System.out.println("\nAmount of territory captures per turn alive: ");
 	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":" + captureCounts.get(player).stream().mapToDouble(x -> x).sum() / (double) livedTurns.get(player));
         }
-	    System.out.println("\nTotal amount of lost territories per turn alive:");
+	    System.out.println("\nAmount of lost territories per turn alive: ");
 	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToDouble(x -> x).sum() / (double) livedTurns.get(player));
         }
-	    System.out.println("\nPercentage of game owning a continent per turn alive:");
+	    System.out.println("\nPart of turns alive owning a continent: ");
         for(String player : playerTypes) {
             System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).sum() / (double) livedTurns.get(player));
         }
