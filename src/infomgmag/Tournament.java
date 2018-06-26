@@ -83,15 +83,15 @@ public class Tournament {
         }
 	    System.out.println("\nAmount of territory captures per turn alive:");
 	    for(String player : playerTypes) {
-	        System.out.println("   " + player + ":" + captureCounts.get(player).stream().mapToInt(x -> x).sum() / turnsAlive.get(player));
+	        System.out.println("   " + player + ":" + captureCounts.get(player).stream().mapToDouble(x -> x).sum() / (double) turnsAlive.get(player));
         }
 	    System.out.println("\nAmount of lost territories per turn alive:");
 	    for(String player : playerTypes) {
-	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToInt(x -> x).sum() / turnsAlive.get(player));
+	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToDouble(x -> x).sum() / (double) turnsAlive.get(player));
         }
 	    System.out.println("\nPercentage of owning a continent while alive:");
         for(String player : playerTypes) {
-            System.out.println("   " + player + ":" + (ownedContinents.get(player).stream().mapToInt(x -> x).sum() / turnsAlive.get(player))*100);
+            System.out.println("   " + player + ":" + (ownedContinents.get(player).stream().mapToDouble(x -> x).sum() / (double) turnsAlive.get(player))*100);
         }
 	}
 
