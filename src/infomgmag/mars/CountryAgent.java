@@ -256,6 +256,8 @@ public class CountryAgent {
     }
 
     public void createGoals() {
+        if(territory.getOwner() == mars)
+            return;
         for (CountryAgent ca : adjacentAgents) {
             Goal goal = new Goal();
             goal.addEarlierGoal(this);

@@ -77,6 +77,15 @@ public class Mars extends Player {
 
     @Override
     public void fortifyTerritory(Board board) {
+        for(CountryAgent ca : countryAgents)
+            ca.clearGoals();
+
+        for(CountryAgent ca : countryAgents)
+            ca.createGoals();
+
+        for(CountryAgent ca : countryAgents)
+            ca.calculateOwnershipValue(personality);
+
         // First create clusters
         ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
 
