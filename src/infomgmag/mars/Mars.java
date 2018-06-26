@@ -110,7 +110,7 @@ public class Mars extends Player {
                 for (ReinforcementBid rb : reinforcementBids) {
                     if (fb.getFortifier() != rb.getReinforcedAgent() &&
                             fb.getUnits() == rb.getUnits()) {
-                        double utilGain = rb.getUtility() + fb.getUtility();
+                        double utilGain = rb.getUtility() * rb.getUnits() + fb.getUtility();
                         if (utilGain > bestUtilGain) {
                             bestfb = fb;
                             bestrb = rb;
