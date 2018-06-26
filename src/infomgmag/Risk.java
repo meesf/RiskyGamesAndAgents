@@ -127,10 +127,6 @@ public class Risk implements CombatInterface {
             totalArmies.put(p, armies);
             territories.put(p, playerTerritories);
         }
-        for(Player p : defeatedPlayers) {
-            totalArmies.put(p, 0);
-            territories.put(p, new ArrayList<Territory>());
-        }
 
         turnLog.add(new TurnLog(turn, currentPlayer, reinforcements, totalArmies, territories));
     }
