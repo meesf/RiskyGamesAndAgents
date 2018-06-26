@@ -17,7 +17,7 @@ public class PersonalityFactory {
                 80.0,
                 0.25,
                 4,
-                1000,
+                0.0,
                 10);
     }
 
@@ -71,7 +71,7 @@ public class PersonalityFactory {
                 0.05,
                 -0.03,
                 0.5,
-                20.0,
+                60.0,
                 4.0,
                 80.0,
                 40.0,

@@ -12,7 +12,7 @@ public class Tournament {
     public static final int SPEED = 1;
 
     public static final int RUNS = 25;
-    public static final int STARTING_SEED = 100;
+    public static final int STARTING_SEED = 101;
 	
 	public static HashMap<String, String> players;
 
