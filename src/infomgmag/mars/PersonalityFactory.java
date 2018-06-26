@@ -24,8 +24,8 @@ public class PersonalityFactory {
     public static Personality normalPersonality() {
         return new Personality(
                 "Normal",
-                120.0,
-                170.0,
+                1.0,
+                1.2,
                 1.2,
                 -0.3,
                 0.05,
@@ -44,8 +44,8 @@ public class PersonalityFactory {
     public static Personality defensivePersonality() {
         return new Personality(
                 "Defensive",
-                40.0,
-                40.0,
+                1.4,
+                1.0,
                 1.2,
                 -0.3,
                 0.05,
@@ -58,14 +58,14 @@ public class PersonalityFactory {
                 0.05,
                 4,
                 0.0,
-                10);
+                100);
     }
 
     public static Personality continentPersonality() {
         return new Personality(
                 "Continent",
-                120.0,
-                170.0,
+                1.0,
+                1.2,
                 1.2,
                 -0.3,
                 0.05,

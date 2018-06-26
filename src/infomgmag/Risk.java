@@ -27,14 +27,16 @@ public class Risk implements CombatInterface {
     private RiskVisual visuals;
 
     private int turn = 0;
-    private int maxTurns = 150;
+    private int maxTime = 60;
     private int initialArmies;
     private boolean StopGame;
+    private long startTime;
     
     public ArrayList<CombatEvent> combatLog;
     public ArrayList<TurnLog> turnLog;
     
     public Risk(boolean visible) {
+        this.startTime = System.currentTimeMillis();
         this.visible = visible;
         createDiceOdds();
         visuals = new RiskVisual(this,visible);
@@ -338,7 +340,7 @@ public class Risk implements CombatInterface {
      * Returns true if there is a winner.
      */
     private boolean finished() {
-        return activePlayers.size() == 1 || StopGame || turn > maxTurns;
+        return activePlayers.size() == 1 || StopGame || System.currentTimeMillis() > startTime + maxTime * 1000;
     }
 
     public static ArrayList<Territory> getConnectedTerritories(Territory origin) {
