@@ -56,9 +56,9 @@ public class Result {
         
         for(TurnLog turnLog : risk.turnLog) {
             receivedReinforcements.get(turnLog.player.getName()).add(turnLog.receivedReinforcements);
-            for(String p : players.keySet()) {
-                totalArmies.get(p).add(turnLog.totalArmies.get(players.get(p)));
-                ownedContinent.get(p).add(ownsContinent(risk, turnLog.territories.get(players.get(p))));
+            for(Player p : turnLog.territories.keySet()) {
+                totalArmies.get(p.getName()).add(turnLog.totalArmies.get(p));
+                ownedContinent.get(p.getName()).add(ownsContinent(risk, turnLog.territories.get(p)));
             }
         }
         
