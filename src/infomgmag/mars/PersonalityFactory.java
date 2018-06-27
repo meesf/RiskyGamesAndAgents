@@ -26,7 +26,7 @@ public class PersonalityFactory {
         return new Personality(
                 "Normal",
                 1.0, // defensive multiplier
-                1.5, // offensive multiplier
+                1.2, // offensive multiplier
                 10.0, // static bonus
                 1.2, // friendly neighbor
                 -0.3, // enemy neighbor
@@ -68,16 +68,16 @@ public class PersonalityFactory {
         return new Personality(
                 "Continent",
                 1.0, // defensive multiplier
-                1.5, // offensive multiplier
+                1.0, // offensive multiplier
                 10.0, // static bonus
                 1.2, // friendly neighbor
                 -0.3, // enemy neighbor
                 0.05, // friendly army
                 -0.03, // enemy army
                 0.5, // continent border
-                15.0, // goal captures whole continent
+                25.0, // goal captures whole continent
                 4.0, // enemy owns whole continent
-                10.0, // percentage of continent owned
+                15.0, // percentage of continent owned
                 5.0, // goal kills an enemy
                 0.05, // clustering
                 4, // goal length
@@ -87,7 +87,7 @@ public class PersonalityFactory {
 
     public static Personality vengefulPersonality() {
         return new Personality(
-                "Normal",
+                "Vengeful",
                 1.0, // defensive multiplier
                 1.5, // offensive multiplier
                 10.0, // static bonus
@@ -99,7 +99,7 @@ public class PersonalityFactory {
                 5.0, // goal captures whole continent
                 3.0, // enemy owns whole continent
                 5.0, // percentage of continent owned
-                5.0, // goal kills enemy
+                10.0, // goal kills enemy
                 0.1, // clustering
                 4, // goal length
                 25.0, // hated
