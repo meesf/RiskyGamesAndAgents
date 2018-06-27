@@ -103,7 +103,7 @@ public class Mars extends Player {
             ArrayList<ReinforcementBid> reinforcementBids = new ArrayList<>();
             for (CountryAgent ca : cluster) {
                 fortifierBids.addAll(ca.getFortifierBids());
-                reinforcementBids.addAll(ca.getBids(maxUnits));
+                reinforcementBids.addAll(ca.getDefensiveBids(maxUnits));
             }
             // Get biggest possible utility gain
             for (FortifierBid fb : fortifierBids) {
