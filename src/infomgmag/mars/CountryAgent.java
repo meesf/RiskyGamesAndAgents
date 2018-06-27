@@ -12,16 +12,29 @@ public class CountryAgent {
     private Mars mars;
     private double value;
     private boolean ownedByHatedEnemy;
+    private double staticValue;
 
     CountryAgent(Territory territory, Mars mars) {
         this.territory = territory;
         goalList = new ArrayList<>();
         this.adjacentAgents = new ArrayList<CountryAgent>();
         this.mars = mars;
+        setStaticValue();
     }
 
     public Territory getTerritory() {
         return territory;
+    }
+    
+    public void setStaticValue() {
+        ArrayList<Territory> borders = new ArrayList<>();
+        for(Territory t : territory.getContinent().getTerritories()) {
+            for(Territory ta : t.getAdjacentTerritories()) {
+                if(!territory.getContinent().getTerritories().contains(ta) && !borders.contains(ta))
+                    borders.add(ta);
+            }
+        }
+        this.staticValue = (double) territory.getContinent().getReinforcements() / ((double) borders.size() * (double) territory.getContinent().getTerritories().size());
     }
 
     //calculates value of owning a territory
@@ -35,7 +48,8 @@ public class CountryAgent {
                  territory.getContinentsBorderedAmount() * personality.getContinentBorderWeight() +
                  (enemyOwnsAnEntireContinent() ? 1 : 0) * personality.getEnemyOwnsWholeContinentWeight() +
                  percentageOfContinentOwned() * personality.getPercentageOfContinentWeight() +
-                 (ownedByHatedEnemy ? 1 : 0) * personality.getHatedBonus());
+                 (ownedByHatedEnemy ? 1 : 0) * personality.getHatedBonus() +
+                 this.staticValue * personality.getStaticBonus());
     }
 
     // calculates how many friendly neighbouring territories border this territory

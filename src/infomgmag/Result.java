@@ -16,6 +16,7 @@ public class Result {
                                                                         // whole continent that turn 
     public HashMap<String, ArrayList<Integer>> totalArmies;             // Amount of total armies owned per turn
     public HashMap<String, ArrayList<Integer>> receivedReinforcements;  // Amount of reinforcements earned per turn
+    public HashMap<String, Integer> amountOfAttacks;                    // Amount of attacks where the player (key) was the attacker
     
     public Result(Risk risk, Integer seed) {
         this.winner = risk.getActivePlayers().size() == 1 ? risk.getActivePlayers().get(0).getName() : "NoWinner";
@@ -43,6 +44,7 @@ public class Result {
         ownedContinent = new HashMap<String, ArrayList<Integer>>();
         receivedReinforcements = new HashMap<String, ArrayList<Integer>>();
         totalArmies = new HashMap<String, ArrayList<Integer>>();
+        amountOfAttacks = new HashMap<String, Integer>();
         
         // Initialize the maps containing information
         for(String p : players.keySet()) {
@@ -52,6 +54,7 @@ public class Result {
             ownedContinent.put(p, new ArrayList<Integer>());
             receivedReinforcements.put(p, new ArrayList<Integer>());
             totalArmies.put(p, new ArrayList<Integer>());
+            amountOfAttacks.put(p, 0);
         }
         
         for(TurnLog turnLog : risk.turnLog) {
@@ -66,6 +69,7 @@ public class Result {
             String attacker = ce.getAttackingPlayer().getName();
             String defender = ce.getDefendingPlayer().getName();
             combatCaptures.get(attacker).add(ce.getCombatResult());
+            amountOfAttacks.put(attacker, amountOfAttacks.get(attacker) + 1);
             if(ce.getCombatResult() == CombatEvent.CAPTURE) {
                 captureTerritoryCount.put(attacker, captureTerritoryCount.get(attacker) + 1);
                 lostTerritoryCount.put(defender, lostTerritoryCount.get(defender) + 1);

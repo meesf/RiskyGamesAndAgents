@@ -8,10 +8,10 @@ import java.util.Random;
 
 public class Tournament {
 
-    public static final boolean VISIBLE = true;
+    public static final boolean VISIBLE = false;
     public static final int SPEED = 0;
 
-    public static final int RUNS = 5;
+    public static final int RUNS = 3;
     public static final int STARTING_SEED = 101;
 	
 	public static HashMap<String, String> players;
@@ -47,7 +47,7 @@ public class Tournament {
 	    HashMap<String, ArrayList<Integer>> loseCounts = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, ArrayList<Integer>> ownedContinents = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, Integer> turnsAlive = new HashMap<String, Integer>();
-	    // Could also add totalArmies and reinforcements (they are in the Result class already)
+	    HashMap<String, Integer> amountOfAttacks = new HashMap<>();
 
         for(String type : playerTypes){
             wins.put(type, 0);
@@ -56,6 +56,7 @@ public class Tournament {
             loseCounts.put(type, new ArrayList<Integer>());
             ownedContinents.put(type, new ArrayList<Integer>());
             turnsAlive.put(type, 0);
+            amountOfAttacks.put(type, 0);
         }
 
 	    for(Result r : results) {
@@ -70,6 +71,7 @@ public class Tournament {
 	            captureCounts.get(type).add(r.captureTerritoryCount.get(player));
 	            loseCounts.get(type).add(r.lostTerritoryCount.get(player));
 	            ownedContinents.get(type).addAll(r.ownedContinent.get(player));
+	            amountOfAttacks.put(type, amountOfAttacks.get(type) + r.amountOfAttacks.get(player));
 	        }
 	    }
 	    
@@ -80,6 +82,10 @@ public class Tournament {
 	    System.out.println("\nAmount of attacks that resulted in a capture per attack:");
 	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":" + captureRatios.get(player).stream().mapToInt(x -> x).average().getAsDouble());
+        }
+	    System.out.println("\nAmount of attacks per turn alive:");
+        for(String player : playerTypes) {
+            System.out.println("   " + player + ":" + (double) amountOfAttacks.get(player) / (double) turnsAlive.get(player));
         }
 	    System.out.println("\nAmount of territory captures per turn alive:");
 	    for(String player : playerTypes) {
