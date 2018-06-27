@@ -8,11 +8,11 @@ import java.util.Random;
 
 public class Tournament {
 
-    public static final boolean VISIBLE = false;
+    public static final boolean VISIBLE = true;
     public static final int SPEED = 0;
 
-    public static final int RUNS = 3;
-    public static final int STARTING_SEED = 101;
+    public static final int RUNS = 5;
+    public static final int STARTING_SEED = 200;
 	
 	public static HashMap<String, String> players;
 
