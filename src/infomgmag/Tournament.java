@@ -1,6 +1,5 @@
 package infomgmag;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,12 +11,13 @@ public class Tournament {
     public static final int SPEED = 0;
 
     public static final int RUNS = 10;
-    public static final int STARTING_SEED = 100;
-	
+    public static final int STARTING_SEED = (int)System.currentTimeMillis();
+
 	public static HashMap<String, String> players;
 
 	public static Random random;
 	public static boolean RANDOMIZE_PLAYERS = true;
+	public static final int NUMBER_OF_PLAYERS = 6;
 
     public static ArrayList<String> playerTypes = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent", "vengeful"));
 
@@ -99,6 +99,10 @@ public class Tournament {
         for(String player : playerTypes) {
             System.out.println("   " + player + ":" + (ownedContinents.get(player).stream().mapToDouble(x -> x).sum() / (double) turnsAlive.get(player))*100);
         }
+        System.out.println("\nTurns alive:");
+        for(String player : playerTypes) {
+            System.out.println("   " + player + ":" + turnsAlive.get(player));
+        }
 	}
 
 	private static void randomizePlayers() {
@@ -106,7 +110,7 @@ public class Tournament {
         String str = "ABCDEF";
         char[] ch  = str.toCharArray();
         int aC = 0, nC = 0, dC = 0, cC = 0;
-	    for(int i = 0; i < 5; i++){
+	    for(int i = 0; i < NUMBER_OF_PLAYERS; i++){
             String player = playerTypes.get(random.nextInt(playerTypes.size()));
             if(player == "aggressive"){
                 players.put(player + ch[aC], player);
@@ -137,66 +141,5 @@ public class Tournament {
         players.put("normalB", "normal");
         players.put("defensiveA", "defensive");
         players.put("continentA", "continent");
-    }
-    private static void setPlayersNNNN() {
-        players.put("normalA", "normal");
-        players.put("normalB", "normal");
-        players.put("normalC", "normal");
-        players.put("normalD", "normal");
-    }
-    private static void setPlayersDDDD() {
-        players.put("defensiveA", "defensive");
-        players.put("defensiveB", "defensive");
-        players.put("defensiveC", "defensive");
-        players.put("defensiveD", "defensive");
-    }
-    
-    private static void setPlayersCCCC() {
-        players.put("continentA", "continent");
-        players.put("continentB", "continent");
-        players.put("continentC", "continent");
-        players.put("continentD", "continent");
-    }
-    private static void setPlayersAAAA() {
-        players.put("aggressiveA", "aggressive");
-        players.put("aggressiveB", "aggressive");
-        players.put("aggressiveC", "aggressive");
-        players.put("aggressiveD", "aggressive");
-    }
-    private static void setPlayersNNDD() {
-        players.put("normalA", "normal");
-        players.put("normalB", "normal");
-        players.put("defensiveA", "defensive");
-        players.put("defensiveB", "defensive");
-    }
-    private static void setPlayersNNCC() {
-        players.put("normalA", "normal");
-        players.put("normalB", "normal");
-        players.put("continentA", "continent");
-        players.put("continentB", "continent");
-    }
-    private static void setPlayersNNAA() {
-        players.put("normalA", "normal");
-        players.put("normalB", "normal");
-        players.put("aggressiveA", "aggressive");
-        players.put("aggressiveB", "aggressive");
-    }
-    private static void setPlayersDDCC() {
-        players.put("defensiveA", "defensive");
-        players.put("defensiveB", "defensive");
-        players.put("continentA", "continent");
-        players.put("continentB", "continent");
-    }
-    private static void setPlayersDDAA() {
-        players.put("defensiveA", "defensive");
-        players.put("defensiveB", "defensive");
-        players.put("aggressiveA", "aggressive");
-        players.put("aggressiveB", "aggressive");
-    }
-    private static void setPlayersCCAA() {
-        players.put("continentA", "continent");
-        players.put("continentB", "continent");
-        players.put("aggressiveA", "aggressive");
-        players.put("aggressiveB", "aggressive");
     }
 }
