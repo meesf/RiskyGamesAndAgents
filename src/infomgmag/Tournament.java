@@ -11,7 +11,7 @@ public class Tournament {
     public static final boolean VISIBLE = false;
     public static final int SPEED = 1;
 
-    public static final int RUNS = 5;
+    public static final int RUNS = 10;
     public static final int STARTING_SEED = 100;
 	
 	public static HashMap<String, String> players;
@@ -19,7 +19,7 @@ public class Tournament {
 	public static Random random;
 	public static boolean RANDOMIZE_PLAYERS = true;
 
-    public static ArrayList<String> playerTypes = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent"));
+    public static ArrayList<String> playerTypes = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent", "vengeful"));
 
 	public static void main(String[] args) {
 		ArrayList<Result> results = new ArrayList<Result>();
@@ -112,6 +112,10 @@ public class Tournament {
                 dC++;
             }
             else if(player == "continent"){
+                players.put(player + ch[cC], player);
+                cC++;
+            }
+            else if(player == "vengeful"){
                 players.put(player + ch[cC], player);
                 cC++;
             }

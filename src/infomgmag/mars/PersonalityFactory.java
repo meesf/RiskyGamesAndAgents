@@ -80,4 +80,24 @@ public class PersonalityFactory {
                 0.0,
                 10);
     }
+
+    public static Personality vengefulPersonality() {
+        return new Personality(
+                "Normal",
+                120.0,
+                170.0,
+                1.2,
+                -0.3,
+                0.05,
+                -0.03,
+                0.5,
+                20.0,
+                4.0,
+                5.0,
+                40.0,
+                0.05,
+                4,
+                1000.0,
+                10);
+    }
 }
