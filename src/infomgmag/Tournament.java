@@ -9,7 +9,7 @@ import java.util.Random;
 public class Tournament {
 
     public static final boolean VISIBLE = true;
-    public static final int SPEED = 50;
+    public static final int SPEED = 0;
 
     public static final int RUNS = 25;
     public static final int STARTING_SEED = (int)System.currentTimeMillis();

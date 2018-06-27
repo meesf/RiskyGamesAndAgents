@@ -87,22 +87,22 @@ public class PersonalityFactory {
 
     public static Personality vengefulPersonality() {
         return new Personality(
-                "Vengeful",
-                1.0,
-                1.2,
-                70.0,
-                1.2,
-                -0.3,
-                0.05,
-                -0.03,
-                0.5,
-                20.0,
-                4.0,
-                5.0,
-                40.0,
-                0.05,
-                4,
-                1000.0,
-                10);
+                "Normal",
+                1.0, // defensive multiplier
+                1.5, // offensive multiplier
+                10.0, // static bonus
+                1.2, // friendly neighbor
+                -0.3, // enemy neighbor
+                0.05, // friendly army
+                -0.03, // enemy army
+                0.5, // continent border
+                5.0, // goal captures whole continent
+                3.0, // enemy owns whole continent
+                5.0, // percentage of continent owned
+                5.0, // goal kills enemy
+                0.1, // clustering
+                4, // goal length
+                25.0, // hated
+                1000); // first attack
     }
 }
