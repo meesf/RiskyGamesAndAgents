@@ -141,6 +141,7 @@ public class CountryAgent {
         goalValue += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
         goalValue += territory.getUnits() * mars.getPersonality().getClusteringWeight();
         goalValue += (ownedByHatedEnemy ? 1 : 0) * mars.getPersonality().getHatedBonus();
+        goalValue += (mars.hasConqueredTerritoryInTurn() ? 0 : 1) * mars.getPersonality().getAttackFirstCountryWeight();
         return goalValue;
     }
 
@@ -212,42 +213,26 @@ public class CountryAgent {
     }
 
     public ArrayList<FortifierBid> getFortifierBids () {
+        // Creating fortifier bids using the loss of utility of the best goal when moving a certain amount of units to another territory
         ArrayList<FortifierBid> result = new ArrayList<>();
-        double bestUtil = Double.NEGATIVE_INFINITY;
-        if (!goalList.isEmpty()) {
-            Goal bestGoal = null;
-            for (Goal goal : goalList) {
-                double util = getGoalUtility(goal,0);
-                if (util > bestUtil) {
-                    bestUtil = util;
-                    bestGoal = goal;
+        for (int i = 1; i < territory.getUnits(); i++) {
+            double worstUtil = Double.POSITIVE_INFINITY;
+            if (!goalList.isEmpty()) {
+                for (Goal goal : goalList) {
+                    double util = getGoalUtility(goal, -i) - getGoalUtility(goal, 0);
+                    if (util < worstUtil) {
+                        worstUtil = util;
+                    }
                 }
             }
-
-            // Creating fortifier bids using the loss of utility of the best goal when moving a certain amount of units to another territory
-            for (int i = 1; i < territory.getUnits(); i++) {
-                double util = getGoalUtility(bestGoal, -i) - getGoalUtility(bestGoal,0);
-                result.add(new FortifierBid(this, i, util));
-            }
-        }
-
-        double defensiveUtil = getDefenseUtility(0);
-        if (defensiveUtil > bestUtil) {
-            result = new ArrayList<>();
-            // Creating fortifier bids using the loss of utility of defending the territory when moving a certain amount of units to another territory
-            for (int i = 1; i < territory.getUnits(); i++) {
-                double util = getDefenseUtility(-i) - getDefenseUtility(0);
-                result.add(new FortifierBid(this,i,util));
+            double defensiveUtil = getDefenseUtility(-i) - getDefenseUtility(0);
+            if (defensiveUtil < worstUtil) {
+                result.add(new FortifierBid(this,i, defensiveUtil));
+            } else {
+                result.add(new FortifierBid(this, i, worstUtil));
             }
         }
         return result;
-    }
-    
-    public ReinforcementBid getBestMaxBid(int unitsLeft) {
-        return this.getBids(unitsLeft).stream()
-                .filter(x -> x.getUnits() == unitsLeft)
-                .max((x, y) -> (x.getUtility() < y.getUtility() ? -1 : (x.getUtility() == y.getUtility() ? 0 : 1)))
-                .get();
     }
 
     private ArrayList<OffensiveBid> getOffensiveBids(int unitsLeft, Goal goal) {
@@ -255,7 +240,6 @@ public class CountryAgent {
         OffensiveBid bestBid = null;
         for (int i = 0; i <= unitsLeft; i++) {
             double bidUtil = getGoalUtilityPerUnit(goal, i);
-            bidUtil += (mars.hasConqueredTerritoryInTurn() ? 0 : 1) * mars.getPersonality().getAttackFirstCountryWeight();
             OffensiveBid bid = new OffensiveBid(this, goal, i, bidUtil);
             result.add(bid);
             if (bestBid == null || bidUtil > bestBid.getUtility()) {
