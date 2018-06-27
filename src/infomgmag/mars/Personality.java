@@ -2,6 +2,7 @@ package infomgmag.mars;
 
 public class Personality {
 
+    private double staticBonus;
     private double friendlyNeighbourWeight;
     private double enemyNeighbourWeight;
     private double friendlyArmyWeight;
@@ -22,6 +23,7 @@ public class Personality {
     public Personality(String name,
                        double defensiveMultiplier,
                        double offensiveMultiplier,
+                       double staticBonus,
                        double friendlyNeighbourWeight,
                        double enemyNeighbourWeight,
                        double friendlyArmyWeight,
@@ -39,6 +41,7 @@ public class Personality {
         this.name = name;
         this.defensiveMultiplier = defensiveMultiplier;
         this.offensiveMultiplier = offensiveMultiplier;
+        this.staticBonus = staticBonus;
         this.friendlyNeighbourWeight = friendlyNeighbourWeight;
         this.enemyNeighbourWeight = enemyNeighbourWeight;
         this.friendlyArmyWeight = friendlyArmyWeight;
@@ -54,6 +57,10 @@ public class Personality {
         this.attackFirstCountryWeight = attackFirstTerritoryWeight;
     }
 
+    public double getStaticBonus() {
+        return staticBonus;
+    }
+    
     public String getName() {
         return name;
     }

@@ -77,9 +77,20 @@ public class Mars extends Player {
 
     @Override
     public void fortifyTerritory(Board board) {
+        for(CountryAgent ca : countryAgents)
+            ca.clearGoals();
+
+        for(CountryAgent ca : countryAgents)
+            ca.createGoals();
+
+        for(CountryAgent ca : countryAgents)
+            ca.calculateOwnershipValue(personality);
+
         // First create clusters
         ArrayList<ArrayList<CountryAgent>> clusters = getClusters();
-
+        FortifierBid bestfb = null;
+        ReinforcementBid bestrb = null;
+        double bestUtilGain = 0;
         for (ArrayList<CountryAgent> cluster : clusters) {
             // Get all fortifierBids
             int maxUnits =
@@ -95,9 +106,6 @@ public class Mars extends Player {
                 reinforcementBids.addAll(ca.getBids(maxUnits));
             }
             // Get biggest possible utility gain
-            FortifierBid bestfb = null;
-            ReinforcementBid bestrb = null;
-            double bestUtilGain = 0;
             for (FortifierBid fb : fortifierBids) {
                 for (ReinforcementBid rb : reinforcementBids) {
                     if (fb.getFortifier() != rb.getReinforcedAgent() &&
@@ -111,10 +119,10 @@ public class Mars extends Player {
                     }
                 }
             }
-            // If there was something better than 0 then move the units
-            if (bestUtilGain > 0) {
-                board.moveUnits(bestfb.getFortifier().getTerritory(), bestrb.getReinforcedAgent().getTerritory(), bestfb.getUnits());
-            }
+        }
+        // If there was something better than 0 then move the units
+        if (bestUtilGain > 0) {
+            board.moveUnits(bestfb.getFortifier().getTerritory(), bestrb.getReinforcedAgent().getTerritory(), bestfb.getUnits());
         }
     }
 
