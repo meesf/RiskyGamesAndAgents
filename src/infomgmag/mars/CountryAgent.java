@@ -136,11 +136,10 @@ public class CountryAgent {
             goalValue += ca.value;
         }
 
-        // Adds extra bonusses to the goal
+        // Adds extra bonuses to the goal
         goalValue += (goal.completesContinentFor(mars) ? 1 : 0) * mars.getPersonality().getOwnWholeContinentWeight();
         goalValue += goal.killsPlayers(mars) * mars.getPersonality().getKillEnemyWeight();
         goalValue += territory.getUnits() * mars.getPersonality().getClusteringWeight();
-        goalValue += (ownedByHatedEnemy ? 1 : 0) * mars.getPersonality().getHatedBonus();
         goalValue += (mars.hasConqueredTerritoryInTurn() ? 0 : 1) * mars.getPersonality().getAttackFirstCountryWeight();
         return goalValue;
     }
