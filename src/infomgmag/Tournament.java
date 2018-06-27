@@ -8,11 +8,11 @@ import java.util.Random;
 
 public class Tournament {
 
-    public static final boolean VISIBLE = false;
-    public static final int SPEED = 1;
+    public static final boolean VISIBLE = true;
+    public static final int SPEED = 0;
 
     public static final int RUNS = 5;
-    public static final int STARTING_SEED = 100;
+    public static final int STARTING_SEED = 200;
 	
 	public static HashMap<String, String> players;
 
@@ -42,18 +42,21 @@ public class Tournament {
 
 	private static void printResults(ArrayList<Result> results) {
 	    HashMap<String, Integer> wins = new HashMap<String, Integer>();
-	    HashMap<String, ArrayList<Double>> captureRatios = new HashMap<String, ArrayList<Double>>();
+	    HashMap<String, ArrayList<Integer>> captureRatios = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, ArrayList<Integer>> captureCounts = new HashMap<String, ArrayList<Integer>>();
 	    HashMap<String, ArrayList<Integer>> loseCounts = new HashMap<String, ArrayList<Integer>>();
-	    HashMap<String, ArrayList<Double>> ownedContinents = new HashMap<String, ArrayList<Double>>();
-	    // Could also add totalArmies and reinforcements (they are in the Result class already)
+	    HashMap<String, ArrayList<Integer>> ownedContinents = new HashMap<String, ArrayList<Integer>>();
+	    HashMap<String, Integer> turnsAlive = new HashMap<String, Integer>();
+	    HashMap<String, Integer> amountOfAttacks = new HashMap<>();
 
         for(String type : playerTypes){
             wins.put(type, 0);
-            captureRatios.put(type, new ArrayList<Double>());
+            captureRatios.put(type, new ArrayList<Integer>());
             captureCounts.put(type, new ArrayList<Integer>());
             loseCounts.put(type, new ArrayList<Integer>());
-            ownedContinents.put(type, new ArrayList<Double>());
+            ownedContinents.put(type, new ArrayList<Integer>());
+            turnsAlive.put(type, 0);
+            amountOfAttacks.put(type, 0);
         }
 
 	    for(Result r : results) {
@@ -63,10 +66,12 @@ public class Tournament {
             }
 	        for(String player : r.players.keySet()) {
 	            String type = player.substring(0, player.length() - 1);
-                captureRatios.get(type).add(r.captureRatio.get(player));
+	            turnsAlive.put(type, turnsAlive.get(type) + r.ownedContinent.get(player).size());
+                captureRatios.get(type).addAll(r.combatCaptures.get(player));
 	            captureCounts.get(type).add(r.captureTerritoryCount.get(player));
-	            loseCounts.get(type).add(r.loseTerritoryCount.get(player));
-	            ownedContinents.get(type).add(r.ownedContinent.get(player));
+	            loseCounts.get(type).add(r.lostTerritoryCount.get(player));
+	            ownedContinents.get(type).addAll(r.ownedContinent.get(player));
+	            amountOfAttacks.put(type, amountOfAttacks.get(type) + r.amountOfAttacks.get(player));
 	        }
 	    }
 	    
@@ -74,21 +79,25 @@ public class Tournament {
 	    for(String player : playerTypes) {
 	        System.out.println("   " + player + ":"+wins.get(player));
 	    }
-	    System.out.println("\nPercentage of attacks that resulted in a capture:");
+	    System.out.println("\nAmount of attacks that resulted in a capture per attack:");
 	    for(String player : playerTypes) {
-	        System.out.println("   " + player + ":" + captureRatios.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
+	        System.out.println("   " + player + ":" + captureRatios.get(player).stream().mapToInt(x -> x).average().getAsDouble());
         }
-	    System.out.println("\nTotal amount of territory captures:");
-	    for(String player : playerTypes) {
-	        System.out.println("   " + player + ":" + captureCounts.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
-        }
-	    System.out.println("\nTotal amount of lost territories:");
-	    for(String player : playerTypes) {
-	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
-        }
-	    System.out.println("\nPercentage of game owning a continent:");
+	    System.out.println("\nAmount of attacks per turn alive:");
         for(String player : playerTypes) {
-            System.out.println("   " + player + ":" + ownedContinents.get(player).stream().mapToDouble(x -> x).average().getAsDouble());
+            System.out.println("   " + player + ":" + (double) amountOfAttacks.get(player) / (double) turnsAlive.get(player));
+        }
+	    System.out.println("\nAmount of territory captures per turn alive:");
+	    for(String player : playerTypes) {
+	        System.out.println("   " + player + ":" + captureCounts.get(player).stream().mapToDouble(x -> x).sum() / (double) turnsAlive.get(player));
+        }
+	    System.out.println("\nAmount of lost territories per turn alive:");
+	    for(String player : playerTypes) {
+	        System.out.println("   " + player + ":" + loseCounts.get(player).stream().mapToDouble(x -> x).sum() / (double) turnsAlive.get(player));
+        }
+	    System.out.println("\nPercentage of owning a continent while alive:");
+        for(String player : playerTypes) {
+            System.out.println("   " + player + ":" + (ownedContinents.get(player).stream().mapToDouble(x -> x).sum() / (double) turnsAlive.get(player))*100);
         }
 	}
 
