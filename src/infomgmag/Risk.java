@@ -288,6 +288,8 @@ public class Risk implements CombatInterface {
                 player = new Mars(this, objective, 0, entry.getKey(), color, PersonalityFactory.defensivePersonality());
             if(entry.getValue() == "continent")
                 player = new Mars(this, objective, 0, entry.getKey(), color, PersonalityFactory.continentPersonality());
+            if(entry.getValue() == "vengeful")
+                player = new Mars(this, objective, 0, entry.getKey(), color, PersonalityFactory.vengefulPersonality());
             if(player == null)
                 player = new RandomBot(objective, 0, entry.getKey(), color);
             activePlayers.add(player);
