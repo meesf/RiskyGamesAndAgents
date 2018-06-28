@@ -27,7 +27,7 @@ public class Risk implements CombatInterface {
     private RiskVisual visuals;
 
     private int turn = 0;
-    private int maxTime = 120000;
+    private int maxTime = 120;
     private int initialArmies;
     private boolean StopGame;
     private long startTime;

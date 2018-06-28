@@ -7,11 +7,11 @@ import java.util.Random;
 
 public class Tournament {
 
-    public static final boolean VISIBLE = true;
-    public static final int SPEED = 50;
+    public static final boolean VISIBLE = false;
+    public static final int SPEED = 0;
 
-    public static final int RUNS = 3;
-    public static final int STARTING_SEED = 2;
+    public static final int RUNS = 1;
+    public static final int STARTING_SEED = (int)System.currentTimeMillis();
 
 	public static HashMap<String, String> players;
 
@@ -29,6 +29,7 @@ public class Tournament {
         if(!RANDOMIZE_PLAYERS)
             setPlayers();
         for(int i = STARTING_SEED; i < RUNS + STARTING_SEED; i++) {
+            System.out.println(i - STARTING_SEED + 1);
             Risk risk = new Risk(VISIBLE);
             if(RANDOMIZE_PLAYERS)
                 randomizePlayers();
@@ -38,6 +39,7 @@ public class Tournament {
         }
         
         printResults(results);
+        System.exit(0);
     }
 
 	private static void printResults(ArrayList<Result> results) {
