@@ -70,7 +70,7 @@ public class Result {
             String defender = ce.getDefendingPlayer().getName();
             combatCaptures.get(attacker).add(ce.getCombatResult());
             amountOfAttacks.put(attacker, amountOfAttacks.get(attacker) + 1);
-            if(ce.getCombatResult() == CombatEvent.CAPTURE) {
+            if(ce.getCaptured()) {
                 captureTerritoryCount.put(attacker, captureTerritoryCount.get(attacker) + 1);
                 lostTerritoryCount.put(defender, lostTerritoryCount.get(defender) + 1);
             }
