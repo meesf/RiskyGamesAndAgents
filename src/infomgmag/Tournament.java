@@ -10,7 +10,7 @@ public class Tournament {
     public static final boolean VISIBLE = false;
     public static final int SPEED = 0;
 
-    public static final int RUNS = 10;
+    public static final int RUNS = 30;
     public static final int STARTING_SEED = (int)System.currentTimeMillis();
 
 	public static HashMap<String, String> players;
