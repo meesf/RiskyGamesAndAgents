@@ -10,13 +10,13 @@ public class Tournament {
     public static final boolean VISIBLE = false;
     public static final int SPEED = 0;
 
-    public static final int RUNS = 1;
+    public static final int RUNS = 10;
     public static final int STARTING_SEED = (int)System.currentTimeMillis();
 
 	public static HashMap<String, String> players;
 
 	public static Random random;
-	public static boolean RANDOMIZE_PLAYERS = false;
+	public static boolean RANDOMIZE_PLAYERS = true;
 	public static final int NUMBER_OF_PLAYERS = 6;
 
     public static ArrayList<String> playerTypes = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent", "vengeful"));
