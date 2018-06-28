@@ -8,15 +8,15 @@ import java.util.Random;
 public class Tournament {
 
     public static final boolean VISIBLE = true;
-    public static final int SPEED = 0;
+    public static final int SPEED = 100;
 
-    public static final int RUNS = 10;
-    public static final int STARTING_SEED = (int)System.currentTimeMillis();
+    public static final int RUNS = 3;
+    public static final int STARTING_SEED = 2;
 
 	public static HashMap<String, String> players;
 
 	public static Random random;
-	public static boolean RANDOMIZE_PLAYERS = true;
+	public static boolean RANDOMIZE_PLAYERS = false;
 	public static final int NUMBER_OF_PLAYERS = 6;
 
     public static ArrayList<String> playerTypes = new ArrayList<>(Arrays.asList("aggressive", "normal", "defensive", "continent", "vengeful"));
@@ -136,10 +136,10 @@ public class Tournament {
     }
 	
 	private static void setPlayers() {
-        players.put("aggressiveA", "aggressive");
-        players.put("normalA", "normal");
-        players.put("normalB", "normal");
-        players.put("defensiveA", "defensive");
-        players.put("continentA", "continent");
+        players.put("Aggressive", "aggressive");
+        players.put("Normal", "normal");
+        players.put("Vengeful", "vengeful");
+        players.put("Defensive", "defensive");
+        players.put("Continent", "continent");
     }
 }
