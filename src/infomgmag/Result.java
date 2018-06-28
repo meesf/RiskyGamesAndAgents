@@ -68,7 +68,7 @@ public class Result {
         for(CombatEvent ce : risk.getCombatLog()) {
             String attacker = ce.getAttackingPlayer().getName();
             String defender = ce.getDefendingPlayer().getName();
-            combatCaptures.get(attacker).add(ce.getCombatResult());
+            combatCaptures.get(attacker).add(ce.getCaptured() ? 1 : 0);
             amountOfAttacks.put(attacker, amountOfAttacks.get(attacker) + 1);
             if(ce.getCaptured()) {
                 captureTerritoryCount.put(attacker, captureTerritoryCount.get(attacker) + 1);
