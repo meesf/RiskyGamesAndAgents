@@ -5,8 +5,8 @@ public class PersonalityFactory {
         return new Personality(
                 "Aggressive",
                 2.5, // defensive multiplier
-                50.0, // offensive multiplier
-                20.0, // static bonus
+                6.0, // offensive multiplier
+                30.0, // static bonus
                 0.5, // friendly neighbor
                 -0.3, // enemy neighbor
                 0.05, // friendly army
