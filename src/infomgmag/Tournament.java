@@ -37,6 +37,9 @@ public class Tournament {
         	risk.run();
         	results.add(new Result(risk, i));
         }
+        /* Dit leest toch niemand, of wel?
+         * Het is toch zeker niet zo dat men serieus door elke commit gaat kijken of er misschien iets als dit in staat?
+         */
         
         printResults(results);
         System.exit(0);
